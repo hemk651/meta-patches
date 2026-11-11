@@ -4,19 +4,15 @@ import app.morphe.patcher.patch.patch
 import app.hemk651.patches.shared.MetaCompatibilities
 
 /**
- * Compatibility registration for Edits.
- *
- * This declaration makes the patch visible for the exact package name without
- * a version-code allowlist. The runtime mc_overrides writer is not implemented
- * yet; this patch intentionally does not modify app bytecode.
+ * Packages the user-consented MetaConfig override installer for Edits.
+ * The payload's Employee Options flag is not verified for Edits; no
+ * app-specific MobileConfig hook is claimed by this compatibility entry.
  */
 val editsPatch = patch(
     name = "Developer Options Unlocker (Employee Options)",
-    description = "Provides the user-consented MetaConfig installer for Edits. A user-granted folder permission is required; startup invocation is not yet wired.",
+    description = "Packages the MetaConfig override and SAF installer for Edits. Employee flag compatibility and app-side loading are unverified; no bytecode unlock hook is included.",
     default = false
 ) {
     compatibleWith(MetaCompatibilities.EDITS)
-
-    // Package the SAF installer helper and mc_overrides.json asset with this target.
     extendWith("extensions/extension.mpe")
 }
