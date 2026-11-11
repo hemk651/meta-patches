@@ -11,8 +11,8 @@ import app.hemk651.patches.shared.MetaCompatibilities
  * yet; this patch intentionally does not modify app bytecode.
  */
 val editsPatch = patch(
-    name = "Edits — compatibility entry",
-    description = "Registers Edits package compatibility. Runtime config injection is not included yet.",
+    name = "Developer options unlocker (Employee options)",
+    description = "Bundles the MetaConfig installer for Edits. A user-granted folder permission is required; startup invocation is not yet wired.",
     default = false
 ) {
     compatibleWith(MetaCompatibilities.EDITS)
