@@ -25,6 +25,7 @@ public final class MetaConfigInstaller {
     private static final String PREFS = "meta_config_installer";
     private static final String PREF_TREE_URI = "tree_uri";
     private static final String PREF_LAUNCH_ATTEMPTS = "launch_attempts";
+    private static final String PREF_INSTALLED = "installed";
     private static final int MAX_LAUNCH_ATTEMPTS = 3;
     private static final String SOURCE_ASSET = "mc_overrides.json";
     private static final String TARGET_DIRECTORY = "mobileconfig";
@@ -74,16 +75,28 @@ public final class MetaConfigInstaller {
         String saved = prefs.getString(PREF_TREE_URI, null);
         if (saved == null) return "NEEDS_FOLDER_PERMISSION";
 
+        if (prefs.getBoolean(PREF_INSTALLED, false)) return "ALREADY_INSTALLED";
         int attempts = prefs.getInt(PREF_LAUNCH_ATTEMPTS, 0);
         if (attempts >= MAX_LAUNCH_ATTEMPTS) return "MAX_LAUNCH_ATTEMPTS_REACHED";
 
-        // Count only real installation attempts. Missing SAF consent must not
-        // consume the three retries before the user has selected a folder.
-        prefs.edit().putInt(PREF_LAUNCH_ATTEMPTS, attempts + 1).apply();
-        return installUsingSavedGrant(context);
+        // Missing SAF consent must not consume retries. Count only actual writes.
+        String result = installUsingSavedGrant(context);
+        if ("INSTALLED_AND_VERIFIED".equals(result)) {
+            prefs.edit().putBoolean(PREF_INSTALLED, true).apply();
+        } else if (!"NEEDS_FOLDER_PERMISSION".equals(result)) {
+            prefs.edit().putInt(PREF_LAUNCH_ATTEMPTS, attempts + 1).apply();
+        }
+        return result;
     }
 
-    /** Retry on later app launches after a folder grant has been saved. */
+    /** Launch the one-time folder setup screen. Call only from a visible app-start hook. */
+    public static void launchSetup(Context context) {
+        Intent intent = new Intent(context, MetaConfigSetupActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+    /** Retry on at most the first three app launches after a folder grant has been saved. */
     public static String installUsingSavedGrant(Context context) {
         String saved = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
                 .getString(PREF_TREE_URI, null);
