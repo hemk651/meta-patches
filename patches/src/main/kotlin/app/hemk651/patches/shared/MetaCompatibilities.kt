@@ -5,7 +5,7 @@ import app.morphe.patcher.patch.AppTarget
 import app.morphe.patcher.patch.Compatibility
 
 object MetaCompatibilities {
-    private fun target(name: String, packageName: String, color: Long) = Compatibility(
+    private fun target(name: String, packageName: String, color: Int) = Compatibility(
         name = name,
         packageName = packageName,
         apkFileType = ApkFileType.APK,
