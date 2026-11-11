@@ -7,7 +7,7 @@ An independent Morphe patch source for the MetaConfig override payload.
 
 ## Patch name
 
-**Developer options unlocker (Employee options)**
+**Developer Options Unlocker (Employee Options)**
 
 The same patch is declared separately for Instagram, Threads, Edits, and Instants.
 
@@ -15,9 +15,10 @@ The same patch is declared separately for Instagram, Threads, Edits, and Instant
 
 - The canonical JSON is bundled as an extension asset.
 - A SAF installer helper is bundled with each app-specific patch.
-- The helper creates `mobileconfig/mc_overrides.json` beneath a user-selected parent folder, verifies the written bytes, and persists the folder grant.
-- A bounded `onAppLaunch(Context)` entry point retries installation on at most three launches after a grant exists.
-- **The app-specific startup hook and permission-picker UI are not yet wired.** The patch must not be described as automatically installing the file until those pieces are implemented and tested against each target APK.
+- The extension bundles the canonical `mc_overrides.json` asset.
+- A user-visible SAF setup Activity asks the user to choose the parent folder once; the installer persists that folder grant, creates `mobileconfig`, writes the JSON, and reads it back to verify exact bytes.
+- The installer exposes a bounded `onAppLaunch(Context)` entry point, with a maximum of three write attempts after consent.
+- **The app-specific startup hook is not yet wired.** The setup Activity and installer are present in the extension, but the four patch declarations still only package the extension. They do not yet invoke setup or `onAppLaunch` automatically.
 
 ## Storage access
 
@@ -40,4 +41,4 @@ Run `python3 scripts/validate_config.py` to validate the source payload. This va
 
 ## Current limitation
 
-The startup hook needs an app-specific bytecode fingerprint. Do not guess this fingerprint: inspect the exact APK for each app before enabling the hook. No app is currently advertised as end-to-end tested.
+The startup hook needs an app-specific bytecode fingerprint and a verified call site. Do not guess this fingerprint: inspect the exact APK for each app before enabling the hook. The SAF setup screen must be launched from a visible Activity context; Android does not permit silently granting access to arbitrary removable-storage folders. No app is currently advertised as end-to-end tested.
