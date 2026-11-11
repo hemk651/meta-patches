@@ -3,6 +3,55 @@
 An independent Morphe patch source for the MetaConfig override payload.
 
 <!-- PATCHES_START EXPANDED -->
+> **[v1.1.0-dev.1](https://github.com/hemk651/meta-patches/releases/tag/v1.1.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;4 patches total
+<details open>
+<summary>📦 Edits&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**Package name:** `com.instagram.basel`
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Developer Options Unlocker (Employee Options)](#developer-options-unlocker-employee-options) | Provides the user-consented MetaConfig installer for Edits. A user-granted folder permission is required; startup invocation is not yet wired. |  |
+
+</details>
+
+<details open>
+<summary>📦 Instagram&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**Package name:** `com.instagram.android`
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Developer Options Unlocker (Employee Options)](#developer-options-unlocker-employee-options) | Provides the user-consented MetaConfig installer for Instagram. A user-granted folder permission is required; startup invocation is not yet wired. |  |
+
+</details>
+
+<details open>
+<summary>📦 Instants&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**Package name:** `com.instagram.moonshot`
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Developer Options Unlocker (Employee Options)](#developer-options-unlocker-employee-options) | Provides the user-consented MetaConfig installer for Instants. A user-granted folder permission is required; startup invocation is not yet wired. |  |
+
+</details>
+
+<details open>
+<summary>📦 Threads&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**Package name:** `com.instagram.barcelona`
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Developer Options Unlocker (Employee Options)](#developer-options-unlocker-employee-options) | Provides the user-consented MetaConfig installer for Threads. A user-granted folder permission is required; startup invocation is not yet wired. |  |
+
+</details>
+
 <!-- PATCHES_END -->
 
 ## Patch name

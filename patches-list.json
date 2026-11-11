@@ -1,10 +1,10 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.0.0",
+  "version": "1.1.0-dev.1",
   "patches": [
     {
-      "name": "Edits — compatibility entry",
-      "description": "Registers Edits package compatibility. Runtime config injection is not included yet.",
+      "name": "Developer Options Unlocker (Employee Options)",
+      "description": "Provides the user-consented MetaConfig installer for Edits. A user-granted folder permission is required; startup invocation is not yet wired.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -30,8 +30,8 @@
       "options": []
     },
     {
-      "name": "Instagram — compatibility entry",
-      "description": "Registers Instagram package compatibility. Runtime config injection is not included yet.",
+      "name": "Developer Options Unlocker (Employee Options)",
+      "description": "Provides the user-consented MetaConfig installer for Instagram. A user-granted folder permission is required; startup invocation is not yet wired.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -57,8 +57,8 @@
       "options": []
     },
     {
-      "name": "Instants — compatibility entry",
-      "description": "Registers Instants package compatibility. Runtime config injection is not included yet.",
+      "name": "Developer Options Unlocker (Employee Options)",
+      "description": "Provides the user-consented MetaConfig installer for Instants. A user-granted folder permission is required; startup invocation is not yet wired.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -84,8 +84,8 @@
       "options": []
     },
     {
-      "name": "Threads — compatibility entry",
-      "description": "Registers Threads package compatibility. Runtime config injection is not included yet.",
+      "name": "Developer Options Unlocker (Employee Options)",
+      "description": "Provides the user-consented MetaConfig installer for Threads. A user-granted folder permission is required; startup invocation is not yet wired.",
       "default": false,
       "category": null,
       "compatiblePackages": [

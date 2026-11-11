@@ -1,3 +1,25 @@
+## [1.1.0-dev.1](https://github.com/hemk651/meta-patches/compare/v1.0.0...v1.1.0-dev.1) (2026-11-11)
+
+### ✨ New Features
+
+* bundle Developer options unlocker for Edits ([3496e6d](https://github.com/hemk651/meta-patches/commit/3496e6d2652d8df71aa14963c7d4869d89bd75de))
+* bundle Developer options unlocker for Instagram ([fb62cdf](https://github.com/hemk651/meta-patches/commit/fb62cdfcef523fff34fde1dc8ebefaab893ddacf))
+* bundle Developer options unlocker for Instants ([7d25417](https://github.com/hemk651/meta-patches/commit/7d25417fa3f47138c964156c1384b8cc7316564e))
+* bundle Developer options unlocker for Threads ([74d697c](https://github.com/hemk651/meta-patches/commit/74d697cea4ab9d4b6d11cc9aa5c1b5d892d4a543))
+* bundle MetaConfig installer extension in app patches ([487178c](https://github.com/hemk651/meta-patches/commit/487178c789e5c8fdbb47f12af449674ad2c36a5b))
+* bundle MetaConfig installer extension in app patches ([bf8e40d](https://github.com/hemk651/meta-patches/commit/bf8e40d3420854fa7c6be7fed495c4c023a472ce))
+* bundle MetaConfig installer extension in app patches ([c2652d1](https://github.com/hemk651/meta-patches/commit/c2652d11ac31a2f89ba155c655f22c26d2964c61))
+* bundle MetaConfig installer extension in app patches ([235ce47](https://github.com/hemk651/meta-patches/commit/235ce4797ce796ad55aadb3bcfca2b44b57f332d))
+* **extension:** add bounded startup installer entry point ([d3d5941](https://github.com/hemk651/meta-patches/commit/d3d5941f03b94d02f609e9027c28b2c7692a7adb))
+* **extension:** add user-consented SAF setup activity ([53e28c5](https://github.com/hemk651/meta-patches/commit/53e28c5bd3ac24eb0691066a70459ca04424a205))
+* **extension:** register SAF setup activity ([3e8ee2e](https://github.com/hemk651/meta-patches/commit/3e8ee2ec0dc880db21f64da477e10db9b308a8dd))
+
+### 🐛 Bug Fixes
+
+* preserve startup retries until folder permission is granted ([1406f2f](https://github.com/hemk651/meta-patches/commit/1406f2f489a97fe10d88b0ce3982984ba9ab7b27))
+* **release:** add expanded patches README markers ([f60877e](https://github.com/hemk651/meta-patches/commit/f60877eecad235eae6372c5dc3c18022e692cf1d))
+* **release:** use valid generated README markers ([7e1d8fc](https://github.com/hemk651/meta-patches/commit/7e1d8fc37d7b133bbfd3e81af9a51f6a88186799))
+
 ## 1.0.0 (2026-11-11)
 
 ### ✨ New Features
