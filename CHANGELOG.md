@@ -1,3 +1,9 @@
+## [1.1.0-dev.2](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.1...v1.1.0-dev.2) (2026-11-11)
+
+### 🐛 Bug Fixes
+
+* **ci:** stage canonical config asset without editing source payload ([dd103e6](https://github.com/hemk651/meta-patches/commit/dd103e67bdc1b1c4933565882d7ccdc5eae57a34))
+
 ## [1.1.0-dev.1](https://github.com/hemk651/meta-patches/compare/v1.0.0...v1.1.0-dev.1) (2026-11-11)
 
 ### ✨ New Features
