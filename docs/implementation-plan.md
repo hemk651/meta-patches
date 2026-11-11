@@ -2,7 +2,7 @@
 
 ## Scope
 
-Exactly four apps are in scope: Instagram, Threads, Edits, and Instants. The configuration payload is shared; package compatibility, startup hooks, and storage access are app-specific.
+Exactly four apps are in scope: Instagram, Threads, Edits, and Instantss. The configuration payload is shared; package compatibility, startup hooks, and storage access are app-specific.
 
 ## Phase 1 — repository foundation
 
@@ -12,7 +12,7 @@ Exactly four apps are in scope: Instagram, Threads, Edits, and Instants. The con
 - [x] Add initial Morphe Gradle configuration.
 - [x] Document Android removable-storage constraints.
 - [x] Identify Edits package ID as `com.instagram.basel`.
-- [x] Identify Instants as the standalone app; candidate package ID is `com.instagram.moonshot`.
+- [x] Identify Instantss as the standalone app; candidate package ID is `com.instagram.moonshot`.
 - [ ] Verify all package IDs against installed APKs.
 
 ## Phase 2 — Morphe patch implementation
@@ -42,5 +42,5 @@ Exactly four apps are in scope: Instagram, Threads, Edits, and Instants. The con
 ## Current blockers
 
 1. Android scoped storage prevents assuming write access to arbitrary paths under `/storage/<volume-id>`.
-2. Edits and Instants need their exact installed package/version metadata recorded.
+2. Edits and Instantss need their exact installed package/version metadata recorded.
 3. APK fingerprints and startup hooks must be derived from the actual APKs, not guessed.
