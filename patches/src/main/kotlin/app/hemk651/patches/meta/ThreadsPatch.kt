@@ -11,9 +11,12 @@ import app.hemk651.patches.shared.MetaCompatibilities
  * yet; this patch intentionally does not modify app bytecode.
  */
 val threadsPatch = patch(
-    name = "Developer options unlocker (Employee options)",
+    name = "Developer option Unlocker (Employee option)",
     description = "Bundles the MetaConfig installer for Threads. A user-granted folder permission is required; startup invocation is not yet wired.",
     default = false
 ) {
     compatibleWith(MetaCompatibilities.THREADS)
+
+    // Package the SAF installer helper and mc_overrides.json asset with this target.
+    extendWith("extensions/extension.mpe")
 }
