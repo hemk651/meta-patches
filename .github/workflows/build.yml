@@ -20,6 +20,10 @@ jobs:
         with:
           distribution: temurin
           java-version: "21"
+      - name: Validate MetaConfig payload and bundled asset
+        run: |
+          python3 scripts/validate_config.py
+          cmp config/mc_overrides.json extensions/extension/src/main/assets/mc_overrides.json
       - name: Build Morphe patch bundle
         env:
           GITHUB_ACTOR: ${{ github.actor }}
