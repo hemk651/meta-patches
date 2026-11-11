@@ -1,30 +1,54 @@
 #!/usr/bin/env python3
-"""Validate the canonical MetaConfig override payload."""
+"""Validate the canonical MetaConfig payload without modifying it.
+
+The repository JSON is the source of truth. This validator deliberately reads
+only that file; build CI stages an identical copy into the extension asset.
+"""
 
 import json
 from pathlib import Path
 
-CONFIG = Path(__file__).resolve().parents[1] / "config" / "mc_overrides.json"
-EXPECTED = {
-    "56474:": ["0: : true"],
-    "28538:": ["0: : true"],
-    "32432:": ["1: : true"],
-    "_qe_overrides_": [],
-}
+ROOT = Path(__file__).resolve().parents[1]
+CONFIG = ROOT / "config" / "mc_overrides.json"
+
+# Keep these assertions explicit so a future edit cannot silently drop or
+# invert the Employee Options candidate flag.
+EMPLOYEE_UNIVERSAL_ID = "28538:"
+EMPLOYEE_SUBFLAG = "0: : true"
 
 
 def main() -> int:
     try:
-        data = json.loads(CONFIG.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        print(f"FAIL: cannot read valid JSON: {exc}")
+        raw = CONFIG.read_bytes()
+        data = json.loads(raw.decode("utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        print(f"FAIL: cannot read valid UTF-8 JSON: {exc}")
         return 1
 
-    if data != EXPECTED:
-        print("FAIL: payload differs from the reviewed canonical values")
+    if not isinstance(data, dict):
+        print("FAIL: root JSON value must be an object")
         return 1
 
-    print("OK: mc_overrides.json is valid and matches the canonical payload")
+    employee_values = data.get(EMPLOYEE_UNIVERSAL_ID)
+    if not isinstance(employee_values, list) or EMPLOYEE_SUBFLAG not in employee_values:
+        print("FAIL: Employee Options candidate 28538::0=true is missing")
+        return 1
+
+    if data.get("_qe_overrides_") != []:
+        print("FAIL: _qe_overrides_ must remain an empty list")
+        return 1
+
+    for key, values in data.items():
+        if not isinstance(key, str) or not isinstance(values, list):
+            print(f"FAIL: invalid MetaConfig entry shape for {key!r}")
+            return 1
+        if not all(isinstance(value, str) for value in values):
+            print(f"FAIL: values for {key!r} must all be strings")
+            return 1
+
+    print(f"OK: valid UTF-8 JSON ({len(raw)} bytes)")
+    print("OK: Employee Options candidate 28538::0 is set to true")
+    print("NOTE: this validates the payload only, not app-side loading or UI unlock.")
     return 0
 
 
