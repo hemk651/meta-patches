@@ -2,6 +2,9 @@
 
 An independent Morphe patch source for the MetaConfig override payload.
 
+<!-- PATCHES_START [EXPANDED] -->
+<!-- PATCHES_END -->
+
 ## Patch name
 
 **Developer options unlocker (Employee options)**
