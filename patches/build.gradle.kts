@@ -3,7 +3,7 @@ group = "app.hemk651"
 patches {
     about {
         name = "Meta Patches"
-        description = "Shared MetaConfig file patch for selected Meta Android apps"
+        description = "Shared MetaConfig configuration patch for selected Meta Android apps"
         source = "https://github.com/hemk651/meta-patches"
         author = "hemk651"
         contact = "https://github.com/hemk651"
@@ -21,7 +21,7 @@ dependencies {
 
 tasks {
     register<JavaExec>("generatePatchesList") {
-        description = "Generate the Morphe patch list"
+        description = "Build patch with patch list"
         dependsOn(build)
         classpath = sourceSets["main"].runtimeClasspath + patchListGeneratorClasspath
         mainClass.set("util.PatchListGeneratorKt")
