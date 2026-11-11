@@ -58,8 +58,16 @@ public final class MetaConfigInstaller {
         try {
             context.getContentResolver().takePersistableUriPermission(selectedTree, takeFlags);
             context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-                    .edit().putString(PREF_TREE_URI, selectedTree.toString()).apply();
-            return installIntoTree(context, selectedTree);
+                    .edit()
+                    .putString(PREF_TREE_URI, selectedTree.toString())
+                    .putInt(PREF_LAUNCH_ATTEMPTS, 0)
+                    .putBoolean(PREF_INSTALLED, false)
+                    .apply();
+            String result = installIntoTree(context, selectedTree);
+            if ("INSTALLED_AND_VERIFIED".equals(result)) {
+                markInstalled(context);
+            }
+            return result;
         } catch (Exception e) {
             return "ERROR: " + e.getClass().getSimpleName() + ": " + e.getMessage();
         }
@@ -75,15 +83,19 @@ public final class MetaConfigInstaller {
         String saved = prefs.getString(PREF_TREE_URI, null);
         if (saved == null) return "NEEDS_FOLDER_PERMISSION";
 
-        if (prefs.getBoolean(PREF_INSTALLED, false)) return "ALREADY_INSTALLED";
         int attempts = prefs.getInt(PREF_LAUNCH_ATTEMPTS, 0);
-        if (attempts >= MAX_LAUNCH_ATTEMPTS) return "MAX_LAUNCH_ATTEMPTS_REACHED";
+        // Verify the saved destination even after a previous success: removable
+        // storage can be replaced, unmounted, or have the file deleted.
+        if (attempts >= MAX_LAUNCH_ATTEMPTS
+                && !prefs.getBoolean(PREF_INSTALLED, false)) {
+            return "MAX_LAUNCH_ATTEMPTS_REACHED";
+        }
 
-        // Missing SAF consent must not consume retries. Count only actual writes.
         String result = installUsingSavedGrant(context);
         if ("INSTALLED_AND_VERIFIED".equals(result)) {
-            prefs.edit().putBoolean(PREF_INSTALLED, true).apply();
-        } else if (!"NEEDS_FOLDER_PERMISSION".equals(result)) {
+            markInstalled(context);
+        } else if (!"NEEDS_FOLDER_PERMISSION".equals(result)
+                && !prefs.getBoolean(PREF_INSTALLED, false)) {
             prefs.edit().putInt(PREF_LAUNCH_ATTEMPTS, attempts + 1).apply();
         }
         return result;
@@ -94,6 +106,14 @@ public final class MetaConfigInstaller {
         Intent intent = new Intent(context, MetaConfigSetupActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+    }
+
+    private static void markInstalled(Context context) {
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+                .edit()
+                .putBoolean(PREF_INSTALLED, true)
+                .putInt(PREF_LAUNCH_ATTEMPTS, 0)
+                .apply();
     }
 
     /** Retry on at most the first three app launches after a folder grant has been saved. */
@@ -111,7 +131,9 @@ public final class MetaConfigInstaller {
                 }
             }
             if (!stillGranted) return "NEEDS_FOLDER_PERMISSION";
-            return installIntoTree(context, tree);
+            String result = installIntoTree(context, tree);
+            if ("INSTALLED_AND_VERIFIED".equals(result)) markInstalled(context);
+            return result;
         } catch (Exception e) {
             return "ERROR: " + e.getClass().getSimpleName() + ": " + e.getMessage();
         }
@@ -138,6 +160,9 @@ public final class MetaConfigInstaller {
         if (directory == null) return "ERROR: could not create mobileconfig directory";
 
         Uri existing = findChild(resolver, tree, directory, TARGET_FILE);
+        if (existing != null && contentEquals(resolver, existing, payload)) {
+            return "INSTALLED_AND_VERIFIED";
+        }
         Uri destination = existing;
         if (destination == null) {
             destination = DocumentsContract.createDocument(
@@ -163,6 +188,18 @@ public final class MetaConfigInstaller {
             }
         }
         return "INSTALLED_AND_VERIFIED";
+    }
+
+    private static boolean contentEquals(ContentResolver resolver, Uri file, byte[] expected)
+            throws Exception {
+        try (InputStream in = resolver.openInputStream(file);
+             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            if (in == null) return false;
+            byte[] buffer = new byte[4096];
+            int read;
+            while ((read = in.read(buffer)) != -1) out.write(buffer, 0, read);
+            return java.util.Arrays.equals(expected, out.toByteArray());
+        }
     }
 
     private static Uri findChild(ContentResolver resolver, Uri tree, Uri parent, String name) {
