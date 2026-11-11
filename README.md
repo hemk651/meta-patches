@@ -1,100 +1,40 @@
 # Meta Patches
 
-An independent Morphe patch source for a shared MetaConfig override file across four Meta Android apps.
+An independent Morphe patch source for the MetaConfig override payload.
 
-## Morphe patches
+## Patch name
 
-<!-- PATCHES_START -->
-> **[v1.0.0](https://github.com/hemk651/meta-patches/releases/tag/v1.0.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;4 patches total
-<details open>
-<summary>📦 Edits&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
-<br>
+**Developer options unlocker (Employee options)**
 
-**Package name:** `com.instagram.basel`
+The same patch is declared separately for Instagram, Threads, Edits, and Instants.
 
-| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
-|----------|----------------|-----------|
-| [Edits — compatibility entry](#edits-compatibility-entry) | Registers Edits package compatibility. Runtime config injection is not included yet. |  |
+## Installer implementation status
 
-</details>
+- The canonical JSON is bundled as an extension asset.
+- A SAF installer helper is bundled with each app-specific patch.
+- The helper creates `mobileconfig/mc_overrides.json` beneath a user-selected parent folder, verifies the written bytes, and persists the folder grant.
+- A bounded `onAppLaunch(Context)` entry point retries installation on at most three launches after a grant exists.
+- **The app-specific startup hook and permission-picker UI are not yet wired.** The patch must not be described as automatically installing the file until those pieces are implemented and tested against each target APK.
 
-<details open>
-<summary>📦 Instagram&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
-<br>
+## Storage access
 
-**Package name:** `com.instagram.android`
+The intended output is `/storage/<volume-id>/data/files/mobileconfig/mc_overrides.json`. Android's Storage Access Framework requires a user-selected folder grant; a volume UUID alone does not grant access. The user should select the intended `data/files` parent folder where Android's picker permits it. The helper creates the `mobileconfig` child directory.
 
-| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
-|----------|----------------|-----------|
-| [Instagram — compatibility entry](#instagram-compatibility-entry) | Registers Instagram package compatibility. Runtime config injection is not included yet. |  |
+Android 11+ may prohibit selecting storage roots or restricted directories. If the system picker does not allow the intended parent folder, this exact destination cannot be written through SAF on that device. The installer reports failure rather than silently writing somewhere else.
 
-</details>
+## Targets
 
-<details open>
-<summary>📦 Instants&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
-<br>
+| App | Package |
+|---|---|
+| Instagram | `com.instagram.android` |
+| Threads | `com.instagram.barcelona` |
+| Edits | `com.instagram.basel` |
+| Instants | `com.instagram.moonshot` (candidate; verify on-device) |
 
-**Package name:** `com.instagram.moonshot`
+## Validation
 
-| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
-|----------|----------------|-----------|
-| [Instants — compatibility entry](#instants-compatibility-entry) | Registers Instants package compatibility. Runtime config injection is not included yet. |  |
+Run `python3 scripts/validate_config.py` to validate the source payload. This validates repository data only; it does not prove device deployment.
 
-</details>
+## Current limitation
 
-<details open>
-<summary>📦 Threads&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
-<br>
-
-**Package name:** `com.instagram.barcelona`
-
-| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
-|----------|----------------|-----------|
-| [Threads — compatibility entry](#threads-compatibility-entry) | Registers Threads package compatibility. Runtime config injection is not included yet. |  |
-
-</details>
-
-<!-- PATCHES_END -->
-
-## Target apps
-
-| App | Package ID | Verification |
-|---|---|---|
-| Instagram | `com.instagram.android` | Known package; target APK not yet tested |
-| Threads | `com.instagram.barcelona` | Known package; target APK not yet tested |
-| Edits | `com.instagram.basel` | Google Play package confirmed; target APK not yet tested |
-| Instants | `com.instagram.moonshot` | Candidate package; verify on-device before release |
-
-## Feature
-
-Install the same `mc_overrides.json` payload into each app's intended `mobileconfig` directory.
-
-The requested destination pattern is:
-
-```text
-/storage/<volume-id>/data/files/mobileconfig/mc_overrides.json
-```
-
-The volume ID is dynamic and must never be hard-coded.
-
-## Canonical configuration
-
-The single source of truth is [config/mc_overrides.json](config/mc_overrides.json). Validate it with:
-
-```bash
-python3 scripts/validate_config.py
-```
-
-## Android storage constraints
-
-On Android 11 and later, a normal app cannot assume write access to an arbitrary directory at the root of removable storage. Discovering a volume UUID does not grant write permission. The implementation must use a verified access path, such as a user-granted Storage Access Framework tree URI where appropriate, and must fail clearly if the requested destination cannot be written.
-
-The patch must not silently write to app-private storage or another folder as a fallback. It must also verify that the target app actually reads this file from the requested location.
-
-## Development status
-
-The repository contains the shared payload, validation, project metadata, and initial Morphe Gradle configuration. App-specific startup hooks, APK fingerprints, removable-storage write integration, and a verified build are still pending. No app is currently advertised as tested or working.
-
-## Risk and disclaimer
-
-MetaConfig experiments may be unstable, account-specific, or carry service/account risk. No safety or compatibility guarantee is made. This independent community project is not affiliated with Meta or Morphe.
+The startup hook needs an app-specific bytecode fingerprint. Do not guess this fingerprint: inspect the exact APK for each app before enabling the hook. No app is currently advertised as end-to-end tested.
