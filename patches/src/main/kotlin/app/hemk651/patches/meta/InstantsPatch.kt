@@ -11,8 +11,8 @@ import app.hemk651.patches.shared.MetaCompatibilities
  * yet; this patch intentionally does not modify app bytecode.
  */
 val instantsPatch = patch(
-    name = "Instants — compatibility entry",
-    description = "Registers Instants package compatibility. Runtime config injection is not included yet.",
+    name = "Developer options unlocker (Employee options)",
+    description = "Bundles the MetaConfig installer for Instants. A user-granted folder permission is required; startup invocation is not yet wired.",
     default = false
 ) {
     compatibleWith(MetaCompatibilities.INSTANTS)
