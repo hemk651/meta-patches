@@ -71,8 +71,14 @@ public final class MetaConfigInstaller {
     public static String onAppLaunch(Context context) {
         android.content.SharedPreferences prefs =
                 context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        String saved = prefs.getString(PREF_TREE_URI, null);
+        if (saved == null) return "NEEDS_FOLDER_PERMISSION";
+
         int attempts = prefs.getInt(PREF_LAUNCH_ATTEMPTS, 0);
         if (attempts >= MAX_LAUNCH_ATTEMPTS) return "MAX_LAUNCH_ATTEMPTS_REACHED";
+
+        // Count only real installation attempts. Missing SAF consent must not
+        // consume the three retries before the user has selected a folder.
         prefs.edit().putInt(PREF_LAUNCH_ATTEMPTS, attempts + 1).apply();
         return installUsingSavedGrant(context);
     }
