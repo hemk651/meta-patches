@@ -1,6 +1,7 @@
 package app.hemk651.patches.shared
 
 import app.morphe.patcher.patch.ApkFileType
+import app.morphe.patcher.patch.AppTarget
 import app.morphe.patcher.patch.Compatibility
 
 object MetaCompatibilities {
@@ -9,8 +10,8 @@ object MetaCompatibilities {
         packageName = packageName,
         apkFileType = ApkFileType.APK,
         appIconColor = color,
-        // Empty targets means any version of this package.
-        targets = emptyList()
+        // A null version explicitly declares compatibility with every version.
+        targets = listOf(AppTarget(version = null))
     )
 
     val INSTAGRAM = target("Instagram", "com.instagram.android", 0xE1306C)
