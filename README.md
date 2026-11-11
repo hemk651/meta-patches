@@ -5,6 +5,7 @@ An independent Morphe patch source for a shared MetaConfig override file across 
 ## Morphe patches
 
 <!-- PATCHES_START -->
+> **[v1.0.0-dev.1](https://github.com/hemk651/meta-patches/releases/tag/v1.0.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;0 patches total
 <!-- PATCHES_END -->
 
 ## Target apps
