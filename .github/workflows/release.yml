@@ -1,5 +1,11 @@
 name: Release
 
+# Semantic-release must not run concurrently for the same branch. Older runs
+# are cancelled so the latest commit can be evaluated against the remote branch.
+concurrency:
+  group: semantic-release-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   workflow_dispatch:
   push:
