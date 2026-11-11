@@ -3,7 +3,7 @@
 An independent Morphe patch source for the MetaConfig override payload.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.1.0-dev.2](https://github.com/hemk651/meta-patches/releases/tag/v1.1.0-dev.2)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;4 patches total
+> **[v1.1.0-dev.3](https://github.com/hemk651/meta-patches/releases/tag/v1.1.0-dev.3)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;4 patches total
 <details open>
 <summary>📦 Edits&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
 <br>
@@ -12,7 +12,7 @@ An independent Morphe patch source for the MetaConfig override payload.
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Developer Options Unlocker (Employee Options)](#developer-options-unlocker-employee-options) | Provides the user-consented MetaConfig installer for Edits. A user-granted folder permission is required; startup invocation is not yet wired. |  |
+| [Developer Options Unlocker (Employee Options)](#developer-options-unlocker-employee-options) | Packages the MetaConfig override and SAF installer for Edits. Employee flag compatibility and app-side loading are unverified; no bytecode unlock hook is included. |  |
 
 </details>
 
@@ -24,7 +24,7 @@ An independent Morphe patch source for the MetaConfig override payload.
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Developer Options Unlocker (Employee Options)](#developer-options-unlocker-employee-options) | Provides the user-consented MetaConfig installer for Instagram. A user-granted folder permission is required; startup invocation is not yet wired. |  |
+| [Developer Options Unlocker (Employee Options)](#developer-options-unlocker-employee-options) | Packages the Employee Options MetaConfig override (28538::0 = true) and SAF installer for Instagram. Actual activation requires the app to read the deployed file; bytecode unlocking is not included. |  |
 
 </details>
 
@@ -36,7 +36,7 @@ An independent Morphe patch source for the MetaConfig override payload.
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Developer Options Unlocker (Employee Options)](#developer-options-unlocker-employee-options) | Provides the user-consented MetaConfig installer for Instants. A user-granted folder permission is required; startup invocation is not yet wired. |  |
+| [Developer Options Unlocker (Employee Options)](#developer-options-unlocker-employee-options) | Packages the MetaConfig override and SAF installer for Instants. Package and employee-flag compatibility require on-device verification; no bytecode unlock hook is included. |  |
 
 </details>
 
@@ -48,7 +48,7 @@ An independent Morphe patch source for the MetaConfig override payload.
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Developer Options Unlocker (Employee Options)](#developer-options-unlocker-employee-options) | Provides the user-consented MetaConfig installer for Threads. A user-granted folder permission is required; startup invocation is not yet wired. |  |
+| [Developer Options Unlocker (Employee Options)](#developer-options-unlocker-employee-options) | Packages the MetaConfig override and SAF installer for Threads. Employee flag compatibility and app-side loading are unverified; no bytecode unlock hook is included. |  |
 
 </details>
 

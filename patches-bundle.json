@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-11-11T19:04:18",
-  "description": "## [1.1.0-dev.2](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.1...v1.1.0-dev.2) (2026-11-11)\n\n### 🐛 Bug Fixes\n\n* **ci:** stage canonical config asset without editing source payload ([dd103e6](https://github.com/hemk651/meta-patches/commit/dd103e67bdc1b1c4933565882d7ccdc5eae57a34))",
-  "download_url": "https://github.com/hemk651/meta-patches/releases/download/v1.1.0-dev.2/patches-1.1.0-dev.2.mpp",
+  "created_at": "2026-11-11T20:15:01",
+  "description": "## [1.1.0-dev.3](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.2...v1.1.0-dev.3) (2026-11-11)\n\n### 🐛 Bug Fixes\n\n* **ci:** build and verify patch bundle before semantic release ([b8d40a4](https://github.com/hemk651/meta-patches/commit/b8d40a4d035b635600eafdb698df08b83cfa02b5))\n* **installer:** verify saved destination and persist install state ([fdb6ebb](https://github.com/hemk651/meta-patches/commit/fdb6ebb347b191c8abafb283c1b12f03f643dce2))",
+  "download_url": "https://github.com/hemk651/meta-patches/releases/download/v1.1.0-dev.3/patches-1.1.0-dev.3.mpp",
   "signature_download_url": "",
-  "version": "1.1.0-dev.2"
+  "version": "1.1.0-dev.3"
 }

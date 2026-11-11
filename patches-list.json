@@ -1,10 +1,10 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.1.0-dev.2",
+  "version": "1.1.0-dev.3",
   "patches": [
     {
       "name": "Developer Options Unlocker (Employee Options)",
-      "description": "Provides the user-consented MetaConfig installer for Edits. A user-granted folder permission is required; startup invocation is not yet wired.",
+      "description": "Packages the MetaConfig override and SAF installer for Edits. Employee flag compatibility and app-side loading are unverified; no bytecode unlock hook is included.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -31,7 +31,7 @@
     },
     {
       "name": "Developer Options Unlocker (Employee Options)",
-      "description": "Provides the user-consented MetaConfig installer for Instagram. A user-granted folder permission is required; startup invocation is not yet wired.",
+      "description": "Packages the Employee Options MetaConfig override (28538::0 = true) and SAF installer for Instagram. Actual activation requires the app to read the deployed file; bytecode unlocking is not included.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -58,7 +58,7 @@
     },
     {
       "name": "Developer Options Unlocker (Employee Options)",
-      "description": "Provides the user-consented MetaConfig installer for Instants. A user-granted folder permission is required; startup invocation is not yet wired.",
+      "description": "Packages the MetaConfig override and SAF installer for Instants. Package and employee-flag compatibility require on-device verification; no bytecode unlock hook is included.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -85,7 +85,7 @@
     },
     {
       "name": "Developer Options Unlocker (Employee Options)",
-      "description": "Provides the user-consented MetaConfig installer for Threads. A user-granted folder permission is required; startup invocation is not yet wired.",
+      "description": "Packages the MetaConfig override and SAF installer for Threads. Employee flag compatibility and app-side loading are unverified; no bytecode unlock hook is included.",
       "default": false,
       "category": null,
       "compatiblePackages": [

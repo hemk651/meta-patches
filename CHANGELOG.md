@@ -1,3 +1,10 @@
+## [1.1.0-dev.3](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.2...v1.1.0-dev.3) (2026-11-11)
+
+### 🐛 Bug Fixes
+
+* **ci:** build and verify patch bundle before semantic release ([b8d40a4](https://github.com/hemk651/meta-patches/commit/b8d40a4d035b635600eafdb698df08b83cfa02b5))
+* **installer:** verify saved destination and persist install state ([fdb6ebb](https://github.com/hemk651/meta-patches/commit/fdb6ebb347b191c8abafb283c1b12f03f643dce2))
+
 ## [1.1.0-dev.2](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.1...v1.1.0-dev.2) (2026-11-11)
 
 ### 🐛 Bug Fixes
