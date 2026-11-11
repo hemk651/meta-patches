@@ -2,6 +2,11 @@
 
 An independent Morphe patch source for a shared MetaConfig override file across four Meta Android apps.
 
+## Morphe patches
+
+<!-- PATCHES_START -->
+<!-- PATCHES_END -->
+
 ## Target apps
 
 | App | Package ID | Verification |
