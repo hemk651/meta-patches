@@ -54,6 +54,10 @@ An independent Morphe patch source for the MetaConfig override payload.
 
 <!-- PATCHES_END -->
 
+## Method 1 implementation notes
+
+See [Method 1 — Employee Options MobileConfig override](docs/method-1-employee-flag.md) for the flag mapping, current implementation boundary, and verification sequence. The JSON payload is preserved unchanged. The current repository does not yet contain an APK-verified startup or MobileConfig bytecode hook.
+
 ## Patch name
 
 **Developer Options Unlocker (Employee Options)**
