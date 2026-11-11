@@ -6,6 +6,6 @@ gson = "2.15.0"
 
 [libraries]
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
-# Dependency is provided by the Morphe Gradle plugin; this entry supports dependency update tooling.
+# Gradle plugin adds this dependency during build; retained for dependency update tooling.
 #noinspection UnusedVersionCatalogEntry
 morphe-patcher = { module = "app.morphe:morphe-patcher", version.ref = "morphe-patcher" }
