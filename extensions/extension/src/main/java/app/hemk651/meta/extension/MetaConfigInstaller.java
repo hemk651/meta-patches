@@ -24,6 +24,8 @@ import java.nio.charset.StandardCharsets;
 public final class MetaConfigInstaller {
     private static final String PREFS = "meta_config_installer";
     private static final String PREF_TREE_URI = "tree_uri";
+    private static final String PREF_LAUNCH_ATTEMPTS = "launch_attempts";
+    private static final int MAX_LAUNCH_ATTEMPTS = 3;
     private static final String SOURCE_ASSET = "mc_overrides.json";
     private static final String TARGET_DIRECTORY = "mobileconfig";
     private static final String TARGET_FILE = "mc_overrides.json";
@@ -60,6 +62,19 @@ public final class MetaConfigInstaller {
         } catch (Exception e) {
             return "ERROR: " + e.getClass().getSimpleName() + ": " + e.getMessage();
         }
+    }
+
+    /**
+     * Call from a verified app-start hook. Tries at most three launches.
+     * It never opens UI from a background startup context.
+     */
+    public static String onAppLaunch(Context context) {
+        android.content.SharedPreferences prefs =
+                context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        int attempts = prefs.getInt(PREF_LAUNCH_ATTEMPTS, 0);
+        if (attempts >= MAX_LAUNCH_ATTEMPTS) return "MAX_LAUNCH_ATTEMPTS_REACHED";
+        prefs.edit().putInt(PREF_LAUNCH_ATTEMPTS, attempts + 1).apply();
+        return installUsingSavedGrant(context);
     }
 
     /** Retry on later app launches after a folder grant has been saved. */
