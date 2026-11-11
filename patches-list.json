@@ -1,5 +1,114 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.0.0-dev.1",
-  "patches": []
+  "version": "1.0.0-dev.2",
+  "patches": [
+    {
+      "name": "Edits — compatibility entry",
+      "description": "Registers Edits package compatibility. Runtime config injection is not included yet.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.instagram.basel",
+          "name": "Edits",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#6C63FF",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": null,
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Instagram — compatibility entry",
+      "description": "Registers Instagram package compatibility. Runtime config injection is not included yet.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.instagram.android",
+          "name": "Instagram",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#E1306C",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": null,
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Instants — compatibility entry",
+      "description": "Registers Instants package compatibility. Runtime config injection is not included yet.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.instagram.moonshot",
+          "name": "Instants",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#222222",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": null,
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Threads — compatibility entry",
+      "description": "Registers Threads package compatibility. Runtime config injection is not included yet.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.instagram.barcelona",
+          "name": "Threads",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#101010",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": null,
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    }
+  ]
 }
