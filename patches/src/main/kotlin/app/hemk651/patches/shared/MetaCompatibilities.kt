@@ -13,8 +13,8 @@ object MetaCompatibilities {
         targets = emptyList()
     )
 
-    val INSTAGRAM = target("Instagram", "com.instagram.android", 0xFFE1306C.toInt())
-    val THREADS = target("Threads", "com.instagram.barcelona", 0xFF101010.toInt())
-    val EDITS = target("Edits", "com.instagram.basel", 0xFF6C63FF.toInt())
-    val INSTANTS = target("Instants", "com.instagram.moonshot", 0xFF222222.toInt())
+    val INSTAGRAM = target("Instagram", "com.instagram.android", 0xE1306C)
+    val THREADS = target("Threads", "com.instagram.barcelona", 0x101010)
+    val EDITS = target("Edits", "com.instagram.basel", 0x6C63FF)
+    val INSTANTS = target("Instants", "com.instagram.moonshot", 0x222222)
 }
