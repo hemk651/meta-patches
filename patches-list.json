@@ -1,5 +1,79 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "0.0.0",
-  "patches": []
+  "version": "1.1.0-alpha.1",
+  "patches": [
+    {
+      "name": "Unlock employee options",
+      "description": "Writes a MobileConfig overrides file (mc_overrides.json) into the app's storage at startup, which unlocks Meta's internal Employee Options / developer options menu.",
+      "default": true,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.instagram.android",
+          "name": "Instagram",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#E1306C",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": null,
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        },
+        {
+          "packageName": "com.instagram.basel",
+          "name": "Edits",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#5B4CFF",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": null,
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        },
+        {
+          "packageName": "com.instagram.moonshot",
+          "name": "Instants",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#4A90D9",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": null,
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "key": "mc_overrides_json",
+          "title": "MobileConfig overrides JSON",
+          "description": "The JSON written to mobileconfig/mc_overrides.json at app startup. Leave unchanged to use the default employee options unlock.",
+          "required": true,
+          "type": "kotlin.String",
+          "default": "{\"56474:\":[\"0: : true\"],\"28538:\":[\"0: : true\"],\"32432:\":[\"1: : true\"],\"_qe_overrides_\":[]}",
+          "values": null
+        }
+      ]
+    }
+  ]
 }

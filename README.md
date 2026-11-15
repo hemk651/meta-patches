@@ -49,17 +49,42 @@ a log line. The file is written to every location Meta apps are known to read it
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
+> **[v1.1.0-alpha.1](https://github.com/hemk651/meta-patches/releases/tag/v1.1.0-alpha.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`alpha`&nbsp;&nbsp;•&nbsp;&nbsp;3 patches total
+<details open>
+<summary>📦 Instagram&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
 
-<!-- Do not modify this section by hand. The patch list is generated when release.yml creates a new release.
-     
-     If you wish for the patches list to be collapsed, then remove the word 'EXPANDED' from the comment tag above.
+**Package name:** `com.instagram.android`
 
-     If you wish to manually keep this list updated then remove the PATCHES_START and PATCHES_END 
-     comment blocks entirely. -->
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Unlock employee options](#unlock-employee-options) | Writes a MobileConfig overrides file (mc_overrides.json) into the app's storage at startup, which unlocks Meta's internal Employee Options / developer options menu. | • MobileConfig overrides JSON |
 
-#### A list of patches will automatically be shown here after the first patches release is created.
+</details>
 
-&nbsp;
+<details open>
+<summary>📦 Edits&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**Package name:** `com.instagram.basel`
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Unlock employee options](#unlock-employee-options) | Writes a MobileConfig overrides file (mc_overrides.json) into the app's storage at startup, which unlocks Meta's internal Employee Options / developer options menu. | • MobileConfig overrides JSON |
+
+</details>
+
+<details open>
+<summary>📦 Instants&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**Package name:** `com.instagram.moonshot`
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Unlock employee options](#unlock-employee-options) | Writes a MobileConfig overrides file (mc_overrides.json) into the app's storage at startup, which unlocks Meta's internal Employee Options / developer options menu. | • MobileConfig overrides JSON |
+
+</details>
 
 <!-- PATCHES_END -->
 

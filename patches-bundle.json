@@ -1,7 +1,7 @@
 {
-  "created_at": "",
-  "description": "",
-  "download_url": "",
+  "created_at": "2026-11-15T18:34:35",
+  "description": "## [1.1.0-alpha.1](https://github.com/hemk651/meta-patches/compare/v1.0.0...v1.1.0-alpha.1) (2026-11-15)\n\n### ✨ New Features\n\n* Unlock employee options via MobileConfig overrides injection ([550e713](https://github.com/hemk651/meta-patches/commit/550e71392253a371c775276b62b3a0a807cd539e))",
+  "download_url": "https://github.com/hemk651/meta-patches/releases/download/v1.1.0-alpha.1/patches-1.1.0-alpha.1.mpp",
   "signature_download_url": "",
-  "version": ""
+  "version": "1.1.0-alpha.1"
 }
