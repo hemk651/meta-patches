@@ -1,1 +1,1 @@
-// Root build configuration for Meta Patches.
+// Root build configuration for meta-patches

@@ -1,7 +1,7 @@
 extension {
-    name = "extensions/extension.mpe"
+    name = "extensions/meta.mpe"
 }
 
 android {
-    namespace = "app.hemk651.meta.extension"
+    namespace = "app.meta.extension"
 }

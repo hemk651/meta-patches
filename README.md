@@ -1,100 +1,98 @@
-# Meta Patches
+# 🧩 Meta Patches
 
-An independent Morphe patch source for a shared MetaConfig override file across four Meta Android apps.
+A [Morphe](https://morphe.software) patch bundle that unlocks Meta's internal **Employee Options /
+developer options** in Instagram, Edits and Instants.
 
-## Morphe patches
+## ❓ About
 
-<!-- PATCHES_START -->
-> **[v1.0.0](https://github.com/hemk651/meta-patches/releases/tag/v1.0.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;4 patches total
-<details open>
-<summary>📦 Edits&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
-<br>
+The bundle ships one package-agnostic patch, **Unlock employee options**. It injects a tiny startup
+hook into the app's `Application` class that writes a `mc_overrides.json` file into the app's
+storage before Meta's MobileConfig framework initializes. Meta's apps then enable their hidden
+internal options menu, including developer options.
 
-**Package name:** `com.instagram.basel`
+The same patch works for all supported apps:
 
-| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
-|----------|----------------|-----------|
-| [Edits — compatibility entry](#edits-compatibility-entry) | Registers Edits package compatibility. Runtime config injection is not included yet. |  |
+| App | Package name |
+|-----|--------------|
+| 📷 Instagram | `com.instagram.android` |
+| 🎬 Edits | `com.instagram.basel` |
+| ⚡ Instants | `com.instagram.moonshot` |
 
-</details>
+### How to use these patches
 
-<details open>
-<summary>📦 Instagram&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
-<br>
+Click the button below, or manually add this repo url to Morphe Manager: https://github.com/hemk651/meta-patches
 
-**Package name:** `com.instagram.android`
+<a href="https://morphe.software/add-source?github=hemk651/meta-patches">
+  <img src=".github/assets/add-to-morphe.svg" alt="Add to Morphe" height="48">
+</a>
 
-| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
-|----------|----------------|-----------|
-| [Instagram — compatibility entry](#instagram-compatibility-entry) | Registers Instagram package compatibility. Runtime config injection is not included yet. |  |
+### The overrides file
 
-</details>
+The patch writes the following JSON by default (customizable through the
+`mc_overrides_json` option):
 
-<details open>
-<summary>📦 Instants&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
-<br>
+```json
+{"56474:":["0: : true"],"28538:":["0: : true"],"32432:":["1: : true"],"_qe_overrides_":[]}
+```
 
-**Package name:** `com.instagram.moonshot`
+To keep every write failure from breaking the app, the file is written atomically (temp file +
+rename), idempotently (an identical file is left untouched) and every failure is swallowed with
+a log line. The file is written to every location Meta apps are known to read it from:
 
-| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
-|----------|----------------|-----------|
-| [Instants — compatibility entry](#instants-compatibility-entry) | Registers Instants package compatibility. Runtime config injection is not included yet. |  |
+- `<app filesDir>/mobileconfig/mc_overrides.json` — the canonical internal location, always writable.
+- `<storage>/Android/data/<package>/files/mobileconfig/mc_overrides.json` — for every mounted
+  storage volume.
+- `<storage root>/data/files/mobileconfig/mc_overrides.json` — the layout some devices read
+  directly from the volume root. Writes there fail silently on modern scoped storage, which is
+  harmless.
 
-</details>
+## 🩹 Patches list
 
-<details open>
-<summary>📦 Threads&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
-<br>
+<!-- PATCHES_START EXPANDED -->
 
-**Package name:** `com.instagram.barcelona`
+<!-- Do not modify this section by hand. The patch list is generated when release.yml creates a new release.
+     
+     If you wish for the patches list to be collapsed, then remove the word 'EXPANDED' from the comment tag above.
 
-| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
-|----------|----------------|-----------|
-| [Threads — compatibility entry](#threads-compatibility-entry) | Registers Threads package compatibility. Runtime config injection is not included yet. |  |
+     If you wish to manually keep this list updated then remove the PATCHES_START and PATCHES_END 
+     comment blocks entirely. -->
 
-</details>
+#### A list of patches will automatically be shown here after the first patches release is created.
+
+&nbsp;
 
 <!-- PATCHES_END -->
 
-## Target apps
+## 🧑‍💻 Dev usage
 
-| App | Package ID | Verification |
-|---|---|---|
-| Instagram | `com.instagram.android` | Known package; target APK not yet tested |
-| Threads | `com.instagram.barcelona` | Known package; target APK not yet tested |
-| Edits | `com.instagram.basel` | Google Play package confirmed; target APK not yet tested |
-| Instants | `com.instagram.moonshot` | Candidate package; verify on-device before release |
+To develop and release these patches:
 
-## Feature
+- **Make all changes to the `alpha` branch.** `main` holds the stable releases.
+- For local development work build your patches using the gradle task `./gradlew buildAndroid` to
+  generate the mpp file found in `patches/build/libs/patches-*.mpp`. Apply your patches locally
+  using Morphe Desktop tool like any other patch bundle.
+- Always use [Semantic commit](https://kapeli.com/cheat_sheets/Semantic_Commits.docset/Contents/Resources/Documents/index) messages for commits. To keep it simple use only 3 commit message types: 
+  - `feat: Added a new feature`
+  - `fix: Some problem now fixed`
+  - `chore: Random change you do not want in the user facing changelog`
+- Commits of `fix:` and `feat:` will automatically generate new pre-releases and `chore:` will not create a new release.
+- Users can apply the alpha branch releases by enabling `pre-release` in Morphe Manager patch sources.
+- When the alpha branch is ready, and you want a stable release, merge alpha branch to main (do not squash, and only merge).
+- **Always use semantic release (release.yml)**. Do not manually upload or create releases by hand
+  because many files must be updated and release.yml handles everything.
+- Do not manually edit or manually commit any generated files such as: `patches-list.json`,
+  `patches-bundle.json`, `CHANGELOG.md`. These files will be automatically updated by `release.yml`.
+- Do not force push any semantic release commits as that will break all future releases.
 
-Install the same `mc_overrides.json` payload into each app's intended `mobileconfig` directory.
+### 🛠️ Building locally
 
-The requested destination pattern is:
+- Run `./gradlew buildAndroid`
+- The built patches .mpp file is found in `patches/build/libs/patches-*.mpp`
+- Patch the mpp file using [Morphe-Desktop](https://github.com/MorpheApp/morphe-desktop)
+  like any other patch bundle.
 
-```text
-/storage/<volume-id>/data/files/mobileconfig/mc_overrides.json
-```
+See the [Morphe documentation](https://github.com/MorpheApp/morphe-documentation) for more information.
 
-The volume ID is dynamic and must never be hard-coded.
+## 📜 License
 
-## Canonical configuration
-
-The single source of truth is [config/mc_overrides.json](config/mc_overrides.json). Validate it with:
-
-```bash
-python3 scripts/validate_config.py
-```
-
-## Android storage constraints
-
-On Android 11 and later, a normal app cannot assume write access to an arbitrary directory at the root of removable storage. Discovering a volume UUID does not grant write permission. The implementation must use a verified access path, such as a user-granted Storage Access Framework tree URI where appropriate, and must fail clearly if the requested destination cannot be written.
-
-The patch must not silently write to app-private storage or another folder as a fallback. It must also verify that the target app actually reads this file from the requested location.
-
-## Development status
-
-The repository contains the shared payload, validation, project metadata, and initial Morphe Gradle configuration. App-specific startup hooks, APK fingerprints, removable-storage write integration, and a verified build are still pending. No app is currently advertised as tested or working.
-
-## Risk and disclaimer
-
-MetaConfig experiments may be unstable, account-specific, or carry service/account risk. No safety or compatibility guarantee is made. This independent community project is not affiliated with Meta or Morphe.
+Meta Patches are licensed under the [GNU General Public License v3.0](LICENSE).
