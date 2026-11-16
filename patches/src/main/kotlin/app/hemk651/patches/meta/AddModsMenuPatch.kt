@@ -27,7 +27,6 @@ package app.hemk651.patches.meta
 import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
-import app.morphe.patcher.extensions.InstructionExtensions.getInstructionOrNull
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
@@ -38,11 +37,16 @@ import app.morphe.patcher.patch.resourceXml
 import app.morphe.patcher.util.addFreeRegisters
 import app.hemk651.patches.shared.MetaCompatibilities
 import com.android.tools.smali.dexlib2.Opcode
+import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.Instruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction
+import app.morphe.patcher.util.proxy.mutableTypes.encodedValue.MutableStringEncodedValue
+import com.android.tools.smali.dexlib2.iface.reference.FieldReference
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
-import com.android.tools.smali.dexlib2.iface.reference.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.StringReference
+import com.android.tools.smali.dexlib2.iface.value.StringEncodedValue
 
 private const val EXTENSION_PREFIX = "Lapp/hemk651/meta/extension/"
 private const val MODS_INIT_CLASS = "Lapp/hemk651/meta/extension/ModsInit;"
@@ -152,9 +156,16 @@ val addModsMenuPatch = patch(
             val method = appShellMatch.method
             if (!isExtensionReferenced(method)) {
                 val superCallIndex = appShellMatch.instructionMatches.first().index
-                val contextRegister = method
-                    .getInstruction<RegisterRangeInstruction>(superCallIndex)
-                    .startRegister
+                val superCall = method.getInstruction<Instruction>(superCallIndex)
+                val contextRegister = when (superCall) {
+                    // `invoke-super {v0}` uses the 35c format with the
+                    // registers in fixed slots; range invokes use 3rc.
+                    is FiveRegisterInstruction -> superCall.registerC
+                    is RegisterRangeInstruction -> superCall.startRegister
+                    else -> throw PatchException(
+                        "Unexpected invoke format of Application.onCreate: ${superCall.opcode}"
+                    )
+                }
 
                 val invocation = if (contextRegister < 16) {
                     "invoke-static {v$contextRegister}, $MODS_INIT_CLASS->init(Landroid/content/Context;)V"
@@ -243,7 +254,7 @@ val addModsMenuPatch = patch(
             .drop(addCallIndex + 1)
             .firstNotNullOfOrNull { instruction ->
                 ((instruction as? ReferenceInstruction)?.reference as? MethodReference)
-                    ?.take { it.definingClass == navigatorType && it.name != "<init>" }
+                    ?.takeIf { it.definingClass == navigatorType && it.name != "<init>" }
             }
             ?: throw PatchException("Navigator transition method not found")
 
@@ -308,40 +319,69 @@ val addModsMenuPatch = patch(
 
         // ---------------------------------------------------------------
         // Applied patches: fill the static patch list of the "Applied
-        // package patches" screen by replacing the placeholder string that
-        // feeds `appliedPatchesJson`.
+        // package patches" screen by replacing the placeholder value of
+        // `appliedPatchesJson`.
+        //
+        // d8 encodes a constant initializer in the dex `static_values` of the
+        // field (the `<clinit>` stays empty), so the field's initial value is
+        // replaced when present; otherwise the `const-string` that feeds the
+        // `sput-object` of `<clinit>` is replaced.
         // ---------------------------------------------------------------
-        val clinitMatch = ModsPatchesInfoClinitFingerprint.matchOrNull()
-            ?: throw PatchException("ModsPatchesInfoActivity.<clinit> did not match")
+        val infoMatch = ModsPatchesInfoClassFingerprint.matchOrNull()
+            ?: throw PatchException("ModsPatchesInfoActivity did not match")
 
-        val clinitMethod = clinitMatch.method
-        val sputIndex = clinitMatch.instructionMatches.first().index
+        val infoClass = infoMatch.classDef
+        val jsonField = infoClass.fields.firstOrNull { it.name == "appliedPatchesJson" }
+            ?: throw PatchException("appliedPatchesJson field not found")
 
-        var constIndex = -1
-        for (index in (sputIndex - 1) downTo maxOf(0, sputIndex - 4)) {
-            val instruction = clinitMethod.getInstructionOrNull(index) ?: break
-            if (instruction.opcode == Opcode.CONST_STRING ||
-                instruction.opcode == Opcode.CONST_STRING_JUMBO
-            ) {
-                constIndex = index
-                break
-            }
-        }
-        if (constIndex < 0) {
-            throw PatchException("appliedPatchesJson placeholder string not found")
-        }
-
-        val register = clinitMethod
-            .getInstruction<OneRegisterInstruction>(constIndex)
-            .registerA
-
-        val json = "[" + APPLIED_PATCHES.joinToString(",") { (name, description) ->
+        val patchesJson = "[" + APPLIED_PATCHES.joinToString(",") { (name, description) ->
             """{"name":"$name","description":"$description"}"""
         } + "]"
 
-        clinitMethod.replaceInstruction(
-            constIndex,
-            "const-string v$register, ${json.smaliLiteral()}"
-        )
+        when (val initialValue = jsonField.initialValue) {
+            is MutableStringEncodedValue -> initialValue.setValue(patchesJson)
+            is StringEncodedValue -> jsonField.setInitialValue(
+                MutableStringEncodedValue(initialValue).apply { setValue(patchesJson) }
+            )
+            else -> replaceClinitPlaceholder(infoClass, patchesJson)
+        }
     }
+}
+
+/**
+ * Replaces the `const-string` placeholder that feeds the `sput-object` of
+ * `appliedPatchesJson` in `<clinit>`, for dex files where the static value is
+ * not encoded in the field's initial value.
+ */
+private fun replaceClinitPlaceholder(
+    infoClass: app.morphe.patcher.util.proxy.mutableTypes.MutableClass,
+    patchesJson: String
+) {
+    val clinitMethod = infoClass.methods.firstOrNull { it.name == "<clinit>" }
+        ?: throw PatchException("appliedPatchesJson placeholder not found")
+
+    val infoClassType = "Lapp/hemk651/meta/extension/activity/ModsPatchesInfoActivity;"
+    val sputIndex = clinitMethod.instructions.indexOfFirst { instruction ->
+        instruction.opcode == Opcode.SPUT_OBJECT && run {
+            val reference = (instruction as? ReferenceInstruction)?.reference as? FieldReference
+            reference?.definingClass == infoClassType &&
+                    reference.name == "appliedPatchesJson" &&
+                    reference.type == "Ljava/lang/String;"
+        }
+    }
+    if (sputIndex < 1) {
+        throw PatchException("appliedPatchesJson placeholder not found")
+    }
+
+    val constInstruction = clinitMethod.getInstruction<OneRegisterInstruction>(sputIndex - 1)
+    if (constInstruction.opcode != Opcode.CONST_STRING &&
+        constInstruction.opcode != Opcode.CONST_STRING_JUMBO
+    ) {
+        throw PatchException("appliedPatchesJson placeholder not found")
+    }
+
+    clinitMethod.replaceInstruction(
+        sputIndex - 1,
+        "const-string v${constInstruction.registerA}, ${patchesJson.smaliLiteral()}"
+    )
 }

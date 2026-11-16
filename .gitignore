@@ -2,6 +2,9 @@
 # Private key that signs the patches file
 morphe-signing.key
 
+# Kotlin compiler cache
+.kotlin/
+
 ### Java template
 # Compiled class file
 *.class

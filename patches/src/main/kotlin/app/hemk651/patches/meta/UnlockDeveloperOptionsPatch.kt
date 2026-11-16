@@ -14,7 +14,7 @@ package app.hemk651.patches.meta
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.methodCall
 import app.morphe.patcher.patch.PatchException
-import app.morphe.patcher.patch.classDefBy
+import app.morphe.patcher.patch.classDefByOrNull
 import app.morphe.patcher.patch.patch
 import app.morphe.patcher.util.returnLate
 import app.hemk651.patches.shared.MetaCompatibilities
@@ -39,7 +39,7 @@ val unlockDeveloperOptionsPatch = patch(
         var gateMatched = false
 
         for (referenceClass in employeeOptionsReferenceClasses) {
-            val referenceClassDef = classDefBy(referenceClass) ?: continue
+            val referenceClassDef = classDefByOrNull(referenceClass) ?: continue
 
             val gateCallFingerprint = Fingerprint(
                 filters = listOf(
@@ -60,7 +60,7 @@ val unlockDeveloperOptionsPatch = patch(
                 .methodReference
                 .definingClass
 
-            val gateClassDef = classDefBy(gateClassType) ?: continue
+            val gateClassDef = classDefByOrNull(gateClassType) ?: continue
 
             val gateMethodFingerprint = Fingerprint(
                 isStatic = true,

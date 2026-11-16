@@ -218,21 +218,16 @@ internal object ModsHomeSheetOpenDeveloperOptionsFingerprint : Fingerprint(
 )
 
 /**
- * The `<clinit>` of the merged extension class that holds the applied patches
- * information shown in the menu ("Applied package patches" screen).
+ * The merged extension class that holds the applied patches information shown
+ * in the menu ("Applied package patches" screen).
  *
  * [app.hemk651.patches.meta.AddModsMenuPatch] replaces the placeholder
- * `const-string "[]"` that feeds the `appliedPatchesJson` static field with the
- * static list of the bundle patches.
+ * `[]` value of the `appliedPatchesJson` static field with the static list of
+ * the bundle patches. The value can be encoded as the field's initial value in
+ * the dex `static_values` (d8 moves constant initializers there) or assigned
+ * by a `const-string` in `<clinit>`; both forms are handled.
  */
-internal object ModsPatchesInfoClinitFingerprint : Fingerprint(
+internal object ModsPatchesInfoClassFingerprint : Fingerprint(
     definingClass = "Lapp/hemk651/meta/extension/activity/ModsPatchesInfoActivity;",
-    name = "<clinit>",
-    filters = listOf(
-        fieldAccess(
-            opcode = Opcode.SPUT_OBJECT,
-            name = "appliedPatchesJson",
-            type = "Ljava/lang/String;"
-        )
-    )
+    name = "<init>"
 )

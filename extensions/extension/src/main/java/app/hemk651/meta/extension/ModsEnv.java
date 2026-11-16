@@ -13,7 +13,9 @@
 package app.hemk651.meta.extension;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 
 /**
  * Build information and repository metadata of the patch bundle.
@@ -64,7 +66,7 @@ public class ModsEnv {
      */
     public static String getIgVersion(Context ctx) {
         if (igVersion == null) {
-            igVersion = resolvePackageProperty(ctx, PackageManager::getVersionName);
+            igVersion = readPackageInfo(ctx, false);
         }
         return igVersion == null ? "unknown" : igVersion;
     }
@@ -74,23 +76,25 @@ public class ModsEnv {
      */
     public static String getIgVersionCode(Context ctx) {
         if (igVersionCode == null) {
-            igVersion = null;
-            igVersionCode = resolvePackageProperty(ctx, PackageManager::getLongVersionCode)
-                    .map(Object::toString)
-                    .orElse(null);
+            igVersionCode = readPackageInfo(ctx, true);
         }
         return igVersionCode == null ? "unknown" : igVersionCode;
     }
 
-    private interface PropertyResolver {
-        Object resolve(PackageManager pm, String packageName) throws Exception;
-    }
-
-    private static String resolvePackageProperty(Context ctx, PropertyResolver resolver) {
+    /**
+     * Reads the version name or version code of the host package.
+     */
+    private static String readPackageInfo(Context ctx, boolean versionCode) {
         try {
-            Object value = resolver.resolve(
-                    ctx.getPackageManager(), ctx.getPackageName());
-            return value == null ? null : value.toString();
+            PackageManager pm = ctx.getPackageManager();
+            PackageInfo info = pm.getPackageInfo(ctx.getPackageName(), 0);
+            if (versionCode) {
+                long code = Build.VERSION.SDK_INT >= 28
+                        ? info.getLongVersionCode()
+                        : info.versionCode;
+                return Long.toString(code);
+            }
+            return info.versionName;
         } catch (Exception e) {
             return null;
         }
