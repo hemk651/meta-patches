@@ -1,0 +1,347 @@
+/*
+ * Meta Patches — Add Mods menu.
+ *
+ * Ported from InstaFL patcher-core "Add Initialize Instafel",
+ * "Change Home Long Click" and "Add App Trigger"
+ * (https://github.com/mamiiblt/instafel) by mamiiblt (Muhammed Ali Bulut),
+ * rebranded and reworked for the Morphe patcher.
+ *
+ * InstaFL copies its embedded UI classes into the app and wires them up with
+ * separate smali patches. The Morphe port ships the same UI as a merged
+ * extension (`extensions/extension.mpe`) and does the wiring at patch time:
+ *
+ *   - the Application.onCreate of the app shell initializes the extension,
+ *   - the home long press listener is replaced so a long press on the feed
+ *     opens the Mods quick menu sheet,
+ *   - the quick menu "Developer options" entry is filled with the app's own
+ *     FragmentNavigator code, recovered from UserDetailFragment,
+ *   - the manifest receives the menu activities,
+ *   - the "Applied package patches" screen is filled with the patch list.
+ *
+ * This file is part of Meta Patches, licensed under the GNU General Public
+ * License version 3. https://www.gnu.org/licenses/gpl-3.0.html
+ */
+
+package app.hemk651.patches.meta
+
+import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
+import app.morphe.patcher.extensions.InstructionExtensions.getInstructionOrNull
+import app.morphe.patcher.extensions.InstructionExtensions.instructions
+import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
+import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
+import app.morphe.patcher.patch.PatchException
+import app.morphe.patcher.patch.classDefByOrNull
+import app.morphe.patcher.patch.patch
+import app.morphe.patcher.patch.resourceXml
+import app.morphe.patcher.util.addFreeRegisters
+import app.hemk651.patches.shared.MetaCompatibilities
+import com.android.tools.smali.dexlib2.Opcode
+import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.RegisterRangeInstruction
+import com.android.tools.smali.dexlib2.iface.reference.MethodReference
+import com.android.tools.smali.dexlib2.iface.reference.ReferenceInstruction
+import com.android.tools.smali.dexlib2.iface.reference.StringReference
+
+private const val EXTENSION_PREFIX = "Lapp/hemk651/meta/extension/"
+private const val MODS_INIT_CLASS = "Lapp/hemk651/meta/extension/ModsInit;"
+private const val MODS_DEV_HOLDER_CLASS = "Lapp/hemk651/meta/extension/ModsDevHolder;"
+private const val MODS_HOME_SHEET_CLASS = "Lapp/hemk651/meta/extension/ModsHomeSheet;"
+private const val MODS_HOME_SHEET_HANDLER_CLASS = "Lapp/hemk651/meta/extension/ModsHomeSheetHandler;"
+private const val IG_MAIN_ACTIVITY_TYPE = "Lcom/instagram/mainactivity/InstagramMainActivity;"
+private const val USER_SESSION_TYPE = "Lcom/instagram/common/session/UserSession;"
+private const val QUICK_EXPERIMENT_FRAGMENT_TYPE =
+    "Lcom/instagram/debug/quickexperiment/QuickExperimentCategoriesFragment;"
+private const val FRAGMENT_ACTIVITY_TYPE = "Landroidx/fragment/app/FragmentActivity;"
+
+/**
+ * The menu activities that have to be declared in the app manifest.
+ */
+private val MODS_ACTIVITIES = listOf(
+    "app.hemk651.meta.extension.activity.ModsMenuActivity",
+    "app.hemk651.meta.extension.activity.ModsAboutActivity",
+    "app.hemk651.meta.extension.activity.ModsPatchesInfoActivity",
+    "app.hemk651.meta.extension.activity.ModsBuildInfoActivity",
+    "app.hemk651.meta.extension.activity.ModsMiscActivity",
+    "app.hemk651.meta.extension.activity.ModsLanguageActivity",
+    "app.hemk651.meta.extension.activity.ModsCrashReportsActivity",
+    "app.hemk651.meta.extension.activity.ModsCrashViewerActivity"
+)
+
+/**
+ * The static patch list shown in the menu's "Applied package patches" screen.
+ *
+ * Like InstaFL, the bundle declares this list itself; the patcher does not
+ * expose the applied patch set to a patch.
+ */
+private val APPLIED_PATCHES = listOf(
+    "Remove ads" to "Removes ads in Instagram by stopping the ad pod flow.",
+    "Remove snooze warning" to "Removes the \"build expired\" snooze warning dialog that alpha builds show.",
+    "Unlock developer options" to "Unlocks the employee options (developer options) menu.",
+    "AMOLED theme" to "Forces Instagram dark theme surfaces to pure black (AMOLED).",
+    "Change channel name" to "Replaces the release channel name (NONE, ALPHA, BETA, PROD) shown in the developer options UI.",
+    "Add Mods menu" to "Adds the Mods menu (home long press) with the ported InstaFL tools."
+)
+
+/**
+ * Renders a [MethodReference] as a smali reference, e.g.
+ * `LX/01Jn;->A0I(Landroidx/fragment/app/Fragment;)V`.
+ */
+private fun MethodReference.smaliText(): String =
+    "$definingClass->${name}(${parameterTypes.joinToString("")})$returnType"
+
+/**
+ * The smali text of a string literal with smali escaping applied.
+ */
+private fun String.smaliLiteral(): String =
+    "\"" + replace("\\", "\\\\").replace("\"", "\\\"") + "\""
+
+/**
+ * Whether the method already references an extension class.
+ */
+private fun isExtensionReferenced(method: com.android.tools.smali.dexlib2.iface.Method): Boolean =
+    method.instructions.any { instruction ->
+        when (val reference = (instruction as? ReferenceInstruction)?.reference) {
+            is MethodReference -> reference.definingClass.startsWith(EXTENSION_PREFIX)
+            is StringReference -> reference.string.contains(EXTENSION_PREFIX)
+            else -> false
+        }
+    }
+
+@Suppress("unused")
+val addModsMenuPatch = patch(
+    name = "Add Mods menu",
+    description = "Adds the Mods menu (fork of the InstaFL menu): long press the home feed to open the quick menu, incl. developer options.",
+    default = false
+) {
+    compatibleWith(MetaCompatibilities.INSTAGRAM)
+
+    extendWith("extensions/extension.mpe")
+
+    execute {
+        // ---------------------------------------------------------------
+        // Manifest: add the menu activities, once.
+        // ---------------------------------------------------------------
+        resourceXml("AndroidManifest.xml").use { manifest ->
+            val application = manifest.elements("application").firstOrNull()
+                ?: throw PatchException("Could not find the <application> element in the manifest")
+
+            for (activity in MODS_ACTIVITIES) {
+                val declared = application.children("activity")
+                    .any { it.attribute("android:name") == activity }
+                if (declared) {
+                    continue
+                }
+                application.appendChild("activity") {
+                    setAttribute("android:name", activity)
+                    setAttribute("android:exported", "false")
+                }
+            }
+        }
+
+        // ---------------------------------------------------------------
+        // Init: inject the extension initialization right after the
+        // Application.onCreate super call of the app shell.
+        //
+        // InstaFL additionally builds its crash handler inline in smali; the
+        // Morphe port installs the crash handler inside `ModsInit.init`, so a
+        // single static call using the super call's own register is enough.
+        // ---------------------------------------------------------------
+        InstagramAppShellOnCreateFingerprint.matchOrNull()?.let { appShellMatch ->
+            val method = appShellMatch.method
+            if (!isExtensionReferenced(method)) {
+                val superCallIndex = appShellMatch.instructionMatches.first().index
+                val contextRegister = method
+                    .getInstruction<RegisterRangeInstruction>(superCallIndex)
+                    .startRegister
+
+                val invocation = if (contextRegister < 16) {
+                    "invoke-static {v$contextRegister}, $MODS_INIT_CLASS->init(Landroid/content/Context;)V"
+                } else {
+                    "invoke-static/range {v$contextRegister}, $MODS_INIT_CLASS->init(Landroid/content/Context;)V"
+                }
+                method.addInstruction(superCallIndex + 1, invocation)
+            }
+        } ?: throw PatchException("InstagramAppShell.onCreate did not match")
+
+        // ---------------------------------------------------------------
+        // Home long press: replace the listener body.
+        //
+        // The original body performs MobileConfig driven feed interactions;
+        // InstaFL swaps it for a handler that stores the activity / session
+        // and opens the quick menu sheet. The synthetic field names of the
+        // class are recovered at patch time, since they are obfuscated and
+        // differ between builds.
+        // ---------------------------------------------------------------
+        val longClickMatch = HomeLongClickFingerprint.matchOrNull()
+        if (longClickMatch == null) {
+            // The string anchor is gone only if the listener was already
+            // replaced; look the class up without the anchor to tell apart
+            // "already patched" from "not found".
+            val listenerClass = classDefByOrNull { classDef ->
+                classDef.interfaces.contains("Landroid/view/View${'$'}OnLongClickListener;") &&
+                        classDef.fields.any { it.type == IG_MAIN_ACTIVITY_TYPE } &&
+                        classDef.fields.any { it.type == USER_SESSION_TYPE }
+            }
+            val listenerMethod = listenerClass?.methods?.firstOrNull { it.name == "onLongClick" }
+            if (listenerClass == null || listenerMethod == null ||
+                !isExtensionReferenced(listenerMethod)
+            ) {
+                throw PatchException("Home long click listener did not match")
+            }
+        } else {
+            val classDef = longClickMatch.classDef
+            val activityField = classDef.fields.first { it.type == IG_MAIN_ACTIVITY_TYPE }.name
+            val sessionField = classDef.fields.first { it.type == USER_SESSION_TYPE }.name
+            val classType = classDef.type
+
+            val method = longClickMatch.method
+            val instructionCount = method.instructions.count()
+            method.removeInstructions(0, instructionCount)
+            method.addInstructions(
+                0,
+                """
+                iget-object v0, p0, $classType->$activityField:$IG_MAIN_ACTIVITY_TYPE
+                iget-object v1, p0, $classType->$sessionField:$USER_SESSION_TYPE
+                invoke-static {v0, v1}, $MODS_DEV_HOLDER_CLASS->set(Landroid/app/Activity;Ljava/lang/Object;)V
+                new-instance v2, $MODS_HOME_SHEET_HANDLER_CLASS
+                invoke-direct {v2, v0}, $MODS_HOME_SHEET_HANDLER_CLASS-><init>(Landroid/content/Context;)V
+                invoke-interface {v2, p1}, Landroid/view/View${'$'}OnLongClickListener;->onLongClick(Landroid/view/View;)Z
+                move-result v0
+                return v0
+                """.trimIndent()
+            )
+        }
+
+        // ---------------------------------------------------------------
+        // Developer options: fill the quick menu's `openDeveloperOptions`
+        // with the app's own fragment navigation code.
+        //
+        // The navigation internals are recovered the same way InstaFL
+        // recovers them: from the UserDetailFragment call site that
+        // navigates to a bare `Landroidx/fragment/app/Fragment;`:
+        //   - the method call defines the navigator class and its add method,
+        //   - the next call on the navigator is its transition method,
+        //   - the constructor signature is taken from the `invoke-direct`
+        //     that builds the navigator (or from the navigator class itself
+        //     as a fallback).
+        // ---------------------------------------------------------------
+        val navigatorMatch = UserDetailNavigatorFingerprint.matchOrNull()
+            ?: throw PatchException("UserDetailFragment navigator call did not match")
+
+        val navigatorCall = navigatorMatch.instructionMatches.first()
+        val addMethodReference = navigatorCall.methodReference
+        val navigatorType = addMethodReference.definingClass
+
+        val containerInstructions = navigatorMatch.method.instructions.toList()
+        val addCallIndex = navigatorCall.index
+
+        // The transition method is the next call on the navigator after the
+        // add call.
+        val transitionReference = containerInstructions
+            .drop(addCallIndex + 1)
+            .firstNotNullOfOrNull { instruction ->
+                ((instruction as? ReferenceInstruction)?.reference as? MethodReference)
+                    ?.take { it.definingClass == navigatorType && it.name != "<init>" }
+            }
+            ?: throw PatchException("Navigator transition method not found")
+
+        // The constructor signature is taken from the nearest `invoke-direct`
+        // that builds the navigator before the add call.
+        val constructorParameterTypes =
+            containerInstructions.take(addCallIndex).lastOrNull { instruction ->
+                val reference = (instruction as? ReferenceInstruction)?.reference as? MethodReference
+                reference != null &&
+                        reference.definingClass == navigatorType &&
+                        reference.name == "<init>"
+            }
+                ?.let { (it as ReferenceInstruction).reference as MethodReference }
+                ?.parameterTypes
+                ?: classDefByOrNull(navigatorType)?.methods
+                    ?.firstOrNull { method ->
+                        method.name == "<init>" &&
+                                method.parameterTypes.size == 2 &&
+                                method.parameterTypes[0] == FRAGMENT_ACTIVITY_TYPE
+                    }
+                    ?.parameterTypes
+                ?: throw PatchException("Navigator constructor not found")
+
+        if (constructorParameterTypes.size != 2 ||
+            constructorParameterTypes[0] != FRAGMENT_ACTIVITY_TYPE
+        ) {
+            throw PatchException(
+                "Unsupported navigator constructor: ${constructorParameterTypes.joinToString("")}"
+            )
+        }
+        val sessionType = constructorParameterTypes[1]
+
+        val sheetMatch = ModsHomeSheetOpenDeveloperOptionsFingerprint.matchOrNull()
+            ?: throw PatchException("openDeveloperOptions placeholder did not match")
+
+        // `openDeveloperOptions()V` is an instance method with only p0, so the
+        // replacement body needs four more registers than the placeholder has.
+        val (method, addedInstructions) = sheetMatch.method.addFreeRegisters(4)
+        method.removeInstructions(
+            addedInstructions,
+            method.instructions.count() - addedInstructions
+        )
+        method.addInstructions(
+            addedInstructions,
+            """
+            invoke-static {}, $MODS_DEV_HOLDER_CLASS->getActivity()Landroid/app/Activity;
+            move-result-object v1
+            invoke-static {}, $MODS_DEV_HOLDER_CLASS->getSession()Ljava/lang/Object;
+            move-result-object v2
+            check-cast v1, $FRAGMENT_ACTIVITY_TYPE
+            check-cast v2, $sessionType
+            new-instance v3, $QUICK_EXPERIMENT_FRAGMENT_TYPE
+            invoke-direct {v3}, $QUICK_EXPERIMENT_FRAGMENT_TYPE-><init>()V
+            new-instance v4, $navigatorType
+            invoke-direct {v4, v1, v2}, ${navigatorType}-><init>(${constructorParameterTypes.joinToString("")})V
+            invoke-virtual {v4, v3}, ${addMethodReference.smaliText()}
+            invoke-virtual {v4}, ${transitionReference.smaliText()}
+            invoke-virtual {v0}, $MODS_HOME_SHEET_CLASS->dismissSheetDialog()V
+            return-void
+            """.trimIndent()
+        )
+
+        // ---------------------------------------------------------------
+        // Applied patches: fill the static patch list of the "Applied
+        // package patches" screen by replacing the placeholder string that
+        // feeds `appliedPatchesJson`.
+        // ---------------------------------------------------------------
+        val clinitMatch = ModsPatchesInfoClinitFingerprint.matchOrNull()
+            ?: throw PatchException("ModsPatchesInfoActivity.<clinit> did not match")
+
+        val clinitMethod = clinitMatch.method
+        val sputIndex = clinitMatch.instructionMatches.first().index
+
+        var constIndex = -1
+        for (index in (sputIndex - 1) downTo maxOf(0, sputIndex - 4)) {
+            val instruction = clinitMethod.getInstructionOrNull(index) ?: break
+            if (instruction.opcode == Opcode.CONST_STRING ||
+                instruction.opcode == Opcode.CONST_STRING_JUMBO
+            ) {
+                constIndex = index
+                break
+            }
+        }
+        if (constIndex < 0) {
+            throw PatchException("appliedPatchesJson placeholder string not found")
+        }
+
+        val register = clinitMethod
+            .getInstruction<OneRegisterInstruction>(constIndex)
+            .registerA
+
+        val json = "[" + APPLIED_PATCHES.joinToString(",") { (name, description) ->
+            """{"name":"$name","description":"$description"}"""
+        } + "]"
+
+        clinitMethod.replaceInstruction(
+            constIndex,
+            "const-string v$register, ${json.smaliLiteral()}"
+        )
+    }
+}
