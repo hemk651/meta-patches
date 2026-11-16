@@ -21,6 +21,13 @@ dependencies {
 }
 
 tasks {
+    test {
+        // The test sources are verification harnesses with main() entry points
+        // (:patches:instagramApkBuild, :patches:dexHierarchyCheck), not JUnit
+        // tests, so the test task legitimately discovers none.
+        failOnNoDiscoveredTests = false
+    }
+
     register<JavaExec>("generatePatchesList") {
         description = "Build patch with patch list"
         dependsOn(build)
