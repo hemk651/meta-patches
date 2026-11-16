@@ -1,3 +1,14 @@
+## [1.1.0-dev.4](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.3...v1.1.0-dev.4) (2026-11-16)
+
+### ✨ New Features
+
+* **instagram:** port InstaFL patch set to Morphe format ([df83535](https://github.com/hemk651/meta-patches/commit/df835353ad4b95dc665b3b6d631765b0b198a6b0))
+
+### 🐛 Bug Fixes
+
+* **ci:** run the verification harnesses outside the test task ([f4576ea](https://github.com/hemk651/meta-patches/commit/f4576ea0189c672f767349ca60bd44b93b7cc6a7))
+* **instagram:** verify full patch run against the real APK ([387b40f](https://github.com/hemk651/meta-patches/commit/387b40fe50d34275ddf0716021caaf8bbf817635))
+
 ## [1.1.0-dev.3](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.2...v1.1.0-dev.3) (2026-11-11)
 
 ### 🐛 Bug Fixes
