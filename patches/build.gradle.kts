@@ -17,6 +17,7 @@ val patchListGeneratorClasspath = configurations.create("patchListGeneratorClass
 dependencies {
     compileOnly(libs.gson)
     patchListGeneratorClasspath(libs.gson)
+    testImplementation(libs.coroutines.core)
 }
 
 tasks {
@@ -25,6 +26,24 @@ tasks {
         dependsOn(build)
         classpath = sourceSets["main"].runtimeClasspath + patchListGeneratorClasspath
         mainClass.set("util.PatchListGeneratorKt")
+    }
+
+    register<JavaExec>("instagramApkBuild") {
+        description = "Apply all patches to a stock Instagram APK and verify the DEX"
+        dependsOn(compileTestKotlin)
+        classpath = sourceSets["test"].runtimeClasspath
+        mainClass.set("util.InstagramApkBuildKt")
+        // The cross-DEX class hierarchy verification of the large Instagram
+        // DEX files needs more than the default heap fraction.
+        jvmArgs("-Xmx2g")
+    }
+
+    register<JavaExec>("dexHierarchyCheck") {
+        description = "Run the cross-DEX class hierarchy verification on a DEX directory"
+        dependsOn(compileTestKotlin)
+        classpath = sourceSets["test"].runtimeClasspath
+        mainClass.set("util.DexHierarchyCheckKt")
+        jvmArgs("-Xmx2g")
     }
 
     publish {
