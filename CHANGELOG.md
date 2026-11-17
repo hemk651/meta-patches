@@ -1,3 +1,9 @@
+## [1.1.0-dev.7](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.6...v1.1.0-dev.7) (2026-11-17)
+
+### 🐛 Bug Fixes
+
+* **instagram:** embed the full ad-blocking override payload ([9996154](https://github.com/hemk651/meta-patches/commit/99961542ff950700980271b69a508376cc0587c6)), closes [150/#160](https://github.com/150/meta-patches/issues/160)
+
 ## [1.1.0-dev.6](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.5...v1.1.0-dev.6) (2026-11-17)
 
 ### 🐛 Bug Fixes
