@@ -2,6 +2,12 @@
 
 An independent Morphe patch source for a shared MetaConfig override file across four Meta Android apps.
 
+> This project is a fork of [InstaFL](https://github.com/mamiiblt/instafel) by
+> [mamiiblt](https://github.com/mamiiblt) (Muhammed Ali Bulut). The menu, the
+> tools and the patch ideas come from InstaFL — thank you for building and
+> sharing the project. Meta Patches is an independent fork; it is not
+> affiliated with InstaFL, Meta, or Instagram.
+
 ## Morphe patches
 
 <!-- PATCHES_START -->

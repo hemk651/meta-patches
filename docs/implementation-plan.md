@@ -1,5 +1,11 @@
 # Implementation plan
 
+> **Origin:** This project is a fork of [InstaFL](https://github.com/mamiiblt/instafel)
+> by [mamiiblt](https://github.com/mamiiblt) (Muhammed Ali Bulut). The patch
+> ideas, the embedded menu and the developer-options approach originate from
+> InstaFL; credit belongs to its author. Meta Patches is an independent fork
+> and is not affiliated with InstaFL, Meta, or Instagram.
+
 ## Scope
 
 Exactly four apps are in scope: Instagram, Threads, Edits, and Instantss. The configuration payload is shared; package compatibility, startup hooks, and storage access are app-specific.
