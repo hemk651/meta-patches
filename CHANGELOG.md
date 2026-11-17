@@ -1,3 +1,9 @@
+## [1.1.0-dev.9](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.8...v1.1.0-dev.9) (2026-11-17)
+
+### 🐛 Bug Fixes
+
+* **instagram:** fix Mods menu crash on home long press ([f314482](https://github.com/hemk651/meta-patches/commit/f314482d3da639b43b56f739dd337c729bfb87eb))
+
 ## [1.1.0-dev.8](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.7...v1.1.0-dev.8) (2026-11-17)
 
 ### 🐛 Bug Fixes
