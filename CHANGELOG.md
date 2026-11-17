@@ -1,3 +1,9 @@
+## [1.1.0-dev.13](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.12...v1.1.0-dev.13) (2026-11-17)
+
+### ✨ New Features
+
+* **instants:** port the Instants Mod from Wagg13 for Instagram Instants ([31f3ef9](https://github.com/hemk651/meta-patches/commit/31f3ef945cd6c5c81e07b44ad1b73cd95ee76455))
+
 ## [1.1.0-dev.12](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.11...v1.1.0-dev.12) (2026-11-17)
 
 ### ✨ New Features
