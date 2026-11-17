@@ -1,3 +1,13 @@
+## [1.1.0-dev.12](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.11...v1.1.0-dev.12) (2026-11-17)
+
+### ✨ New Features
+
+* **instagram:** port the InstaFL overrides backup import ([52514fd](https://github.com/hemk651/meta-patches/commit/52514fd05d94955030a10bb58043d9f90515dca0))
+
+### 🐛 Bug Fixes
+
+* **instagram:** fix the Mods menu items that failed on device ([583fdbf](https://github.com/hemk651/meta-patches/commit/583fdbfce735cb0791e54d5a38262a9de05df24b))
+
 ## [1.1.0-dev.11](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.10...v1.1.0-dev.11) (2026-11-17)
 
 ### 🐛 Bug Fixes

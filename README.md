@@ -9,7 +9,7 @@ An independent Morphe patch source for Instagram.
 > affiliated with InstaFL, Meta, or Instagram.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.1.0-dev.11](https://github.com/hemk651/meta-patches/releases/tag/v1.1.0-dev.11)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;6 patches total
+> **[v1.1.0-dev.12](https://github.com/hemk651/meta-patches/releases/tag/v1.1.0-dev.12)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;6 patches total
 <details open>
 <summary>📦 Instagram&nbsp;&nbsp;•&nbsp;&nbsp;6 patches</summary>
 <br>
