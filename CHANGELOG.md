@@ -1,3 +1,9 @@
+## [1.1.0-dev.6](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.5...v1.1.0-dev.6) (2026-11-17)
+
+### 🐛 Bug Fixes
+
+* **instagram:** remove the unused SAF packaging patches and dead installer machinery ([2fe8abf](https://github.com/hemk651/meta-patches/commit/2fe8abf7e97cb353076d398405e8415a2e423011))
+
 ## [1.1.0-dev.5](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.4...v1.1.0-dev.5) (2026-11-17)
 
 ### 🐛 Bug Fixes
