@@ -84,6 +84,7 @@ private val MODS_ACTIVITIES = listOf(
     "app.hemk651.meta.extension.activity.ModsBuildInfoActivity",
     "app.hemk651.meta.extension.activity.ModsMiscActivity",
     "app.hemk651.meta.extension.activity.ModsLanguageActivity",
+    "app.hemk651.meta.extension.activity.ModsImportBackupActivity",
     "app.hemk651.meta.extension.activity.ModsCrashReportsActivity",
     "app.hemk651.meta.extension.activity.ModsCrashViewerActivity"
 )
@@ -115,6 +116,22 @@ private fun MethodReference.smaliText(): String =
  */
 private fun String.smaliLiteral(): String =
     "\"" + replace("\\", "\\\\").replace("\"", "\\\"") + "\""
+
+/**
+ * Escapes a string for embedding in the JSON array of applied patches.
+ *
+ * The descriptions contain literal quotes (e.g. the "build expired" snooze
+ * warning), which without escaping break the JSON the menu parses at
+ * runtime — every `JSONArray` read then throws and the "Applied package
+ * patches" screen shows "Failed to read the applied patches." instead of
+ * the patch list (reported on device, v1.1.0-dev.11).
+ */
+private fun jsonEscape(value: String): String =
+    value.replace("\\", "\\\\")
+        .replace("\"", "\\\"")
+        .replace("\n", "\\n")
+        .replace("\r", "\\r")
+        .replace("\t", "\\t")
 
 /**
  * Whether the method already references an extension class.
@@ -409,7 +426,7 @@ val addModsMenuPatch = patch(
             ?: throw PatchException("appliedPatchesJson field not found")
 
         val patchesJson = "[" + APPLIED_PATCHES.joinToString(",") { (name, description) ->
-            """{"name":"$name","description":"$description"}"""
+            """{"name":"${jsonEscape(name)}","description":"${jsonEscape(description)}"}"""
         } + "]"
 
         when (val initialValue = jsonField.initialValue) {

@@ -17,9 +17,11 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowInsets;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -96,15 +98,41 @@ public final class ModsUi {
         return scroll;
     }
 
+    /**
+     * Pads the page root by the system bar insets so titles and tiles never
+     * sit under the status bar or navigation bar.
+     *
+     * Android 15 (SDK 35) enforces edge-to-edge: the window content is laid
+     * out behind the system bars, so without this every page title touched
+     * the status bar (reported on device). Call once after building the root
+     * view, before {@code setContentView}.
+     */
+    public static void applySystemBarInsets(View root) {
+        if (Build.VERSION.SDK_INT >= 30) {
+            root.setOnApplyWindowInsetsListener((v, insets) -> {
+                android.graphics.Insets bars = insets.getInsets(
+                        WindowInsets.Type.statusBars()
+                                | WindowInsets.Type.navigationBars()
+                                | WindowInsets.Type.displayCutout());
+                v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+                return WindowInsets.CONSUMED;
+            });
+        } else {
+            // Older releases lay the window out below the bars as soon as the
+            // root asks to fit system windows.
+            root.setFitsSystemWindows(true);
+        }
+    }
+
     /** Page title above the content column. */
     public TextView pageTitle(String text) {
         TextView title = new TextView(ctx);
         title.setText(text);
         title.setTextColor(textColor());
-        title.setTextSize(26);
+        title.setTextSize(24);
         title.setTypeface(Typeface.DEFAULT_BOLD);
         title.setGravity(Gravity.CENTER_VERTICAL);
-        title.setPadding(dp(20), dp(22), dp(20), dp(12));
+        title.setPadding(dp(20), dp(16), dp(20), dp(10));
         return title;
     }
 
