@@ -1,3 +1,7 @@
+import java.io.ByteArrayOutputStream
+import java.util.Base64
+import java.util.zip.Deflater
+
 extension {
     name = "extensions/extension.mpe"
 }
@@ -10,6 +14,11 @@ extension {
  * `config/mc_overrides.json` stays the canonical, validated source of
  * truth (see scripts/validate_config.py). It must be a single line —
  * Instagram's loader only reliably parses compact single-line JSON.
+ *
+ * The payload is deflated and base64-encoded before being embedded as a
+ * BuildConfig string: a raw multi-parameter payload (the ad-removal set
+ * has ~1400 entries) exceeds the JVM's 64 KiB string-constant limit.
+ * MCOverrides inflates it at runtime.
  */
 val mcOverridesFile = rootProject.file("config/mc_overrides.json")
 
@@ -27,10 +36,33 @@ android {
             "config/mc_overrides.json must be a single line (Instagram's " +
                     "loader only reliably parses compact single-line JSON)"
         }
+
+        val deflater = Deflater(Deflater.BEST_COMPRESSION, true)
+        val payload = json.toByteArray(Charsets.UTF_8)
+        deflater.setInput(payload)
+        deflater.finish()
+        val compressed = ByteArrayOutputStream()
+        val buffer = ByteArray(8192)
+        while (!deflater.finished()) {
+            val n = deflater.deflate(buffer)
+            if (n == 0) break
+            compressed.write(buffer, 0, n)
+        }
+        deflater.end()
+        val encoded = Base64.getEncoder().encodeToString(compressed.toByteArray())
+        logger.lifecycle(
+            "mc_overrides payload: {} bytes -> {} compressed+base64",
+            payload.size, encoded.length
+        )
+        require(encoded.length <= 60000) {
+            "compressed payload exceeds the string-constant limit; " +
+                    "reduce the payload size"
+        }
+
         buildConfigField(
             "String",
             "MC_OVERRIDES_JSON",
-            "\"" + json.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
+            "\"" + encoded.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
         )
     }
 }
