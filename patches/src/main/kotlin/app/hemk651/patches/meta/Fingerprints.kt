@@ -72,40 +72,6 @@ internal val employeeOptionsReferenceClasses = listOf(
 )
 
 /**
- * A stable call site inside one of the [employeeOptionsReferenceClasses]:
- * `invoke-static { ... }, <obfuscated-class>;-><method>(UserSession)Z`.
- */
-internal object EmployeeOptionsGateCallFingerprint : Fingerprint(
-    filters = listOf(
-        methodCall(
-            returnType = "Z",
-            parameters = listOf("Lcom/instagram/common/session/UserSession;")
-        )
-    )
-)
-
-/**
- * The employee options gate method itself.
- *
- * A static `(UserSession)Z` method that reads a MobileConfig boolean through
- * `Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;->Bd6(J)Z`
- * and returns it. The gate identifier differs between builds, but the shape of
- * the method is stable.
- */
-internal object EmployeeOptionsGateMethodFingerprint : Fingerprint(
-    isStatic = true,
-    returnType = "Z",
-    parameters = listOf("Lcom/instagram/common/session/UserSession;"),
-    filters = listOf(
-        methodCall(
-            definingClass = "Lcom/facebook/mobileconfig/factory/MobileConfigUnsafeContext;",
-            returnType = "Z",
-            parameters = listOf("J")
-        )
-    )
-)
-
-/**
  * The `const-wide` color literal that feeds `BasePrismColorsV2.GRAY_1600`,
  * the darkest surface color of the Compose prism palette.
  *

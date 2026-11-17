@@ -62,7 +62,7 @@ An independent Morphe patch source for the MetaConfig override payload.
 
 ## Method 1 implementation notes
 
-See [Method 1 — Employee Options MobileConfig override](docs/method-1-employee-flag.md) for the flag mapping, current implementation boundary, and verification sequence. The JSON payload is preserved unchanged. The current repository does not yet contain an APK-verified startup or MobileConfig bytecode hook.
+See [Method 1 — Employee Options MobileConfig override](docs/method-1-employee-flag.md) for the flag mapping, current implementation boundary, and verification sequence. The JSON payload is preserved unchanged. For Instagram the startup hook is now wired and verified against Instagram 457.0.0.0.26 in the build harness (see Runtime install below); for the other apps an APK-verified hook is still pending.
 
 ## Patch name
 
@@ -78,6 +78,18 @@ The same patch is declared separately for Instagram, Threads, Edits, and Instant
 - A user-visible SAF setup Activity asks the user to choose the parent folder once; the installer persists that folder grant, creates `mobileconfig`, writes the JSON, and reads it back to verify exact bytes.
 - The installer exposes a bounded `onAppLaunch(Context)` entry point, with a maximum of three write attempts after consent.
 - **The app-specific startup hook is not yet wired.** The setup Activity and installer are present in the extension, but the four patch declarations still only package the extension. They do not yet invoke setup or `onAppLaunch` automatically.
+- Note: the patcher merges only the extension's dex into the target APK (`.mpe` is a dex), so the extension's asset copy is not present in the target app. The SAF installer reads the payload from the target app's assets, so that flow still needs the asset shipped separately.
+
+## Runtime install (Instagram)
+
+For Instagram the payload is installed without any user consent flow:
+
+- `config/mc_overrides.json` stays the canonical, validated source of truth and must remain a **single line** (Instagram's loader only reliably parses compact single-line JSON).
+- The payload is embedded into the extension at build time as a `BuildConfig` string (`extensions/extension/build.gradle.kts`); no asset is required because the patcher merges only the extension's dex into the target APK.
+- The "Unlock developer options" patch injects a call to `MCOverrides.install(Context)` right after the app shell's `Application.onCreate` super call, so it works without the optional "Add Mods menu" patch.
+- The writer installs the payload atomically and idempotently to `<filesDir>/mobileconfig/mc_overrides.json` — the exact path Instagram's MobileConfig loader reads natively (verified in the app's smali). The settings become active on the next app start.
+- The same patch also forces the employee options gate (`A00(UserSession)Z`) to true, which unlocks the shake-gesture developer options entry.
+- Verified by `:patches:instagramApkBuild`: all patches apply, all DEX files pass dexdump, and the cross-DEX hierarchy issue set is identical to the stock APK.
 
 ## Storage access
 
@@ -100,4 +112,4 @@ Run `python3 scripts/validate_config.py` to validate the source payload. This va
 
 ## Current limitation
 
-The startup hook needs an app-specific bytecode fingerprint and a verified call site. Do not guess this fingerprint: inspect the exact APK for each app before enabling the hook. The SAF setup screen must be launched from a visible Activity context; Android does not permit silently granting access to arbitrary removable-storage folders. No app is currently advertised as end-to-end tested.
+For Instagram the startup hook is wired (see Runtime install above). The other apps still need an app-specific bytecode fingerprint and a verified call site; do not guess the fingerprint: inspect the exact APK for each app before enabling the hook. The SAF setup screen must be launched from a visible Activity context; Android does not permit silently granting access to arbitrary removable-storage folders. No app is currently advertised as end-to-end tested on device.
