@@ -3,7 +3,7 @@ group = "app.hemk651"
 patches {
     about {
         name = "Meta Patches"
-        description = "Shared MetaConfig configuration patch for selected Meta Android apps"
+        description = "Morphe patches for Instagram"
         source = "https://github.com/hemk651/meta-patches"
         author = "hemk651"
         contact = "https://github.com/hemk651"

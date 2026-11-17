@@ -24,7 +24,6 @@ package util
 import app.hemk651.patches.meta.addModsMenuPatch
 import app.hemk651.patches.meta.amoledThemePatch
 import app.hemk651.patches.meta.changeChannelNamePatch
-import app.hemk651.patches.meta.instagramPatch
 import app.hemk651.patches.meta.removeAdsPatch
 import app.hemk651.patches.meta.removeSnoozeWarningPatch
 import app.hemk651.patches.meta.unlockDeveloperOptionsPatch
@@ -141,7 +140,6 @@ fun main(arguments: Array<String>) {
     val sdk = System.getenv("ANDROID_HOME") ?: error("ANDROID_HOME is required for DEX verification")
 
     val selected = setOf(
-        instagramPatch,
         removeAdsPatch,
         removeSnoozeWarningPatch,
         unlockDeveloperOptionsPatch,

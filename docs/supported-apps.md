@@ -1,24 +1,11 @@
 # Supported apps
 
-The project targets exactly these four Android apps:
+The project targets exactly one app:
 
 | App | Android package ID | Status |
 |---|---|---|
-| Instagram | `com.instagram.android` | Package known; patch not yet verified |
-| Threads | `com.instagram.barcelona` | Package known; patch not yet verified |
-| Edits | `com.instagram.basel` | Package confirmed from Google Play listing; patch not yet verified |
-| Instants | `com.instagram.moonshot` | Candidate package ID; verify against installed app before release |
+| Instagram | `com.instagram.android` | Verified on device (v1.1.0-dev.5, Instagram 457.0.0.0.26) |
 
-Instants is Meta's standalone companion app for sharing disappearing photos. The package ID above is a candidate from third-party app metadata and must be checked against the official installed APK before it is treated as confirmed.
+Verification covers: payload install via the runtime writer, developer options unlocked, all patches apply cleanly in the build harness, and the patched DEX hierarchy matches the stock APK.
 
-A package name is not sufficient evidence of compatibility. Each app needs its own Morphe compatibility declaration and verified startup integration point.
-
-## Acceptance checklist
-
-- [ ] Confirm exact package ID on a device using `adb shell pm list packages`.
-- [ ] Record app version name and version code.
-- [ ] Identify the correct process and startup hook for that APK build.
-- [ ] Confirm a supported way to request and persist removable-storage access.
-- [ ] Write the shared `mc_overrides.json` to the requested mobileconfig folder.
-- [ ] Verify the file contents on-device.
-- [ ] Test update/restart behavior and failure handling.
+The previous multi-app list (Threads, Edits, Instants) was removed along with the per-app packaging patches; those declarations were never verified on device.
