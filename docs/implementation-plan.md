@@ -9,6 +9,11 @@
 - [x] Employee options gate forced true (bytecode), unlocking the shake-gesture developer options entry.
 - [x] Verified against Instagram 457.0.0.0.26 in the build harness (`:patches:instagramApkBuild`): all patches apply, all DEX files pass dexdump, cross-DEX hierarchy issue set identical to the stock APK.
 - [x] Confirmed working on device (v1.1.0-dev.5): payload installed and developer options unlocked without the optional Mods menu.
+- [x] Full ad-removal override payload embedded into the extension (v1.1.0-dev.7).
+- [x] Release bundle carries the on-device patcher dex (`classes.dex`) since v1.1.0-dev.8; a workflow-side guard that fails the release without it is prepared but pending a push token with the `workflow` scope.
+- [x] Fixed the Mods menu crash on a home long press (v1.1.0-dev.9): the replaced `onLongClick` listener and `openDeveloperOptions` body now use InstaFL's fixed register layouts (`.registers 6` / `.registers 7`, dismiss through `p0`) instead of hardcoded registers on an uninitialized one; verified by dex inspection of the harness output APK.
+- [x] Home sheet handler degrades gracefully: `try/catch(Throwable)` reports into the in-app crash reports (`<external files dir>/mp_update_files/mp_crashlogs.json`) and toasts `Menu error: <Exception>` instead of crashing the app.
+- [x] `ModsInit.init` injection is guarded per call site (not "any extension reference"), so "Unlock developer options" and "Add Mods menu" no longer suppress each other's hook.
 
 ## Removed (dead machinery)
 
@@ -19,3 +24,5 @@ Removed: the four per-app packaging patch declarations (Instagram/Threads/Edits/
 ## Still open
 
 - [ ] Extend "Remove ads" to cover stories ads, promotional videos, and reels ads (currently a bytecode-only port of the InstaFL ad-pod patch).
+- [ ] Confirm the Mods menu opens on device with v1.1.0-dev.9 (crash fix verified at bytecode level only).
+- [ ] Push the prepared release workflow guard (`classes.dex` presence check); requires `gh auth refresh -h github.com -s workflow`.

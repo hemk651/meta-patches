@@ -32,7 +32,16 @@ public class ModsHomeSheetHandler implements View.OnLongClickListener {
             return false;
         }
 
-        new ModsHomeSheet(mainAppActivity).buildAndShowDialog();
+        try {
+            new ModsHomeSheet(mainAppActivity).buildAndShowDialog();
+        } catch (Throwable t) {
+            // Keep the app alive on a long press: report the failure into
+            // the in-app crash reports (Mods > Crash reports) and show a
+            // toast naming the cause, instead of crashing the app.
+            ModsInit.reportError(mainAppActivity, t);
+            ModsInit.showToast(mainAppActivity,
+                    "Menu error: " + t.getClass().getSimpleName());
+        }
         return true;
     }
 }

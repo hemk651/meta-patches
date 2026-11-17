@@ -70,6 +70,21 @@ public class ModsInit {
         Runtime.getRuntime().exit(0);
     }
 
+    /**
+     * Reports a non-fatal error from patch-injected code into the in-app
+     * crash reports (Mods &gt; Crash reports) without crashing the app.
+     *
+     * Called by the home sheet handler when opening the menu fails, so a
+     * broken hook degrades to a toast instead of taking Instagram down.
+     */
+    public static void reportError(Context context, Throwable throwable) {
+        try {
+            new ModsCrashManager(context).saveLog(throwable);
+        } catch (Exception ignored) {
+            // Crash reporting must never become the crash itself.
+        }
+    }
+
     /** Shows a short toast on the UI thread. */
     public static void showToast(Context context, String message) {
         if (context == null || message == null) {

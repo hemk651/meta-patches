@@ -35,6 +35,7 @@ import app.morphe.patcher.patch.classDefByOrNull
 import app.morphe.patcher.patch.patch
 import app.morphe.patcher.patch.resourceXml
 import app.morphe.patcher.util.addFreeRegisters
+import app.morphe.patcher.util.p0Register
 import app.hemk651.patches.shared.MetaCompatibilities
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
@@ -154,7 +155,17 @@ val addModsMenuPatch = patch(
         // ---------------------------------------------------------------
         InstagramAppShellOnCreateFingerprint.matchOrNull()?.let { appShellMatch ->
             val method = appShellMatch.method
-            if (!isExtensionReferenced(method)) {
+            // Guard on the ModsInit.init call itself: "Unlock developer
+            // options" injects its own MCOverrides call at the same super
+            // call site, so a generic "extension referenced" check would
+            // skip this injection and leave ModsInit without a context —
+            // menu items that need it (e.g. "Open Meta menu") would
+            // silently do nothing.
+            val alreadyInjected = method.instructions.any { instruction ->
+                val reference = (instruction as? ReferenceInstruction)?.reference
+                reference is MethodReference && reference.definingClass == MODS_INIT_CLASS
+            }
+            if (!alreadyInjected) {
                 val superCallIndex = appShellMatch.instructionMatches.first().index
                 val superCall = method.getInstruction<Instruction>(superCallIndex)
                 val contextRegister = when (superCall) {
@@ -208,10 +219,33 @@ val addModsMenuPatch = patch(
             val classType = classDef.type
 
             val method = longClickMatch.method
-            val instructionCount = method.instructions.count()
-            method.removeInstructions(0, instructionCount)
-            method.addInstructions(
-                0,
+            // Like InstaFL's "Change Home Long Click" (`.registers 6`), the
+            // replacement body always uses the locals v0-v2 plus the
+            // parameters p0/p1. The original body is removed wholesale, so
+            // when the original method declared fewer registers, the method
+            // is grown to six registers instead of letting the hardcoded
+            // locals clobber the parameters (verification failure → crash).
+            val registerCount = method.implementation?.registerCount
+                ?: throw PatchException("Home long click method has no implementation")
+            val (targetMethod, addedInstructions) = if (registerCount < 6) {
+                method.addFreeRegisters(6 - registerCount)
+            } else {
+                method to 0
+            }
+            // The invoke of the replacement handler is a 35c instruction, so
+            // p1 has to stay within the 4-bit register range.
+            val p1Reg = targetMethod.implementation!!.registerCount - 1
+            if (p1Reg > 15) {
+                throw PatchException(
+                    "Home long click parameters exceed the 4-bit invoke limit: p1=v$p1Reg"
+                )
+            }
+            targetMethod.removeInstructions(
+                addedInstructions,
+                targetMethod.instructions.count() - addedInstructions
+            )
+            targetMethod.addInstructions(
+                addedInstructions,
                 """
                 iget-object v0, p0, $classType->$activityField:$IG_MAIN_ACTIVITY_TYPE
                 iget-object v1, p0, $classType->$sessionField:$USER_SESSION_TYPE
@@ -290,9 +324,30 @@ val addModsMenuPatch = patch(
         val sheetMatch = ModsHomeSheetOpenDeveloperOptionsFingerprint.matchOrNull()
             ?: throw PatchException("openDeveloperOptions placeholder did not match")
 
-        // `openDeveloperOptions()V` is an instance method with only p0, so the
-        // replacement body needs four more registers than the placeholder has.
-        val (method, addedInstructions) = sheetMatch.method.addFreeRegisters(4)
+        // Like InstaFL's "Update openDeveloperOptions" (`.registers 7`), the
+        // replacement body always uses the locals v0-v3 and dismisses the
+        // sheet through p0. The placeholder is an instance method with only
+        // p0, so it is grown to seven registers when it was compiled with
+        // fewer; the previous version called dismissSheetDialog on the
+        // hardcoded v0 — an uninitialized register — which failed ART
+        // verification, broke the class load of ModsHomeSheet and crashed
+        // the app on a home long press.
+        val placeholder = sheetMatch.method
+        val placeholderRegisterCount = placeholder.implementation?.registerCount
+            ?: throw PatchException("openDeveloperOptions has no implementation")
+        val (method, addedInstructions) = if (placeholderRegisterCount < 7) {
+            placeholder.addFreeRegisters(7 - placeholderRegisterCount)
+        } else {
+            placeholder to 0
+        }
+        // The invokes of the body are 35c instructions, so p0 has to stay
+        // within the 4-bit register range.
+        val p0Reg = method.implementation!!.registerCount - 1
+        if (p0Reg > 15) {
+            throw PatchException(
+                "openDeveloperOptions p0 exceeds the 4-bit invoke limit: p0=v$p0Reg"
+            )
+        }
         method.removeInstructions(
             addedInstructions,
             method.instructions.count() - addedInstructions
@@ -301,18 +356,18 @@ val addModsMenuPatch = patch(
             addedInstructions,
             """
             invoke-static {}, $MODS_DEV_HOLDER_CLASS->getActivity()Landroid/app/Activity;
-            move-result-object v1
+            move-result-object v0
             invoke-static {}, $MODS_DEV_HOLDER_CLASS->getSession()Ljava/lang/Object;
-            move-result-object v2
-            check-cast v1, $FRAGMENT_ACTIVITY_TYPE
-            check-cast v2, $sessionType
-            new-instance v3, $QUICK_EXPERIMENT_FRAGMENT_TYPE
-            invoke-direct {v3}, $QUICK_EXPERIMENT_FRAGMENT_TYPE-><init>()V
-            new-instance v4, $navigatorType
-            invoke-direct {v4, v1, v2}, ${navigatorType}-><init>(${constructorParameterTypes.joinToString("")})V
-            invoke-virtual {v4, v3}, ${addMethodReference.smaliText()}
-            invoke-virtual {v4}, ${transitionReference.smaliText()}
-            invoke-virtual {v0}, $MODS_HOME_SHEET_CLASS->dismissSheetDialog()V
+            move-result-object v1
+            check-cast v0, $FRAGMENT_ACTIVITY_TYPE
+            check-cast v1, $sessionType
+            new-instance v2, $QUICK_EXPERIMENT_FRAGMENT_TYPE
+            invoke-direct {v2}, $QUICK_EXPERIMENT_FRAGMENT_TYPE-><init>()V
+            new-instance v3, $navigatorType
+            invoke-direct {v3, v0, v1}, ${navigatorType}-><init>(${constructorParameterTypes.joinToString("")})V
+            invoke-virtual {v3, v2}, ${addMethodReference.smaliText()}
+            invoke-virtual {v3}, ${transitionReference.smaliText()}
+            invoke-virtual {p0}, $MODS_HOME_SHEET_CLASS->dismissSheetDialog()V
             return-void
             """.trimIndent()
         )
