@@ -61,6 +61,20 @@ private const val QUICK_EXPERIMENT_FRAGMENT_TYPE =
 private const val FRAGMENT_ACTIVITY_TYPE = "Landroidx/fragment/app/FragmentActivity;"
 
 /**
+ * The theme every menu activity declares.
+ *
+ * Without it the activities inherit the app's `<application>` theme, which
+ * for Instagram is the splash theme chain (`Theme.Instagram.Splash`). Its
+ * textAppearance attributes are left unresolved, so the first `TextView` the
+ * menu builds throws
+ * `UnsupportedOperationException: Failed to resolve attribute at index 7`
+ * and the menu crashes at start (reported on device, v1.1.0-dev.9). The
+ * framework `Theme.Material.NoActionBar` is self-contained, always resolves
+ * and fits the programmatic UI, which paints all of its own colors.
+ */
+private const val MODS_ACTIVITY_THEME = "@android:style/Theme.Material.NoActionBar"
+
+/**
  * The menu activities that have to be declared in the app manifest.
  */
 private val MODS_ACTIVITIES = listOf(
@@ -126,7 +140,9 @@ val addModsMenuPatch = patch(
 
     execute {
         // ---------------------------------------------------------------
-        // Manifest: add the menu activities, once.
+        // Manifest: add the menu activities with a self-contained theme.
+        // Existing declarations (a previously patched APK) get the theme
+        // updated in place.
         // ---------------------------------------------------------------
         resourceXml("AndroidManifest.xml").use { manifest ->
             val application = manifest.elements("application").firstOrNull()
@@ -134,13 +150,16 @@ val addModsMenuPatch = patch(
 
             for (activity in MODS_ACTIVITIES) {
                 val declared = application.children("activity")
-                    .any { it.attribute("android:name") == activity }
-                if (declared) {
-                    continue
-                }
-                application.appendChild("activity") {
-                    setAttribute("android:name", activity)
-                    setAttribute("android:exported", "false")
+                    .firstOrNull { it.attribute("android:name") == activity }
+                if (declared == null) {
+                    application.appendChild("activity") {
+                        setAttribute("android:name", activity)
+                        setAttribute("android:exported", "false")
+                        setAttribute("android:theme", MODS_ACTIVITY_THEME)
+                    }
+                } else {
+                    declared.setAttribute("android:exported", "false")
+                    declared.setAttribute("android:theme", MODS_ACTIVITY_THEME)
                 }
             }
         }
