@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-11-16T21:27:16",
-  "description": "## [1.1.0-dev.4](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.3...v1.1.0-dev.4) (2026-11-16)\n\n### ✨ New Features\n\n* **instagram:** port InstaFL patch set to Morphe format ([df83535](https://github.com/hemk651/meta-patches/commit/df835353ad4b95dc665b3b6d631765b0b198a6b0))\n\n### 🐛 Bug Fixes\n\n* **ci:** run the verification harnesses outside the test task ([f4576ea](https://github.com/hemk651/meta-patches/commit/f4576ea0189c672f767349ca60bd44b93b7cc6a7))\n* **instagram:** verify full patch run against the real APK ([387b40f](https://github.com/hemk651/meta-patches/commit/387b40fe50d34275ddf0716021caaf8bbf817635))",
-  "download_url": "https://github.com/hemk651/meta-patches/releases/download/v1.1.0-dev.4/patches-1.1.0-dev.4.mpp",
+  "created_at": "2026-11-17T12:11:01",
+  "description": "## [1.1.0-dev.5](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.4...v1.1.0-dev.5) (2026-11-17)\n\n### 🐛 Bug Fixes\n\n* **instagram:** install the mc_overrides payload and force the dev options gate ([89c6344](https://github.com/hemk651/meta-patches/commit/89c634441ca893dc0771e8e0866175b865ae2cbb))",
+  "download_url": "https://github.com/hemk651/meta-patches/releases/download/v1.1.0-dev.5/patches-1.1.0-dev.5.mpp",
   "signature_download_url": "",
-  "version": "1.1.0-dev.4"
+  "version": "1.1.0-dev.5"
 }

@@ -1,3 +1,9 @@
+## [1.1.0-dev.5](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.4...v1.1.0-dev.5) (2026-11-17)
+
+### 🐛 Bug Fixes
+
+* **instagram:** install the mc_overrides payload and force the dev options gate ([89c6344](https://github.com/hemk651/meta-patches/commit/89c634441ca893dc0771e8e0866175b865ae2cbb))
+
 ## [1.1.0-dev.4](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.3...v1.1.0-dev.4) (2026-11-16)
 
 ### ✨ New Features
