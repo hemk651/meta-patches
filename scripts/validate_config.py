@@ -15,9 +15,15 @@ EXPECTED = {
 
 def main() -> int:
     try:
-        data = json.loads(CONFIG.read_text(encoding="utf-8"))
+        raw = CONFIG.read_text(encoding="utf-8")
+        data = json.loads(raw)
     except (OSError, json.JSONDecodeError) as exc:
         print(f"FAIL: cannot read valid JSON: {exc}")
+        return 1
+
+    if "\n" in raw.strip() or "\r" in raw:
+        print("FAIL: payload must be a single line (Instagram's loader only "
+              "reliably parses compact single-line JSON)")
         return 1
 
     if data != EXPECTED:

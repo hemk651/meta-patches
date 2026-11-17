@@ -67,33 +67,34 @@ An independent Morphe patch source for a shared MetaConfig override file across 
 
 ## Feature
 
-Install the same `mc_overrides.json` payload into each app's intended `mobileconfig` directory.
-
-The requested destination pattern is:
+The `mc_overrides.json` payload is bundled into the patches at build time and
+installed into each app's **own internal storage** at runtime:
 
 ```text
-/storage/<volume-id>/data/files/mobileconfig/mc_overrides.json
+<filesDir>/mobileconfig/mc_overrides.json
 ```
 
-The volume ID is dynamic and must never be hard-coded.
+This is the path Instagram natively reads its MobileConfig overrides from
+(verified in the app's smali). The "Unlock developer options" patch injects a
+static call into the app shell's `Application.onCreate` that writes the payload
+there; it becomes active on the next app start. The payload must be kept as a
+single line — Instagram's loader only reliably parses compact single-line JSON.
 
 ## Canonical configuration
 
-The single source of truth is [config/mc_overrides.json](config/mc_overrides.json). Validate it with:
+The single source of truth is [config/mc_overrides.json](config/mc_overrides.json).
+It is embedded into the extension at build time (as a `BuildConfig` string), so
+local and CI builds always carry the reviewed payload. Validate it with:
 
 ```bash
 python3 scripts/validate_config.py
 ```
 
-## Android storage constraints
-
-On Android 11 and later, a normal app cannot assume write access to an arbitrary directory at the root of removable storage. Discovering a volume UUID does not grant write permission. The implementation must use a verified access path, such as a user-granted Storage Access Framework tree URI where appropriate, and must fail clearly if the requested destination cannot be written.
-
-The patch must not silently write to app-private storage or another folder as a fallback. It must also verify that the target app actually reads this file from the requested location.
-
 ## Development status
 
-The repository contains the shared payload, validation, project metadata, and initial Morphe Gradle configuration. App-specific startup hooks, APK fingerprints, removable-storage write integration, and a verified build are still pending. No app is currently advertised as tested or working.
+The Morphe patch set is ported from InstaFL and verified in the build harness
+(`:patches:instagramApkBuild` applies every patch to a real Instagram APK and
+checks all DEX files). On-device verification of individual patches is ongoing.
 
 ## Risk and disclaimer
 
