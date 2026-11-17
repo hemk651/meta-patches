@@ -1,3 +1,9 @@
+## [1.1.0-dev.8](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.7...v1.1.0-dev.8) (2026-11-17)
+
+### 🐛 Bug Fixes
+
+* **release:** republish the bundle with the on-device patcher dex ([8a85555](https://github.com/hemk651/meta-patches/commit/8a85555a75b306de9bf9199d7cfa1525896f5644))
+
 ## [1.1.0-dev.7](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.6...v1.1.0-dev.7) (2026-11-17)
 
 ### 🐛 Bug Fixes
