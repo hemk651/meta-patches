@@ -3,7 +3,7 @@
 An independent Morphe patch source for Instagram.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.1.0-dev.9](https://github.com/hemk651/meta-patches/releases/tag/v1.1.0-dev.9)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;6 patches total
+> **[v1.1.0-dev.10](https://github.com/hemk651/meta-patches/releases/tag/v1.1.0-dev.10)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;6 patches total
 <details open>
 <summary>📦 Instagram&nbsp;&nbsp;•&nbsp;&nbsp;6 patches</summary>
 <br>

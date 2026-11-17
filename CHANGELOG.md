@@ -1,3 +1,9 @@
+## [1.1.0-dev.10](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.9...v1.1.0-dev.10) (2026-11-17)
+
+### 🐛 Bug Fixes
+
+* **instagram:** close Mods popups on outside taps and harden menu actions ([64f0976](https://github.com/hemk651/meta-patches/commit/64f09769406e3f9b7a5c9119d192ef6dc94fc99c))
+
 ## [1.1.0-dev.9](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.8...v1.1.0-dev.9) (2026-11-17)
 
 ### 🐛 Bug Fixes
