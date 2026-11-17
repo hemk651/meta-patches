@@ -29,8 +29,13 @@ public class ModsEnv {
     public static final String PROJECT_NAME = "Meta Patches";
 
     // ── Build information ───────────────────────────────────────────────────
-    /** Patch bundle version. Updated by CI with every release. */
-    public static final String PATCH_VERSION = "1.0.0";
+    /**
+     * Patch bundle version. Generated at extension build time from the Gradle
+     * project version (see extensions/extension/build.gradle.kts), which the
+     * release flow sets to the release version, so the menu shows the version
+     * that is actually installed.
+     */
+    public static final String PATCH_VERSION = BuildConfig.PATCH_VERSION;
     /**
      * Installation type of the patched app. The clone generation of InstaFL is
      * not ported, so a Meta Patches build is always a normal package.
@@ -50,8 +55,10 @@ public class ModsEnv {
     public static final String CREDITS_TITLE = "Inspired By and Credits";
     public static final String CREDITS_URL = "https://github.com/mamiiblt/instafel";
     public static final String CREDITS_TEXT =
-            "This patch is forked from InstaFL, originally developed by "
-                    + "mamiiblt (Muhammed Ali Bulut).\n"
+            "This project is a fork of InstaFL, originally developed by "
+                    + "mamiiblt (Muhammed Ali Bulut). The menu, tools and patch "
+                    + "ideas come from InstaFL — thanks to them for building "
+                    + "and sharing the project.\n"
                     + "Project: https://github.com/mamiiblt/instafel\n\n"
                     + "Meta Patches is an independent fork; it is not affiliated "
                     + "with InstaFL, Meta, or Instagram.";

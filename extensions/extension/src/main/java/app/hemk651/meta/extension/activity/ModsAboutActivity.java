@@ -79,6 +79,7 @@ public class ModsAboutActivity extends Activity {
                 v -> ModsMenuActivity.openUrl(this, ModsEnv.REPO_URL)));
 
         root.addView(ui.pageContent(content));
+        ModsUi.applySystemBarInsets(root);
         setContentView(root);
     }
 

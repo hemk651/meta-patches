@@ -20,8 +20,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.LinearLayout;
 
+import app.hemk651.meta.extension.ModsDevHolder;
 import app.hemk651.meta.extension.ModsEnv;
 import app.hemk651.meta.extension.ModsHomeSheet;
 import app.hemk651.meta.extension.ModsInit;
@@ -77,6 +80,7 @@ public class ModsMenuActivity extends Activity {
                     v -> openActivity(ModsAboutActivity.class)));
 
             root.addView(ui.pageContent(content));
+            ModsUi.applySystemBarInsets(root);
             setContentView(root);
 
             // Tapping the background or any empty space closes the menu again,
@@ -99,9 +103,43 @@ public class ModsMenuActivity extends Activity {
      * The navigation code is injected into ModsHomeSheet.openDeveloperOptions
      * by the patch; it needs the main activity and session that are captured
      * when the home long press fires.
+     *
+     * The menu activity sits in front of the feed, which is stopped with its
+     * fragment state saved — committing a navigation there throws
+     * {@code IllegalStateException: Can not perform this action after
+     * onSaveInstanceState} (reported on device, v1.1.0-dev.11). The menu is
+     * finished first, and the feed is navigated once it has window focus
+     * again.
      */
     private void openDeveloperOptions() {
-        ModsInit.safeRun(this, () -> new ModsHomeSheet(this).openDeveloperOptions());
+        ModsInit.safeRun(this, () -> {
+            Activity feed = ModsDevHolder.getActivity();
+            if (feed == null || feed.isFinishing() || feed.isDestroyed()) {
+                ModsInit.showToast(this,
+                        "Open the home feed, then try Developer options again");
+                return;
+            }
+
+            finish();
+
+            Handler handler = new Handler(Looper.getMainLooper());
+            int[] attempts = {0};
+            Runnable[] retry = new Runnable[1];
+            retry[0] = () -> {
+                if (feed.isFinishing() || feed.isDestroyed()) {
+                    return;
+                }
+                if (feed.hasWindowFocus()) {
+                    ModsInit.safeRun(feed,
+                            () -> new ModsHomeSheet(feed).openDeveloperOptions());
+                } else if (++attempts[0] < 6) {
+                    handler.postDelayed(retry[0], 200);
+                } else {
+                    ModsInit.showToast(feed, "Could not open developer options");
+                }
+            };
+            handler.postDelayed(retry[0], 250);
+        });
     }
 
     private void openActivity(Class<? extends Activity> activityClass) {

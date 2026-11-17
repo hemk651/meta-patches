@@ -64,6 +64,18 @@ android {
             "MC_OVERRIDES_JSON",
             "\"" + encoded.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
         )
+
+        // The menu shows this as the patch version (Build info, Misc, crash
+        // reports). It comes from the Gradle project version, which is set to
+        // the release version before the bundle is built for publishing, so
+        // the menu always shows the version that is actually installed
+        // instead of a stale constant.
+        buildConfigField(
+            "String",
+            "PATCH_VERSION",
+            "\"" + project.version.toString()
+                .replace("\\", "\\\\").replace("\"", "\\\"") + "\""
+        )
     }
 }
 

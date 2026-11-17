@@ -48,6 +48,7 @@ public class ModsBuildInfoActivity extends Activity {
                 + " (" + ModsEnv.getIgVersionCode(this) + ")", null, null));
 
         root.addView(ui.pageContent(content));
+        ModsUi.applySystemBarInsets(root);
         setContentView(root);
     }
 }

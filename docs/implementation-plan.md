@@ -16,6 +16,12 @@
 - [x] `ModsInit.init` injection is guarded per call site (not "any extension reference"), so "Unlock developer options" and "Add Mods menu" no longer suppress each other's hook.
 - [x] Outside-tap closing and graceful menu actions (v1.1.0-dev.10): tapping the dimmed background (or an empty spot) closes the quick sheet and the Mods menu activity like a back gesture; sheet items, menu tiles and both `onCreate` bodies are wrapped so failures are reported (`Menu error: <Exception>` toast + crash report) instead of crashing. The final APK's manifest was verified to declare all eight menu activities (`aapt2 dump xmltree`).
 - [x] Root-caused the "Open Meta menu" crash with the on-device log (v1.1.0-dev.11): the injected activities declared no theme, so they inherited the app's splash theme chain (`Theme.Instagram.Splash`), whose `textAppearance` attributes fail to resolve — `new TextView()` threw `Failed to resolve attribute at index 7`. All eight menu activities now declare the self-contained framework theme `@android:style/Theme.Material.NoActionBar` in the manifest; the reference was verified in the output APK (`@0x0103022e`).
+- [x] Fixed the "Developer options" crash from the Mods menu (v1.1.0-dev.12, on-device log): the menu activity sits in front of the feed, which is stopped with its fragment state saved — the sheet's navigator commit on it threw `IllegalStateException: Can not perform this action after onSaveInstanceState`. The menu now finishes itself first and the feed is navigated once it has window focus again (retry loop, guarded).
+- [x] Fixed "Failed to read the applied patches" (v1.1.0-dev.12): the patch built the applied-patches JSON without escaping, so the "Remove snooze warning" description's literal quotes broke every `JSONArray` parse. The list is JSON-escaped at patch time now.
+- [x] Real patch version everywhere (v1.1.0-dev.12): the extension generates `BuildConfig.PATCH_VERSION` from the Gradle project version (which the release flow sets to the release version before the bundle build), replacing the stale "1.0.0" constant shown in Build info, Misc and written into crash reports (`appData.patch_ver`).
+- [x] System bar insets for all menu pages (v1.1.0-dev.12): Android 15+ enforces edge-to-edge, which pushed every page title under the status bar. A shared `ModsUi.applySystemBarInsets` helper pads the page root by the status/navigation/cutout insets on API 30+ and fits system windows below.
+- [x] Import backup ported from InstaFL (v1.1.0-dev.12): Misc → Backup → Import backup opens the system file picker — full replace or merge into `<filesDir>/mobileconfig/mc_overrides.json` (same path `MCOverrides.install` writes; the optional `"backup"` wrapper of InstaFL backups is unwrapped, merge keeps current values and only adds missing entries). A marker file makes the bundled installer stand down so imports survive restarts; "Restore bundled overrides" undoes an import. The old-backup and mapping-file flows of InstaFL were not ported (no export/mapping feature here yet).
+- [x] Fork-of-InstaFL attribution (v1.1.0-dev.12): README carries the explicit "This project is a fork of InstaFL" credit next to the release-flow-regenerated patches section (which only rewrites the `PATCHES_START`/`END` block), and the in-app About credits text states the same.
 
 ## Removed (dead machinery)
 
@@ -26,5 +32,6 @@ Removed: the four per-app packaging patch declarations (Instagram/Threads/Edits/
 ## Still open
 
 - [ ] Extend "Remove ads" to cover stories ads, promotional videos, and reels ads (currently a bytecode-only port of the InstaFL ad-pod patch).
-- [ ] Confirm the Mods menu and "Open Meta menu" work on device with v1.1.0-dev.11 (theme fix verified at the manifest level only).
+- [ ] Confirm the v1.1.0-dev.12 menu changes on device (developer options from the menu, applied-patches list, version display, insets, import backup).
+- [ ] Export (write-back) of the current overrides as a backup file, completing the InstaFL backup round trip.
 - [ ] Push the prepared release workflow guard (`classes.dex` presence check); requires `gh auth refresh -h github.com -s workflow`.

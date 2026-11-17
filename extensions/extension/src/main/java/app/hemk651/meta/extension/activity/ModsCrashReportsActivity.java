@@ -73,6 +73,7 @@ public class ModsCrashReportsActivity extends Activity {
         }
 
         root.addView(ui.pageContent(content));
+        ModsUi.applySystemBarInsets(root);
         setContentView(root);
     }
 
