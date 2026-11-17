@@ -13,10 +13,12 @@ package app.hemk651.meta.extension;
 import android.content.Context;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.zip.Inflater;
 
 /**
  * Installs the bundled MobileConfig overrides into Instagram's native
@@ -66,7 +68,7 @@ public final class MCOverrides {
     }
 
     private static void installInternal(Context context) throws Exception {
-        String content = BuildConfig.MC_OVERRIDES_JSON;
+        String content = inflate(BuildConfig.MC_OVERRIDES_JSON);
         if (content == null || content.isEmpty()) {
             Log.w(TAG, "No overrides payload bundled, skipping");
             return;
@@ -109,6 +111,35 @@ public final class MCOverrides {
         }
         temp.delete();
         Log.i(TAG, "Installed " + FILE_NAME + " (direct write, " + content.length() + " chars)");
+    }
+
+    /**
+     * The build embeds the payload deflated and base64-encoded (the raw
+     * multi-parameter payload exceeds the JVM's 64 KiB string-constant
+     * limit). The stream is a raw deflate stream with no zlib or gzip
+     * wrapper, matching the build-side encoding.
+     */
+    private static String inflate(String encoded) throws Exception {
+        if (encoded == null || encoded.isEmpty()) {
+            return "";
+        }
+        byte[] compressed = android.util.Base64.decode(encoded, android.util.Base64.NO_WRAP);
+        Inflater inflater = new Inflater(true);
+        try {
+            inflater.setInput(compressed);
+            ByteArrayOutputStream out = new ByteArrayOutputStream(compressed.length * 4);
+            byte[] buffer = new byte[8192];
+            while (!inflater.finished()) {
+                int n = inflater.inflate(buffer);
+                if (n == 0 && inflater.needsInput()) {
+                    throw new IllegalStateException("Truncated overrides payload");
+                }
+                out.write(buffer, 0, n);
+            }
+            return new String(out.toByteArray(), StandardCharsets.UTF_8);
+        } finally {
+            inflater.end();
+        }
     }
 
     private static String readUtf8(File file) throws Exception {
