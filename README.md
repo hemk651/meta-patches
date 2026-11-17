@@ -34,6 +34,15 @@ For Instagram the payload is installed without any user consent flow:
 - The same patch also forces the employee options gate (`A00(UserSession)Z`) to true, which unlocks the shake-gesture developer options entry.
 - Verified by `:patches:instagramApkBuild`: all patches apply, all DEX files pass dexdump, and the cross-DEX hierarchy issue set is identical to the stock APK.
 
+## Mods menu (`Add Mods menu`)
+
+The optional "Add Mods menu" patch ports the InstaFL quick menu: **long press the home feed** to open the sheet with the ported InstaFL tools (Open Meta menu, Developer options, About, Restart app, …).
+
+- The home long-press listener and the sheet's `openDeveloperOptions` placeholder are replaced wholesale with fixed-size bodies, mirroring InstaFL's smali (`.registers 6` for the listener, `.registers 7` for the developer-options body, which dismisses the sheet through `p0`). Earlier bundles (v1.1.0-dev.5–dev.8) injected the developer-options body with hardcoded registers and called `dismissSheetDialog()` on an uninitialized register; ART failed to verify the class, so loading the sheet crashed the app exactly when the long press fired. Since v1.1.0-dev.9 the method is normalized to the fixed register layout before the body is injected, and the patched registers are verified by dex inspection in the build harness.
+- Opening the menu can no longer take the app down: if the sheet fails to open, the handler reports the error into the in-app crash reports and shows a toast naming the cause (`Menu error: <Exception>`).
+- Crash reports live in the Mods menu (Open Meta menu → Crash reports); the log file is written to `<external files dir>/mp_update_files/mp_crashlogs.json` (e.g. `/storage/emulated/0/Android/data/com.instagram.android/files/mp_update_files/mp_crashlogs.json`).
+- The extension initialization (`ModsInit.init`) is injected after the app shell's `Application.onCreate` super call whenever it is not present yet — independently of the "Unlock developer options" patch, which injects its own `MCOverrides.install` call at the same site. (Previously the two patches could each skip the other's injection, leaving the menu without a context.)
+
 ## Targets
 
 | App | Package |
@@ -47,5 +56,7 @@ Run `python3 scripts/validate_config.py` to validate the source payload. This va
 ## Current limitation
 
 For Instagram the startup hook is wired and the payload install plus dev-options unlock are confirmed working on device (v1.1.0-dev.5). The "Remove ads" patch now installs the full community-tested ad-removal override set (1370 parameters, merged with the developer-options parameters; see InstaFL issues #143, #150 and #160 for on-device ad coverage reports), embedded into the extension DEX at build time (v1.1.0-dev.7).
+
+The Mods menu crash on a home long press (v1.1.0-dev.5–dev.8) is fixed in v1.1.0-dev.9: the register layouts of the replaced methods now match InstaFL's proven smali and the patched registers were verified by dex inspection of the output APK. On-device confirmation of the menu itself is still pending.
 
 > Note for consumers: the Morphe manager runs the patcher on-device and loads the patch classes from the bundle's `classes.dex`, which only the `:patches:buildAndroid` task adds to the bundle.
