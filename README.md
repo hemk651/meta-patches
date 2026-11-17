@@ -3,7 +3,7 @@
 An independent Morphe patch source for the MetaConfig override payload.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.1.0-dev.4](https://github.com/hemk651/meta-patches/releases/tag/v1.1.0-dev.4)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;10 patches total
+> **[v1.1.0-dev.5](https://github.com/hemk651/meta-patches/releases/tag/v1.1.0-dev.5)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;10 patches total
 <details open>
 <summary>📦 Instagram&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -18,7 +18,7 @@ An independent Morphe patch source for the MetaConfig override payload.
 | [Developer Options Unlocker (Employee Options)](#developer-options-unlocker-employee-options) | Packages the Employee Options MetaConfig override (28538::0 = true) and SAF installer for Instagram. Actual activation requires the app to read the deployed file; bytecode unlocking is not included. |  |
 | [Remove ads](#remove-ads) | Removes ads in Instagram by stopping the ad pod flow. |  |
 | [Remove snooze warning](#remove-snooze-warning) | Removes the "build expired" snooze warning dialog that alpha builds show. |  |
-| [Unlock developer options](#unlock-developer-options) | Unlocks the employee options (developer options) menu. |  |
+| [Unlock developer options](#unlock-developer-options) | Unlocks the developer options: writes the MobileConfig overrides file that reveals Developer options in the settings together with a dedicated Employee options entry, and forces the employee options gate to true (shake-gesture entry). The overrides file becomes active after an app restart. |  |
 
 </details>
 
