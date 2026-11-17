@@ -1,3 +1,9 @@
+## [1.1.0-dev.11](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.10...v1.1.0-dev.11) (2026-11-17)
+
+### 🐛 Bug Fixes
+
+* **instagram:** give the menu activities a self-contained theme ([9541ab4](https://github.com/hemk651/meta-patches/commit/9541ab4a61a556e472906424265aa9422384a981))
+
 ## [1.1.0-dev.10](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.9...v1.1.0-dev.10) (2026-11-17)
 
 ### 🐛 Bug Fixes
