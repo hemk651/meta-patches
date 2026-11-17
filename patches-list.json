@@ -94,114 +94,6 @@
       ]
     },
     {
-      "name": "Developer Options Unlocker (Employee Options)",
-      "description": "Packages the MetaConfig override and SAF installer for Edits. Employee flag compatibility and app-side loading are unverified; no bytecode unlock hook is included.",
-      "default": false,
-      "category": null,
-      "compatiblePackages": [
-        {
-          "packageName": "com.instagram.basel",
-          "name": "Edits",
-          "description": null,
-          "apkFileType": "APK",
-          "appIconColor": "#6C63FF",
-          "signatures": null,
-          "formFactor": "MOBILE",
-          "targets": [
-            {
-              "version": null,
-              "versionCodes": null,
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            }
-          ]
-        }
-      ],
-      "options": []
-    },
-    {
-      "name": "Developer Options Unlocker (Employee Options)",
-      "description": "Packages the Employee Options MetaConfig override (28538::0 = true) and SAF installer for Instagram. Actual activation requires the app to read the deployed file; bytecode unlocking is not included.",
-      "default": false,
-      "category": null,
-      "compatiblePackages": [
-        {
-          "packageName": "com.instagram.android",
-          "name": "Instagram",
-          "description": null,
-          "apkFileType": "APK",
-          "appIconColor": "#E1306C",
-          "signatures": null,
-          "formFactor": "MOBILE",
-          "targets": [
-            {
-              "version": null,
-              "versionCodes": null,
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            }
-          ]
-        }
-      ],
-      "options": []
-    },
-    {
-      "name": "Developer Options Unlocker (Employee Options)",
-      "description": "Packages the MetaConfig override and SAF installer for Instants. Package and employee-flag compatibility require on-device verification; no bytecode unlock hook is included.",
-      "default": false,
-      "category": null,
-      "compatiblePackages": [
-        {
-          "packageName": "com.instagram.moonshot",
-          "name": "Instants",
-          "description": null,
-          "apkFileType": "APK",
-          "appIconColor": "#222222",
-          "signatures": null,
-          "formFactor": "MOBILE",
-          "targets": [
-            {
-              "version": null,
-              "versionCodes": null,
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            }
-          ]
-        }
-      ],
-      "options": []
-    },
-    {
-      "name": "Developer Options Unlocker (Employee Options)",
-      "description": "Packages the MetaConfig override and SAF installer for Threads. Employee flag compatibility and app-side loading are unverified; no bytecode unlock hook is included.",
-      "default": false,
-      "category": null,
-      "compatiblePackages": [
-        {
-          "packageName": "com.instagram.barcelona",
-          "name": "Threads",
-          "description": null,
-          "apkFileType": "APK",
-          "appIconColor": "#101010",
-          "signatures": null,
-          "formFactor": "MOBILE",
-          "targets": [
-            {
-              "version": null,
-              "versionCodes": null,
-              "isExperimental": false,
-              "minSdk": null,
-              "description": null
-            }
-          ]
-        }
-      ],
-      "options": []
-    },
-    {
       "name": "Remove ads",
       "description": "Removes ads in Instagram by stopping the ad pod flow.",
       "default": true,
@@ -257,7 +149,7 @@
     },
     {
       "name": "Unlock developer options",
-      "description": "Unlocks the employee options (developer options) menu.",
+      "description": "Unlocks the developer options: writes the MobileConfig overrides file that reveals Developer options in the settings together with a dedicated Employee options entry, and forces the employee options gate to true (shake-gesture entry). The overrides file becomes active after an app restart.",
       "default": true,
       "category": null,
       "compatiblePackages": [

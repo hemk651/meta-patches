@@ -15,7 +15,4 @@ object MetaCompatibilities {
     )
 
     val INSTAGRAM = target("Instagram", "com.instagram.android", 0xE1306C)
-    val THREADS = target("Threads", "com.instagram.barcelona", 0x101010)
-    val EDITS = target("Edits", "com.instagram.basel", 0x6C63FF)
-    val INSTANTS = target("Instants", "com.instagram.moonshot", 0x222222)
 }

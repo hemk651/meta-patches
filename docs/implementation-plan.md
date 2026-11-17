@@ -1,27 +1,21 @@
 # Implementation plan
 
-## Completed in repository
+## Completed
 
-- [x] Canonical JSON payload and repository validator.
-- [x] Morphe patch declarations for the four target packages.
-- [x] Version-independent compatibility declarations.
-- [x] Bundle the JSON as an extension asset.
-- [x] Add a SAF installer helper that creates the `mobileconfig` child directory and verifies the written bytes.
-- [x] Persist user-granted tree URI access.
-- [x] Add a three-launch retry entry point that does not launch UI from a background context.
-- [x] Attach the extension bundle to all four patch declarations.
+- [x] Canonical JSON payload (`config/mc_overrides.json`) and repository validator (`scripts/validate_config.py`).
+- [x] Morphe patch set ported from InstaFL for Instagram.
+- [x] Runtime payload writer (`MCOverrides.install`) injected after `InstagramAppShell.onCreate`; writes `<filesDir>/mobileconfig/mc_overrides.json` atomically and idempotently.
+- [x] Payload embedded into the extension at build time as a `BuildConfig` string from the canonical config file (the patcher merges only the extension's dex, so no asset is shipped).
+- [x] Employee options gate forced true (bytecode), unlocking the shake-gesture developer options entry.
+- [x] Verified against Instagram 457.0.0.0.26 in the build harness (`:patches:instagramApkBuild`): all patches apply, all DEX files pass dexdump, cross-DEX hierarchy issue set identical to the stock APK.
+- [x] Confirmed working on device (v1.1.0-dev.5): payload installed and developer options unlocked without the optional Mods menu.
 
-## Still required before claiming automatic deployment
+## Removed (dead machinery)
 
-- [ ] Add a visible, user-initiated folder picker flow in the target app.
-- [ ] Inspect each target APK and identify a stable app-start hook.
-- [ ] Invoke `MetaConfigInstaller.onAppLaunch(context)` from the verified hook.
-- [ ] Invoke the picker flow from a visible Activity when the result is `NEEDS_FOLDER_PERMISSION`.
-- [ ] Verify Android 11+ permits selection of the intended parent folder on the target device.
-- [ ] Build and inspect the Morphe bundle and verify the helper/asset are present.
-- [ ] Test all four apps on real APK versions, including first install, denied permission, missing volume, restart, and update.
-- [ ] Verify the app itself reads the written configuration and observe the intended developer/employee options.
+The original SAF/Storage Access Framework installer design was removed because it was architecturally dead: the patcher merges only the extension's dex into the target APK, so the extension's asset never reached the target app — and the SAF installer read `mc_overrides.json` from the *host* app's assets. The working path is the runtime writer above.
 
-## Important platform constraint
+Removed: the four per-app packaging patch declarations (Instagram/Threads/Edits/Instants "Developer Options Unlocker (Employee Options)"), `MetaConfigInstaller`, `MetaConfigSetupActivity`, the extension asset copy, and the SAF-related documentation. The "Unlock developer options" patch (runtime writer + gate) is the supported path and stays.
 
-The target directory is outside ordinary app-private storage. Android 11+ scoped storage prevents assuming raw filesystem write access. The helper uses the Storage Access Framework and requires explicit user consent. It does not bypass the system picker restrictions.
+## Still open
+
+- [ ] Extend "Remove ads" to cover stories ads, promotional videos, and reels ads (currently a bytecode-only port of the InstaFL ad-pod patch).
