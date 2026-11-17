@@ -4,16 +4,15 @@ import app.morphe.patcher.patch.patch
 import app.hemk651.patches.shared.MetaCompatibilities
 
 /**
- * Compatibility registration for Threads.
- *
- * This declaration makes the patch visible for the exact package name without
- * a version-code allowlist. The runtime mc_overrides writer is not wired for
- * this package yet; this patch intentionally does not modify app bytecode.
+ * Packages the user-consented MetaConfig override installer for Threads.
+ * The payload's Employee Options flag is not verified for Threads; no
+ * app-specific MobileConfig hook is claimed by this compatibility entry.
  */
 val threadsPatch = patch(
-    name = "Threads — compatibility entry",
-    description = "Registers Threads package compatibility. Runtime config injection is not included yet.",
+    name = "Developer Options Unlocker (Employee Options)",
+    description = "Packages the MetaConfig override and SAF installer for Threads. Employee flag compatibility and app-side loading are unverified; no bytecode unlock hook is included.",
     default = false
 ) {
     compatibleWith(MetaCompatibilities.THREADS)
+    extendWith("extensions/extension.mpe")
 }

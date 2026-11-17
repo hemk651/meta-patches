@@ -1,35 +1,27 @@
 # Dynamic mobileconfig storage path
 
-The requested output path follows this pattern:
+Requested destination:
 
 ```text
 /storage/<volume-id>/data/files/mobileconfig/mc_overrides.json
 ```
 
-Example only (the volume ID is not fixed):
+The implementation does not hard-code a volume ID. It bundles the canonical JSON and uses a persisted Storage Access Framework tree URI.
 
-```text
-/storage/23DE-10EA/data/files/mobileconfig/mc_overrides.json
-```
+## User permission flow
 
-## Requirements
+1. A visible Activity must launch `MetaConfigInstaller.createFolderPickerIntent()`.
+2. The user selects the intended `data/files` parent folder (if the system picker exposes it).
+3. Pass the returned URI and result flags to `MetaConfigInstaller.install(context, uri, flags)`.
+4. The helper persists the URI grant, creates `mobileconfig`, writes `mc_overrides.json`, and reads it back to verify exact bytes.
+5. A verified app-start hook may call `MetaConfigInstaller.onAppLaunch(context)`; this retries only for the first three launches.
 
-1. Never hard-code `23DE-10EA` or another volume ID.
-2. Discover the currently mounted volume at runtime.
-3. Create the `data/files/mobileconfig` directories if permitted.
-4. Write the canonical bundled JSON as UTF-8.
-5. Validate the JSON before writing.
-6. Avoid overwriting a user-edited file without a backup or explicit policy.
-7. Report permission denial clearly; do not claim success if the write failed.
+The helper never opens an Activity from a background provider or silently falls back to app-private storage.
 
-## Android storage access
+## Android 11+ limitation
 
-On modern Android, a normal app generally cannot write arbitrary paths at the root of removable storage due to scoped-storage restrictions. Discovering a StorageVolume does not itself grant write access.
+Android restricts SAF selection of certain roots and directories, including some SD-card roots. If the intended parent cannot be selected, the exact requested path is not available through this mechanism on that device. A raw volume path is not proof of write permission.
 
-The preferred implementation should use the Storage Access Framework: ask the user to select the intended removable-storage root (or the closest permitted parent), persist the returned tree URI permission, and create the required child directories using DocumentFile APIs.
+## Status
 
-If the target path cannot be represented or written through the granted tree, show a clear unsupported-permission result. Do not fall back to app-private storage because that would not satisfy the requested destination.
-
-## Verification
-
-A successful operation must verify that the destination document exists and its bytes match the canonical configuration. A failed permission request or failed write must be reported as a failure.
+The asset and installer helper are bundled. The target-app picker UI and per-app startup bytecode hooks are not yet wired. End-to-end deployment remains unverified.

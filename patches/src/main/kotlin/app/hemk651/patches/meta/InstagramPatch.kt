@@ -4,17 +4,18 @@ import app.morphe.patcher.patch.patch
 import app.hemk651.patches.shared.MetaCompatibilities
 
 /**
- * Compatibility registration for Instagram.
+ * Packages the user-consented MetaConfig override installer for Instagram.
  *
- * This declaration makes the patch visible for the exact package name without
- * a version-code allowlist. The runtime mc_overrides writer ships with the
- * "Unlock developer options" patch; this entry intentionally does not modify
- * app bytecode.
+ * The canonical payload includes the Employee Options candidate flag
+ * 28538::0 = true. This patch does not yet hook Instagram's MobileConfig
+ * reader or unlock the UI through bytecode; those require APK-verified
+ * fingerprints and a separate runtime hook.
  */
 val instagramPatch = patch(
-    name = "Instagram — compatibility entry",
-    description = "Registers Instagram package compatibility. Runtime config injection is not included yet.",
+    name = "Developer Options Unlocker (Employee Options)",
+    description = "Packages the Employee Options MetaConfig override (28538::0 = true) and SAF installer for Instagram. Actual activation requires the app to read the deployed file; bytecode unlocking is not included.",
     default = false
 ) {
     compatibleWith(MetaCompatibilities.INSTAGRAM)
+    extendWith("extensions/extension.mpe")
 }

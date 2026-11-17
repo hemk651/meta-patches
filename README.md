@@ -1,11 +1,27 @@
 # Meta Patches
 
-An independent Morphe patch source for a shared MetaConfig override file across four Meta Android apps.
+An independent Morphe patch source for the MetaConfig override payload.
 
-## Morphe patches
+<!-- PATCHES_START EXPANDED -->
+> **[v1.1.0-dev.4](https://github.com/hemk651/meta-patches/releases/tag/v1.1.0-dev.4)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;10 patches total
+<details open>
+<summary>📦 Instagram&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
+<br>
 
-<!-- PATCHES_START -->
-> **[v1.0.0](https://github.com/hemk651/meta-patches/releases/tag/v1.0.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;4 patches total
+**Package name:** `com.instagram.android`
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [AMOLED theme](#amoled-theme) | Forces Instagram dark theme surfaces to pure black (AMOLED). |  |
+| [Add Mods menu](#add-mods-menu) | Adds the Mods menu (fork of the InstaFL menu): long press the home feed to open the quick menu, incl. developer options. |  |
+| [Change channel name](#change-channel-name) | Replaces the release channel name (NONE, ALPHA, BETA, PROD) shown in the developer options UI. | • Channel name |
+| [Developer Options Unlocker (Employee Options)](#developer-options-unlocker-employee-options) | Packages the Employee Options MetaConfig override (28538::0 = true) and SAF installer for Instagram. Actual activation requires the app to read the deployed file; bytecode unlocking is not included. |  |
+| [Remove ads](#remove-ads) | Removes ads in Instagram by stopping the ad pod flow. |  |
+| [Remove snooze warning](#remove-snooze-warning) | Removes the "build expired" snooze warning dialog that alpha builds show. |  |
+| [Unlock developer options](#unlock-developer-options) | Unlocks the employee options (developer options) menu. |  |
+
+</details>
+
 <details open>
 <summary>📦 Edits&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
 <br>
@@ -14,19 +30,7 @@ An independent Morphe patch source for a shared MetaConfig override file across 
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Edits — compatibility entry](#edits-compatibility-entry) | Registers Edits package compatibility. Runtime config injection is not included yet. |  |
-
-</details>
-
-<details open>
-<summary>📦 Instagram&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
-<br>
-
-**Package name:** `com.instagram.android`
-
-| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
-|----------|----------------|-----------|
-| [Instagram — compatibility entry](#instagram-compatibility-entry) | Registers Instagram package compatibility. Runtime config injection is not included yet. |  |
+| [Developer Options Unlocker (Employee Options)](#developer-options-unlocker-employee-options) | Packages the MetaConfig override and SAF installer for Edits. Employee flag compatibility and app-side loading are unverified; no bytecode unlock hook is included. |  |
 
 </details>
 
@@ -38,7 +42,7 @@ An independent Morphe patch source for a shared MetaConfig override file across 
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Instants — compatibility entry](#instants-compatibility-entry) | Registers Instants package compatibility. Runtime config injection is not included yet. |  |
+| [Developer Options Unlocker (Employee Options)](#developer-options-unlocker-employee-options) | Packages the MetaConfig override and SAF installer for Instants. Package and employee-flag compatibility require on-device verification; no bytecode unlock hook is included. |  |
 
 </details>
 
@@ -50,52 +54,62 @@ An independent Morphe patch source for a shared MetaConfig override file across 
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Threads — compatibility entry](#threads-compatibility-entry) | Registers Threads package compatibility. Runtime config injection is not included yet. |  |
+| [Developer Options Unlocker (Employee Options)](#developer-options-unlocker-employee-options) | Packages the MetaConfig override and SAF installer for Threads. Employee flag compatibility and app-side loading are unverified; no bytecode unlock hook is included. |  |
 
 </details>
 
 <!-- PATCHES_END -->
 
-## Target apps
+## Method 1 implementation notes
 
-| App | Package ID | Verification |
-|---|---|---|
-| Instagram | `com.instagram.android` | Known package; target APK not yet tested |
-| Threads | `com.instagram.barcelona` | Known package; target APK not yet tested |
-| Edits | `com.instagram.basel` | Google Play package confirmed; target APK not yet tested |
-| Instants | `com.instagram.moonshot` | Candidate package; verify on-device before release |
+See [Method 1 — Employee Options MobileConfig override](docs/method-1-employee-flag.md) for the flag mapping, current implementation boundary, and verification sequence. The JSON payload is preserved unchanged. For Instagram the startup hook is now wired and verified against Instagram 457.0.0.0.26 in the build harness (see Runtime install below); for the other apps an APK-verified hook is still pending.
 
-## Feature
+## Patch name
 
-The `mc_overrides.json` payload is bundled into the patches at build time and
-installed into each app's **own internal storage** at runtime:
+**Developer Options Unlocker (Employee Options)**
 
-```text
-<filesDir>/mobileconfig/mc_overrides.json
-```
+The same patch is declared separately for Instagram, Threads, Edits, and Instants.
 
-This is the path Instagram natively reads its MobileConfig overrides from
-(verified in the app's smali). The "Unlock developer options" patch injects a
-static call into the app shell's `Application.onCreate` that writes the payload
-there; it becomes active on the next app start. The payload must be kept as a
-single line — Instagram's loader only reliably parses compact single-line JSON.
+## Installer implementation status
 
-## Canonical configuration
+- The canonical JSON is bundled as an extension asset.
+- A SAF installer helper is bundled with each app-specific patch.
+- The extension bundles the canonical `mc_overrides.json` asset.
+- A user-visible SAF setup Activity asks the user to choose the parent folder once; the installer persists that folder grant, creates `mobileconfig`, writes the JSON, and reads it back to verify exact bytes.
+- The installer exposes a bounded `onAppLaunch(Context)` entry point, with a maximum of three write attempts after consent.
+- **The app-specific startup hook is not yet wired.** The setup Activity and installer are present in the extension, but the four patch declarations still only package the extension. They do not yet invoke setup or `onAppLaunch` automatically.
+- Note: the patcher merges only the extension's dex into the target APK (`.mpe` is a dex), so the extension's asset copy is not present in the target app. The SAF installer reads the payload from the target app's assets, so that flow still needs the asset shipped separately.
 
-The single source of truth is [config/mc_overrides.json](config/mc_overrides.json).
-It is embedded into the extension at build time (as a `BuildConfig` string), so
-local and CI builds always carry the reviewed payload. Validate it with:
+## Runtime install (Instagram)
 
-```bash
-python3 scripts/validate_config.py
-```
+For Instagram the payload is installed without any user consent flow:
 
-## Development status
+- `config/mc_overrides.json` stays the canonical, validated source of truth and must remain a **single line** (Instagram's loader only reliably parses compact single-line JSON).
+- The payload is embedded into the extension at build time as a `BuildConfig` string (`extensions/extension/build.gradle.kts`); no asset is required because the patcher merges only the extension's dex into the target APK.
+- The "Unlock developer options" patch injects a call to `MCOverrides.install(Context)` right after the app shell's `Application.onCreate` super call, so it works without the optional "Add Mods menu" patch.
+- The writer installs the payload atomically and idempotently to `<filesDir>/mobileconfig/mc_overrides.json` — the exact path Instagram's MobileConfig loader reads natively (verified in the app's smali). The settings become active on the next app start.
+- The same patch also forces the employee options gate (`A00(UserSession)Z`) to true, which unlocks the shake-gesture developer options entry.
+- Verified by `:patches:instagramApkBuild`: all patches apply, all DEX files pass dexdump, and the cross-DEX hierarchy issue set is identical to the stock APK.
 
-The Morphe patch set is ported from InstaFL and verified in the build harness
-(`:patches:instagramApkBuild` applies every patch to a real Instagram APK and
-checks all DEX files). On-device verification of individual patches is ongoing.
+## Storage access
 
-## Risk and disclaimer
+The intended output is `/storage/<volume-id>/data/files/mobileconfig/mc_overrides.json`. Android's Storage Access Framework requires a user-selected folder grant; a volume UUID alone does not grant access. The user should select the intended `data/files` parent folder where Android's picker permits it. The helper creates the `mobileconfig` child directory.
 
-MetaConfig experiments may be unstable, account-specific, or carry service/account risk. No safety or compatibility guarantee is made. This independent community project is not affiliated with Meta or Morphe.
+Android 11+ may prohibit selecting storage roots or restricted directories. If the system picker does not allow the intended parent folder, this exact destination cannot be written through SAF on that device. The installer reports failure rather than silently writing somewhere else.
+
+## Targets
+
+| App | Package |
+|---|---|
+| Instagram | `com.instagram.android` |
+| Threads | `com.instagram.barcelona` |
+| Edits | `com.instagram.basel` |
+| Instants | `com.instagram.moonshot` (candidate; verify on-device) |
+
+## Validation
+
+Run `python3 scripts/validate_config.py` to validate the source payload. This validates repository data only; it does not prove device deployment.
+
+## Current limitation
+
+For Instagram the startup hook is wired (see Runtime install above). The other apps still need an app-specific bytecode fingerprint and a verified call site; do not guess the fingerprint: inspect the exact APK for each app before enabling the hook. The SAF setup screen must be launched from a visible Activity context; Android does not permit silently granting access to arbitrary removable-storage folders. No app is currently advertised as end-to-end tested on device.

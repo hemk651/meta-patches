@@ -1,19 +1,19 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.0.0",
+  "version": "1.1.0-dev.4",
   "patches": [
     {
-      "name": "Edits — compatibility entry",
-      "description": "Registers Edits package compatibility. Runtime config injection is not included yet.",
-      "default": false,
+      "name": "AMOLED theme",
+      "description": "Forces Instagram dark theme surfaces to pure black (AMOLED).",
+      "default": true,
       "category": null,
       "compatiblePackages": [
         {
-          "packageName": "com.instagram.basel",
-          "name": "Edits",
+          "packageName": "com.instagram.android",
+          "name": "Instagram",
           "description": null,
           "apkFileType": "APK",
-          "appIconColor": "#6C63FF",
+          "appIconColor": "#E1306C",
           "signatures": null,
           "formFactor": "MOBILE",
           "targets": [
@@ -30,8 +30,8 @@
       "options": []
     },
     {
-      "name": "Instagram — compatibility entry",
-      "description": "Registers Instagram package compatibility. Runtime config injection is not included yet.",
+      "name": "Add Mods menu",
+      "description": "Adds the Mods menu (fork of the InstaFL menu): long press the home feed to open the quick menu, incl. developer options.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -57,8 +57,99 @@
       "options": []
     },
     {
-      "name": "Instants — compatibility entry",
-      "description": "Registers Instants package compatibility. Runtime config injection is not included yet.",
+      "name": "Change channel name",
+      "description": "Replaces the release channel name (NONE, ALPHA, BETA, PROD) shown in the developer options UI.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.instagram.android",
+          "name": "Instagram",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#E1306C",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": null,
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": [
+        {
+          "key": "channelName",
+          "title": "Channel name",
+          "description": "The name shown in place of the release channel.",
+          "required": false,
+          "type": "kotlin.String",
+          "default": "Mods",
+          "values": null
+        }
+      ]
+    },
+    {
+      "name": "Developer Options Unlocker (Employee Options)",
+      "description": "Packages the MetaConfig override and SAF installer for Edits. Employee flag compatibility and app-side loading are unverified; no bytecode unlock hook is included.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.instagram.basel",
+          "name": "Edits",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#6C63FF",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": null,
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Developer Options Unlocker (Employee Options)",
+      "description": "Packages the Employee Options MetaConfig override (28538::0 = true) and SAF installer for Instagram. Actual activation requires the app to read the deployed file; bytecode unlocking is not included.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.instagram.android",
+          "name": "Instagram",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#E1306C",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": null,
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Developer Options Unlocker (Employee Options)",
+      "description": "Packages the MetaConfig override and SAF installer for Instants. Package and employee-flag compatibility require on-device verification; no bytecode unlock hook is included.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -84,8 +175,8 @@
       "options": []
     },
     {
-      "name": "Threads — compatibility entry",
-      "description": "Registers Threads package compatibility. Runtime config injection is not included yet.",
+      "name": "Developer Options Unlocker (Employee Options)",
+      "description": "Packages the MetaConfig override and SAF installer for Threads. Employee flag compatibility and app-side loading are unverified; no bytecode unlock hook is included.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -95,6 +186,87 @@
           "description": null,
           "apkFileType": "APK",
           "appIconColor": "#101010",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": null,
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Remove ads",
+      "description": "Removes ads in Instagram by stopping the ad pod flow.",
+      "default": true,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.instagram.android",
+          "name": "Instagram",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#E1306C",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": null,
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Remove snooze warning",
+      "description": "Removes the \"build expired\" snooze warning dialog that alpha builds show.",
+      "default": true,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.instagram.android",
+          "name": "Instagram",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#E1306C",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": null,
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Unlock developer options",
+      "description": "Unlocks the employee options (developer options) menu.",
+      "default": true,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.instagram.android",
+          "name": "Instagram",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#E1306C",
           "signatures": null,
           "formFactor": "MOBILE",
           "targets": [
