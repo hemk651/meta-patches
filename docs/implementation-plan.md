@@ -1,5 +1,15 @@
 # Implementation plan
 
+> **Origin:** This project is a fork of [InstaFL](https://github.com/mamiiblt/instafel)
+> by [mamiiblt](https://github.com/mamiiblt) (Muhammed Ali Bulut). The patch
+> ideas, the embedded menu and the developer-options approach originate from
+> InstaFL; credit belongs to its author. Meta Patches is an independent fork
+> and is not affiliated with InstaFL, Meta, or Instagram.
+
+## Scope
+
+Exactly two apps are in scope: Instagram (`com.instagram.android`) and Instagram Instants (`com.instagram.moonshot`). The configuration payload is shared; package compatibility, startup hooks, and storage access are app-specific.
+
 ## Completed
 
 - [x] Canonical JSON payload (`config/mc_overrides.json`) and repository validator (`scripts/validate_config.py`).
@@ -22,6 +32,8 @@
 - [x] System bar insets for all menu pages (v1.1.0-dev.12): Android 15+ enforces edge-to-edge, which pushed every page title under the status bar. A shared `ModsUi.applySystemBarInsets` helper pads the page root by the status/navigation/cutout insets on API 30+ and fits system windows below.
 - [x] Import backup ported from InstaFL (v1.1.0-dev.12): Misc → Backup → Import backup opens the system file picker — full replace or merge into `<filesDir>/mobileconfig/mc_overrides.json` (same path `MCOverrides.install` writes; the optional `"backup"` wrapper of InstaFL backups is unwrapped, merge keeps current values and only adds missing entries). A marker file makes the bundled installer stand down so imports survive restarts; "Restore bundled overrides" undoes an import. The old-backup and mapping-file flows of InstaFL were not ported (no export/mapping feature here yet).
 - [x] Fork-of-InstaFL attribution (v1.1.0-dev.12): README carries the explicit "This project is a fork of InstaFL" credit next to the release-flow-regenerated patches section (which only rewrites the `PATCHES_START`/`END` block), and the in-app About credits text states the same.
+- [x] Ported the Instants Mod from Wagg13 (v1.2.0-dev.1): the functional parts of Wagg13Patch_Morphe's "Instants Mod" (https://github.com/WaggBR/Wagg13Patch_Morphe, GPL-3) for Instagram Instants (`com.instagram.moonshot`) — the gallery button on the camera screen (posts a picked photo or a short video through the camera pipeline, Home-route visibility detection) and the "Save to gallery" row in the friends' Instant overflow menu (photos and videos via MediaStore, needs Android 10+). Upstream's branding parts (launcher icon, wordmark, "Mod by Wagg13" About row) were not ported; name and description kept. Helper classes merged into the shared extension as `app.hemk651.meta.extension.instants`; patch package `app.hemk651.patches.instants`; compatibility declares every version (upstream pinned 451.0.0.53.106). Fingerprint verification against 455.0.0.55.95 awaits the user's APK (helpers are self-contained: framework + reflection only).
+- [x] Harness selects the patch set by APK (v1.2.0-dev.1): the AndroidManifest bytes of the input APK are sniffed for the exact package name `com.instagram.moonshot` (NUL-stripped, so UTF-16LE string pools match; the Instagram manifest mentions "moonshot" only as a share target, which the exact-name search rejects), and the Instants patch (with its unnamed dependency parts) is selected for moonshot builds.
 
 ## Removed (dead machinery)
 
@@ -35,3 +47,5 @@ Removed: the four per-app packaging patch declarations (Instagram/Threads/Edits/
 - [ ] Confirm the v1.1.0-dev.12 menu changes on device (developer options from the menu, applied-patches list, version display, insets, import backup).
 - [ ] Export (write-back) of the current overrides as a backup file, completing the InstaFL backup round trip.
 - [ ] Push the prepared release workflow guard (`classes.dex` presence check); requires `gh auth refresh -h github.com -s workflow`.
+- [ ] Verify the ported Instants Mod on device against 455.0.0.55.95 (APK awaited from the user; harness run done, fingerprint adaptation if any part fails).
+- [ ] DM screen status-bar report (v1.1.0-dev.12): stock-vs-patched APK comparison shows the bundle changes nothing that can affect layout (manifest diff = only the nine menu activities; resources.arsc diff = only the four AMOLED color values plus runtime-invisible placeholder renames of already-obfuscated names; no window/insets code touched). Awaiting a screenshot and a stock-build comparison before any change; an inset shim on the DM window would risk double padding since Instagram drives edge-to-edge itself (`enableEdgeToEdge=true` in its own theme).

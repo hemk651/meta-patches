@@ -21,6 +21,7 @@
 
 package util
 
+import app.hemk651.patches.instants.instantsModPatch
 import app.hemk651.patches.meta.addModsMenuPatch
 import app.hemk651.patches.meta.amoledThemePatch
 import app.hemk651.patches.meta.changeChannelNamePatch
@@ -139,14 +140,29 @@ fun main(arguments: Array<String>) {
     require(input.isFile) { "Stock APK does not exist: $input" }
     val sdk = System.getenv("ANDROID_HOME") ?: error("ANDROID_HOME is required for DEX verification")
 
-    val selected = setOf(
-        removeAdsPatch,
-        removeSnoozeWarningPatch,
-        unlockDeveloperOptionsPatch,
-        amoledThemePatch,
-        changeChannelNamePatch,
-        addModsMenuPatch
-    )
+    // The bundle covers two apps. The Instants APK (com.instagram.moonshot)
+    // is detected from its manifest: the binary XML stores its strings as
+    // UTF-8 or UTF-16LE, so the NUL bytes are stripped before the substring
+    // search. The Instagram APK keeps the fixed patch set below.
+    val manifestBytes = java.util.zip.ZipFile(input).use { zip ->
+        zip.getInputStream(zip.getEntry("AndroidManifest.xml")).use { it.readBytes() }
+    }
+    val manifestText = String(manifestBytes.filter { it != 0.toByte() }.toByteArray(), Charsets.ISO_8859_1)
+    // The exact package name: the Instagram manifest mentions "moonshot" too,
+    // as a share target ("com.instagram.share.add_to_reel_moonshot").
+    val selected = if (manifestText.contains("com.instagram.moonshot")) {
+        println("Detected the Instagram Instants APK (com.instagram.moonshot)")
+        setOf(instantsModPatch)
+    } else {
+        setOf(
+            removeAdsPatch,
+            removeSnoozeWarningPatch,
+            unlockDeveloperOptionsPatch,
+            amoledThemePatch,
+            changeChannelNamePatch,
+            addModsMenuPatch
+        )
+    }
 
     val workspace = createTempDirectory("meta-patches-build").toFile()
     val verifier = InstagramDexVerifier(File(sdk))

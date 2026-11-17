@@ -5,8 +5,10 @@ An independent Morphe patch source for Instagram.
 > This project is a fork of [InstaFL](https://github.com/mamiiblt/instafel) by
 > [mamiiblt](https://github.com/mamiiblt) (Muhammed Ali Bulut). The menu, the
 > tools and the patch ideas come from InstaFL — thank you for building and
-> sharing the project. Meta Patches is an independent fork; it is not
-> affiliated with InstaFL, Meta, or Instagram.
+> sharing the project. The Instagram Instants patch is a port of the
+> functional parts of [Wagg13Patch_Morphe](https://github.com/WaggBR/Wagg13Patch_Morphe)
+> by Wagg13 — thank you as well. Meta Patches is an independent fork; it is
+> not affiliated with InstaFL, Wagg13, Meta, or Instagram.
 
 <!-- PATCHES_START EXPANDED -->
 > **[v1.1.0-dev.7](https://github.com/hemk651/meta-patches/releases/tag/v1.1.0-dev.7)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;6 patches total
