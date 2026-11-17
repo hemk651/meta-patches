@@ -55,11 +55,17 @@ public class ModsMiscActivity extends Activity {
                     ModsInit.showToast(this, "This patch is compiled into the app")));
         }
 
+        content.addView(ui.sectionTitle("Backup"));
+        content.addView(ui.tile("⤓", "Import backup",
+                "Restore overrides from a JSON backup file", "›",
+                v -> openActivity(ModsImportBackupActivity.class)));
+
         content.addView(ui.sectionTitle("Build"));
         content.addView(ui.tile("⎇", "Patch Version", ModsEnv.PATCH_VERSION, "›",
                 v -> openActivity(ModsBuildInfoActivity.class)));
 
         root.addView(ui.pageContent(content));
+        ModsUi.applySystemBarInsets(root);
         setContentView(root);
     }
 

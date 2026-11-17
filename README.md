@@ -2,6 +2,12 @@
 
 An independent Morphe patch source for Instagram.
 
+> This project is a fork of [InstaFL](https://github.com/mamiiblt/instafel) by
+> [mamiiblt](https://github.com/mamiiblt) (Muhammed Ali Bulut). The menu, the
+> tools and the patch ideas come from InstaFL — thank you for building and
+> sharing the project. Meta Patches is an independent fork; it is not
+> affiliated with InstaFL, Meta, or Instagram.
+
 <!-- PATCHES_START EXPANDED -->
 > **[v1.1.0-dev.7](https://github.com/hemk651/meta-patches/releases/tag/v1.1.0-dev.7)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;6 patches total
 <details open>
@@ -42,6 +48,11 @@ The optional "Add Mods menu" patch ports the InstaFL quick menu: **long press th
 - Opening the menu can no longer take the app down: if the sheet fails to open, the handler reports the error into the in-app crash reports and shows a toast naming the cause (`Menu error: <Exception>`).
 - Since v1.1.0-dev.10 the popups behave like back gestures: tapping the dimmed background (or any empty spot of the sheet) closes the quick sheet, and tapping an empty area of the Mods menu activity closes it. Every item action and both activity `onCreate` bodies are wrapped — a failure lands in the crash reports and a `Menu error: <Exception>` toast instead of crashing the app.
 - The menu activities declare the framework theme `Theme.Material.NoActionBar` in the manifest. Without it they inherited Instagram's application theme — the splash theme chain (`Theme.Instagram.Splash`) — whose unresolved `textAppearance` attributes made the first `TextView` of the menu throw `Failed to resolve attribute at index 7`, crashing every menu activity at start. Reported on device with v1.1.0-dev.9; fixed in v1.1.0-dev.11 (verified by `aapt2 dump xmltree` of the output APK).
+- Developer options from the Mods menu (v1.1.0-dev.12): the menu activity sits in front of the feed, which is stopped with its fragment state saved, so committing the navigation there threw `IllegalStateException: Can not perform this action after onSaveInstanceState` (reported on device). The menu now finishes itself first and navigates the feed once it has window focus again (short retry loop, guarded like every menu action).
+- The menu shows the real patch bundle version everywhere (Build info, Misc, crash reports): it is generated into the extension's `BuildConfig` from the Gradle project version, which the release flow sets to the release version before the bundle is built. Previously a stale constant ("1.0.0") was displayed and written into crash reports.
+- The "Applied package patches" screen parses the patch list injected at patch time; the list JSON is now escaped, so descriptions containing literal quotes (e.g. the "build expired" snooze warning) no longer break the parse and show "Failed to read the applied patches."
+- Every menu page pads its root by the system bar insets: Android 15+ enforces edge-to-edge, which used to push the page titles under the status bar.
+- **Import backup** (v1.1.0-dev.12, ported from InstaFL's developer options import): Misc → Backup → Import backup picks a JSON backup through the system file picker — *Full replace* overwrites the overrides file, *Merge* adds only the entries the current file does not define (current values win), and *Restore bundled overrides* reinstalls the payload bundled with the build. InstaFL backups (with the `"backup"` wrapper) and plain overrides files are both accepted; imports are written as compact single-line JSON and survive app restarts (a marker file keeps the bundled installer from overwriting them).
 - Crash reports live in the Mods menu (Open Meta menu → Crash reports); the log file is written to `<external files dir>/mp_update_files/mp_crashlogs.json` (e.g. `/storage/emulated/0/Android/data/com.instagram.android/files/mp_update_files/mp_crashlogs.json`).
 - The extension initialization (`ModsInit.init`) is injected after the app shell's `Application.onCreate` super call whenever it is not present yet — independently of the "Unlock developer options" patch, which injects its own `MCOverrides.install` call at the same site. (Previously the two patches could each skip the other's injection, leaving the menu without a context.)
 
@@ -57,8 +68,8 @@ Run `python3 scripts/validate_config.py` to validate the source payload. This va
 
 ## Current limitation
 
-For Instagram the startup hook is wired and the payload install plus dev-options unlock are confirmed working on device (v1.1.0-dev.5). The "Remove ads" patch now installs the full community-tested ad-removal override set (1370 parameters, merged with the developer-options parameters; see InstaFL issues #143, #150 and #160 for on-device ad coverage reports), embedded into the extension DEX at build time (v1.1.0-dev.7).
+For Instagram the startup hook is wired and the payload install plus dev-options unlock are confirmed working on device (v1.1.0-dev.5). The Mods menu itself opens on device (v1.1.0-dev.11, theme fix confirmed). The "Remove ads" patch now installs the full community-tested ad-removal override set (1370 parameters, merged with the developer-options parameters; see InstaFL issues #143, #150 and #160 for on-device ad coverage reports), embedded into the extension DEX at build time (v1.1.0-dev.7).
 
-The Mods menu crash on a home long press (v1.1.0-dev.5–dev.8) is fixed in v1.1.0-dev.9: the register layouts of the replaced methods now match InstaFL's proven smali and the patched registers were verified by dex inspection of the output APK. On-device confirmation of the menu itself is still pending.
+The v1.1.0-dev.12 menu changes (developer options from the menu, applied-patches list, patch version display, system bar insets, import backup) are verified by the build harness and await on-device confirmation.
 
 > Note for consumers: the Morphe manager runs the patcher on-device and loads the patch classes from the bundle's `classes.dex`, which only the `:patches:buildAndroid` task adds to the bundle.
