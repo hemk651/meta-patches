@@ -15,4 +15,6 @@ object MetaCompatibilities {
     )
 
     val INSTAGRAM = target("Instagram", "com.instagram.android", 0xE1306C)
+
+    val INSTANTS = target("Instagram Instants", "com.instagram.moonshot", 0xE1306C)
 }
