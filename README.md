@@ -46,4 +46,6 @@ Run `python3 scripts/validate_config.py` to validate the source payload. This va
 
 ## Current limitation
 
-For Instagram the startup hook is wired and the payload install plus dev-options unlock are confirmed working on device (v1.1.0-dev.5). The "Remove ads" patch is currently a bytecode-only port; ad coverage (stories, promotional videos, reels) is being extended.
+For Instagram the startup hook is wired and the payload install plus dev-options unlock are confirmed working on device (v1.1.0-dev.5). The "Remove ads" patch now installs the full community-tested ad-removal override set (1370 parameters, merged with the developer-options parameters; see InstaFL issues #143, #150 and #160 for on-device ad coverage reports), embedded into the extension DEX at build time (v1.1.0-dev.7).
+
+> Note for consumers: the Morphe manager runs the patcher on-device and loads the patch classes from the bundle's `classes.dex`, which only the `:patches:buildAndroid` task adds to the bundle.
