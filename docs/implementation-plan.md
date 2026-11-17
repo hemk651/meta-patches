@@ -14,6 +14,7 @@
 - [x] Fixed the Mods menu crash on a home long press (v1.1.0-dev.9): the replaced `onLongClick` listener and `openDeveloperOptions` body now use InstaFL's fixed register layouts (`.registers 6` / `.registers 7`, dismiss through `p0`) instead of hardcoded registers on an uninitialized one; verified by dex inspection of the harness output APK.
 - [x] Home sheet handler degrades gracefully: `try/catch(Throwable)` reports into the in-app crash reports (`<external files dir>/mp_update_files/mp_crashlogs.json`) and toasts `Menu error: <Exception>` instead of crashing the app.
 - [x] `ModsInit.init` injection is guarded per call site (not "any extension reference"), so "Unlock developer options" and "Add Mods menu" no longer suppress each other's hook.
+- [x] Outside-tap closing and graceful menu actions (v1.1.0-dev.10): tapping the dimmed background (or an empty spot) closes the quick sheet and the Mods menu activity like a back gesture; sheet items, menu tiles and both `onCreate` bodies are wrapped so failures are reported (`Menu error: <Exception>` toast + crash report) instead of crashing. The final APK's manifest was verified to declare all eight menu activities (`aapt2 dump xmltree`).
 
 ## Removed (dead machinery)
 
@@ -25,4 +26,5 @@ Removed: the four per-app packaging patch declarations (Instagram/Threads/Edits/
 
 - [ ] Extend "Remove ads" to cover stories ads, promotional videos, and reels ads (currently a bytecode-only port of the InstaFL ad-pod patch).
 - [ ] Confirm the Mods menu opens on device with v1.1.0-dev.9 (crash fix verified at bytecode level only).
+- [ ] Diagnose the "Open Meta menu" crash reported on device with v1.1.0-dev.9 (crash log pending). With dev.10 the app survives such failures and the toast/crash report names the real exception; the manifest declares the activities, so the cause is inside the activity start path.
 - [ ] Push the prepared release workflow guard (`classes.dex` presence check); requires `gh auth refresh -h github.com -s workflow`.
