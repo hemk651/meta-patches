@@ -45,8 +45,11 @@ public class ModsHomeSheet {
         try {
             sheetDialog = buildSheet();
             sheetDialog.show();
-        } catch (Exception e) {
-            ModsInit.showToast(act, "An error occurred while building / showing dialog");
+        } catch (Throwable t) {
+            // A broken sheet degrades to a crash report + toast instead of
+            // crashing the app.
+            ModsInit.reportError(act, t);
+            ModsInit.showToast(act, "Menu error: " + t.getClass().getSimpleName());
         }
     }
 
@@ -54,6 +57,9 @@ public class ModsHomeSheet {
         Dialog dialog = new Dialog(act);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
+        // Tapping the dimmed background closes the sheet and returns to the
+        // feed, like a back gesture.
+        dialog.setCanceledOnTouchOutside(true);
 
         GradientDrawable bg = new GradientDrawable();
         bg.setColor(ui.background());
@@ -91,6 +97,9 @@ public class ModsHomeSheet {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         ));
+        // Tapping an empty spot of the sheet itself (padding, gaps, header)
+        // also closes it, like a back gesture.
+        root.setOnClickListener(v -> dismissSheetDialog());
 
         // Header. InstaFL shows the IFL version and the IG version in a
         // subtitle here; the subtitle is intentionally not ported.
@@ -128,7 +137,7 @@ public class ModsHomeSheet {
                 "Open " + ModsEnv.APP_NAME + " menu",
                 v -> {
                     dismissSheetDialog();
-                    ModsInit.startModsMenu();
+                    ModsInit.startModsMenu(act);
                 }));
 
         root.addView(sheetItem(
@@ -171,7 +180,10 @@ public class ModsHomeSheet {
         item.setPadding(ui.dp(15), ui.dp(12), ui.dp(15), ui.dp(12));
         item.setClickable(true);
         item.setFocusable(true);
-        item.setOnClickListener(onClickListener);
+        // Every sheet action degrades gracefully: a failure is reported into
+        // the crash reports and toasted instead of crashing the app.
+        item.setOnClickListener(v ->
+                ModsInit.safeRun(act, () -> onClickListener.onClick(v)));
 
         TextView icon = new TextView(act);
         icon.setText(glyph);

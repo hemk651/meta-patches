@@ -47,12 +47,21 @@ public class ModsInit {
 
     /** Opens the main Mods menu activity. */
     public static void startModsMenu() {
-        if (ctx == null) {
+        startModsMenu(null);
+    }
+
+    /**
+     * Opens the main Mods menu activity, preferring the given context and
+     * falling back to the one stored by {@link #init(Context)}.
+     */
+    public static void startModsMenu(Context context) {
+        Context base = context != null ? context : ctx;
+        if (base == null) {
             return;
         }
-        Intent intent = new Intent(ctx, ModsMenuActivity.class);
+        Intent intent = new Intent(base, ModsMenuActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        ctx.startActivity(intent);
+        base.startActivity(intent);
     }
 
     /** Restarts the whole app process, like InstaFL's restart menu item. */
@@ -82,6 +91,19 @@ public class ModsInit {
             new ModsCrashManager(context).saveLog(throwable);
         } catch (Exception ignored) {
             // Crash reporting must never become the crash itself.
+        }
+    }
+
+    /**
+     * Runs a menu action, reporting any failure into the in-app crash reports
+     * and as a toast naming the cause instead of crashing the app.
+     */
+    public static void safeRun(Context context, Runnable action) {
+        try {
+            action.run();
+        } catch (Throwable t) {
+            reportError(context, t);
+            showToast(context, "Menu error: " + t.getClass().getSimpleName());
         }
     }
 
