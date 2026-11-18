@@ -137,4 +137,4 @@ MetaConfig experiments can be unstable, account-specific, or carry service/accou
 
 ## Credits and licensing
 
-Meta Patches builds on ideas and code from [InstaFL](https://github.com/mamiiblt/instafel). See [NOTICE](NOTICE) for attribution and [CHANGELOG.md](CHANGELOG.md) for release history. The project is licensed under GPL-3.0; see the repository's license and notice files.
+The patch module declares GPLv3 in its Morphe metadata. See [NOTICE](NOTICE) for Morphe naming restrictions and [CHANGELOG.md](CHANGELOG.md) for release history.
