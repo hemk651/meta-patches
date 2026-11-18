@@ -24,7 +24,7 @@ An independent [Morphe](https://github.com/MorpheApp) patch source for Instagram
 This section is generated from `patches-list.json` during the release workflow. Do not edit the generated section by hand.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.1.0](https://github.com/hemk651/meta-patches/releases/tag/v1.1.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;8 patches total
+> **[v1.1.1](https://github.com/hemk651/meta-patches/releases/tag/v1.1.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;8 patches total
 <details open>
 <summary>📦 Instagram&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -39,7 +39,7 @@ This section is generated from `patches-list.json` during the release workflow. 
 | [Remove ads](#remove-ads) | Removes ads in Instagram by stopping the ad pod flow. |  |
 | [Remove snooze warning](#remove-snooze-warning) | Removes the "build expired" snooze warning dialog that alpha builds show. |  |
 | [Unlock developer options](#unlock-developer-options) | Unlocks the developer options: writes the MobileConfig overrides file that reveals Developer options in the settings together with a dedicated Employee options entry, and forces the employee options gate to true (shake-gesture entry). The overrides file becomes active after an app restart. |  |
-| [Upload Instants from Gallery](#upload-instants-from-gallery) | Adds a gallery button to the Instants camera to post photos and videos from your device's gallery. |  |
+| [Upload instants from gallary](#upload-instants-from-gallary) | Adds a gallery button to the Instants camera to post photos and videos from your device's gallery. |  |
 
 </details>
 
