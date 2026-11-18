@@ -90,7 +90,7 @@ The patch is included and available, but its functionality is not yet working re
 
 ### Threads
 
-<badge color="warning">Under development</badge>
+**🚧 Under development**
 
 Threads support is being worked on and is not included in the current stable release. No Threads patch is available in v1.1.0.
 
