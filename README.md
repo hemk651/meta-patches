@@ -161,6 +161,6 @@ Version-agnostic target declarations do not mean every app version is guaranteed
 
 ## Credits, license, and disclaimer
 
-This project incorporates work and ideas from InstaFL and Wagg13Patch_Morphe. Please retain the upstream attribution and license notices when redistributing. See [NOTICE](NOTICE), [CHANGELOG.md](CHANGELOG.md), and the repository license.
+The patch module declares GPLv3 in its Morphe metadata. See [NOTICE](NOTICE) for Morphe naming restrictions, retain upstream attribution when redistributing, and consult [CHANGELOG.md](CHANGELOG.md) for release history.
 
 Meta Patches is an independent community project. It is not endorsed by Meta, Instagram, InstaFL, Wagg13, or Morphe. Modifying third-party apps may cause instability or account/service consequences. Use at your own discretion.
