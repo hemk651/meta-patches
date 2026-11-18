@@ -2,28 +2,19 @@
 
 This page records the functional target scope and the verification evidence documented for the promoted stable branch.
 
-| App | Android package ID | Release status |
-|---|---|---|
-| Instagram | `com.instagram.android` | 🟢 Included — all 7 listed patches reported working well |
-| Instagram Instants | `com.instagram.moonshot` | 🟡 Included — patch available, functionality not yet working reliably |
-| Threads | — | 🚧 Under development — not included in v1.1.0 |
+| App | Android package ID | Patch | Available | Working well |
+|---|---|---|:---:|:---:|
+| Instagram | `com.instagram.android` | AMOLED theme | 🟢 ✓ | 🟢 ✓ |
+| Instagram | `com.instagram.android` | Add Mods menu | 🟢 ✓ | 🟢 ✓ |
+| Instagram | `com.instagram.android` | Change channel name | 🟢 ✓ | 🟢 ✓ |
+| Instagram | `com.instagram.android` | Remove ads | 🟢 ✓ | 🟢 ✓ |
+| Instagram | `com.instagram.android` | Remove snooze warning | 🟢 ✓ | 🟢 ✓ |
+| Instagram | `com.instagram.android` | Unlock developer options | 🟢 ✓ | 🟢 ✓ |
+| Instagram | `com.instagram.android` | Upload Instants from Gallery | 🟢 ✓ | 🟢 ✓ |
+| Instagram Instants | `com.instagram.moonshot` | Instants Mod | 🟢 ✓ | 🔴 ✗ |
+| Threads | — | — | 🚧 Under development | — |
 
 Edits is not currently included in this stable release line.
-
-## Patch-level status
-
-| App | Patch | Available | Working well |
-|---|---|:---:|:---:|
-| Instagram | AMOLED theme | 🟢 ✓ | 🟢 ✓ |
-| Instagram | Add Mods menu | 🟢 ✓ | 🟢 ✓ |
-| Instagram | Change channel name | 🟢 ✓ | 🟢 ✓ |
-| Instagram | Remove ads | 🟢 ✓ | 🟢 ✓ |
-| Instagram | Remove snooze warning | 🟢 ✓ | 🟢 ✓ |
-| Instagram | Unlock developer options | 🟢 ✓ | 🟢 ✓ |
-| Instagram | Upload Instants from Gallery | 🟢 ✓ | 🟢 ✓ |
-| Instagram Instants | Instants Mod | 🟢 ✓ | 🔴 ✗ |
-
-Threads remains under development and is not part of the stable release.
 
 ## Instagram
 
@@ -37,7 +28,7 @@ The runtime writer installs the bundled configuration to:
 
 The app-private path is intentional: the previous removable-storage/SAF design was removed because the extension's dex-only merge does not deliver the host app's assets to the target app.
 
-The **Upload instants from gallery** patch explicitly targets `com.instagram.android`. It adds gallery selection to Instagram's built-in Instants camera. It is separate from the **Instants Mod** patch, which targets `com.instagram.moonshot`.
+The **Upload Instants from Gallery** patch explicitly targets `com.instagram.android`. It adds gallery selection to Instagram's built-in Instants camera. It is separate from the **Instants Mod** patch, which targets `com.instagram.moonshot`.
 
 ## Instagram Instants
 
