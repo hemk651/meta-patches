@@ -1,14 +1,28 @@
 # Meta Patches
 
-An independent Morphe patch source for a shared MetaConfig override file across four Meta Android apps.
+[![Build](https://github.com/hemk651/meta-patches/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/hemk651/meta-patches/actions/workflows/build.yml)
+[![Release](https://github.com/hemk651/meta-patches/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/hemk651/meta-patches/actions/workflows/release.yml)
 
-> This project is a fork of [Instafel](https://github.com/mamiiblt/instafel) by
-> [mamiiblt](https://github.com/mamiiblt) (Muhammed Ali Bulut). The menu, the
-> tools and the patch ideas come from InstaFL — thank you for building and
-> sharing the project. Meta Patches is an independent fork; it is not
-> affiliated with InstaFL, Meta, or Instagram.
+An independent [Morphe](https://github.com/MorpheApp) patch source exploring shared MetaConfig overrides for Meta Android applications.
+
+> **Branch:** `main` · **Release baseline:** `v1.0.0` · **Status:** compatibility declarations and repository foundation
+>
+> This project is an independent fork of [InstaFL](https://github.com/mamiiblt/instafel) by [mamiiblt](https://github.com/mamiiblt) (Muhammed Ali Bulut). The project is not affiliated with Meta, Instagram, or Morphe.
+
+## Quick links
+
+- [Add this source to Morphe](https://morphe.software/add-source?github=hemk651/meta-patches)
+- [Latest main release](https://github.com/hemk651/meta-patches/releases)
+- [Development branch](https://github.com/hemk651/meta-patches/tree/dev)
+- [Feature and implementation status](docs/feature-status.md)
+- [Supported app identifiers](docs/supported-apps.md)
+- [Implementation plan](docs/implementation-plan.md)
+- [Version compatibility policy](docs/version-policy.md)
+- [Dynamic storage-path notes](docs/storage-path.md)
 
 ## Morphe patches
+
+The list below is generated from `patches-list.json` during the release workflow. Do not edit the generated section by hand.
 
 <!-- PATCHES_START -->
 > **[v1.0.0](https://github.com/hemk651/meta-patches/releases/tag/v1.0.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;4 patches total
@@ -62,45 +76,65 @@ An independent Morphe patch source for a shared MetaConfig override file across 
 
 <!-- PATCHES_END -->
 
-## Target apps
+## What this branch currently provides
 
-| App | Package ID | Verification |
+The `main` branch is the conservative v1.0.0 baseline. It contains four Morphe compatibility declarations, a shared MetaConfig JSON payload, Gradle project configuration, patch-list generation, validation, and GitHub Actions build/release workflows.
+
+**Important:** the four entries register package compatibility only. They do not currently inject the configuration at runtime, unlock developer options, or modify the target apps' behavior. A patch appearing in Morphe is not evidence that its feature is implemented or device-tested.
+
+| App | Android package | Main-branch state |
 |---|---|---|
-| Instagram | `com.instagram.android` | Known package; target APK not yet tested |
-| Threads | `com.instagram.barcelona` | Known package; target APK not yet tested |
-| Edits | `com.instagram.basel` | Google Play package confirmed; target APK not yet tested |
-| Instants | `com.instagram.moonshot` | Candidate package; verify on-device before release |
+| Instagram | `com.instagram.android` | Compatibility declaration only |
+| Threads | `com.instagram.barcelona` | Compatibility declaration only |
+| Edits | `com.instagram.basel` | Compatibility declaration only |
+| Instants | `com.instagram.moonshot` | Compatibility declaration only; package identity should be confirmed on-device |
 
-## Feature
+For the functional Instagram and Instants implementation, see the [dev branch](https://github.com/hemk651/meta-patches/tree/dev). The two branches intentionally represent different project states.
 
-Install the same `mc_overrides.json` payload into each app's intended `mobileconfig` directory.
+## Configuration
 
-The requested destination pattern is:
-
-```text
-/storage/<volume-id>/data/files/mobileconfig/mc_overrides.json
-```
-
-The volume ID is dynamic and must never be hard-coded.
-
-## Canonical configuration
-
-The single source of truth is [config/mc_overrides.json](config/mc_overrides.json). Validate it with:
+The canonical payload is [`config/mc_overrides.json`](config/mc_overrides.json). The validator checks that the JSON is valid and matches the reviewed values:
 
 ```bash
 python3 scripts/validate_config.py
 ```
 
-## Android storage constraints
+Validation checks repository data only. It does not prove that an Android app loads the payload or that a feature is enabled.
 
-On Android 11 and later, a normal app cannot assume write access to an arbitrary directory at the root of removable storage. Discovering a volume UUID does not grant write permission. The implementation must use a verified access path, such as a user-granted Storage Access Framework tree URI where appropriate, and must fail clearly if the requested destination cannot be written.
+## Build from source
 
-The patch must not silently write to app-private storage or another folder as a fallback. It must also verify that the target app actually reads this file from the requested location.
+Requirements:
 
-## Development status
+- JDK 21
+- Git
+- Network access to resolve Gradle and Morphe dependencies
 
-The repository contains the shared payload, validation, project metadata, and initial Morphe Gradle configuration. App-specific startup hooks, APK fingerprints, removable-storage write integration, and a verified build are still pending. No app is currently advertised as tested or working.
+Build the Morphe patch bundle:
 
-## Risk and disclaimer
+```bash
+./gradlew :patches:buildAndroid --no-daemon
+```
 
-MetaConfig experiments may be unstable, account-specific, or carry service/account risk. No safety or compatibility guarantee is made. This independent community project is not affiliated with Meta or Morphe.
+The GitHub Actions build workflow runs this task on pushes and pull requests targeting `main` or `dev`. The release workflow uses semantic-release to publish branch releases.
+
+## Repository layout
+
+| Path | Purpose |
+|---|---|
+| `patches/` | Morphe patch declarations and patch-list generation |
+| `extensions/extension/` | Android extension module |
+| `config/mc_overrides.json` | Canonical MetaConfig payload |
+| `scripts/validate_config.py` | Payload validation |
+| `.github/scripts/` | Generated README patch-list helper |
+| `.github/workflows/` | Build and release automation |
+| `docs/` | Compatibility, implementation, and storage documentation |
+
+## Compatibility and safety
+
+Morphe's version-agnostic target declarations are package selectors, not universal compatibility guarantees. App updates can change internal classes, methods, startup behavior, and configuration loading. See the [version policy](docs/version-policy.md) before treating any target as supported.
+
+MetaConfig experiments can be unstable, account-specific, or carry service/account risk. Use at your own discretion and keep a recoverable copy of important app data. This project is independent and is not endorsed by Meta or Morphe.
+
+## Credits and licensing
+
+Meta Patches builds on ideas and code from [InstaFL](https://github.com/mamiiblt/instafel). See [NOTICE](NOTICE) for attribution and [CHANGELOG.md](CHANGELOG.md) for release history. The project is licensed under GPL-3.0; see the repository's license and notice files.
