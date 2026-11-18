@@ -22,6 +22,7 @@
 package util
 
 import app.hemk651.patches.instants.instantsModPatch
+import app.hemk651.patches.instantsupload.uploadInstantsFromGalleryPatch
 import app.hemk651.patches.meta.addModsMenuPatch
 import app.hemk651.patches.meta.amoledThemePatch
 import app.hemk651.patches.meta.changeChannelNamePatch
@@ -160,7 +161,8 @@ fun main(arguments: Array<String>) {
             unlockDeveloperOptionsPatch,
             amoledThemePatch,
             changeChannelNamePatch,
-            addModsMenuPatch
+            addModsMenuPatch,
+            uploadInstantsFromGalleryPatch
         )
     }
 

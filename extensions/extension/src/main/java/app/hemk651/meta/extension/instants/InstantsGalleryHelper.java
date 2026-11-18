@@ -86,6 +86,26 @@ public final class InstantsGalleryHelper {
     }
 
     /**
+     * Called by the main app's patches when the Instants camera's view model is created:
+     * the camera screen is opening. The main app's camera has no route object of its own,
+     * so the button's visibility is tracked through the view model's lifecycle instead of
+     * the navigator (unlike {@link #onRoute}).
+     */
+    public static void onCameraOpened() {
+        cameraRoute = true;
+        ensureGalleryButton();
+    }
+
+    /**
+     * Called by the main app's patches when the Instants camera's view model is cleared:
+     * the camera screen is closing and the button must hide until the camera opens again.
+     */
+    public static void onCameraClosed() {
+        cameraRoute = false;
+        MAIN.post(InstantsGalleryHelper::applyVisibility);
+    }
+
+    /**
      * Called by the patched "photo captured" callback with the camera's bitmap. When an image
      * was picked from the gallery it is returned instead, and released: it is used for one
      * capture only. A private mutable copy is handed out because the app draws on and recycles
