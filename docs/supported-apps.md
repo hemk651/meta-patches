@@ -10,6 +10,21 @@ This page records the functional target scope and the verification evidence docu
 
 Edits is not currently included in this stable release line.
 
+## Patch-level status
+
+| App | Patch | Available | Working well |
+|---|---|:---:|:---:|
+| Instagram | AMOLED theme | 🟢 ✓ | 🟢 ✓ |
+| Instagram | Add Mods menu | 🟢 ✓ | 🟢 ✓ |
+| Instagram | Change channel name | 🟢 ✓ | 🟢 ✓ |
+| Instagram | Remove ads | 🟢 ✓ | 🟢 ✓ |
+| Instagram | Remove snooze warning | 🟢 ✓ | 🟢 ✓ |
+| Instagram | Unlock developer options | 🟢 ✓ | 🟢 ✓ |
+| Instagram | Upload Instants from Gallery | 🟢 ✓ | 🟢 ✓ |
+| Instagram Instants | Instants Mod | 🟢 ✓ | 🔴 ✗ |
+
+Threads remains under development and is not part of the stable release.
+
 ## Instagram
 
 The Instagram target includes the developer-options/MobileConfig runtime path, Mods menu extension, theme and channel-label modifications, ad-pod suppression, snooze-warning removal, and a selectable gallery-upload patch for the Instants camera inside the main Instagram app.
@@ -22,7 +37,7 @@ The runtime writer installs the bundled configuration to:
 
 The app-private path is intentional: the previous removable-storage/SAF design was removed because the extension's dex-only merge does not deliver the host app's assets to the target app.
 
-The **Upload instants from gallary** patch explicitly targets `com.instagram.android`. It adds gallery selection to Instagram's built-in Instants camera. It is separate from the **Instants Mod** patch, which targets `com.instagram.moonshot`.
+The **Upload instants from gallery** patch explicitly targets `com.instagram.android`. It adds gallery selection to Instagram's built-in Instants camera. It is separate from the **Instants Mod** patch, which targets `com.instagram.moonshot`.
 
 ## Instagram Instants
 
