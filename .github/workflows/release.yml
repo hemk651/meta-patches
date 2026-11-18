@@ -4,7 +4,7 @@ name: Release
 # are cancelled so the latest commit can be evaluated against the remote branch.
 concurrency:
   group: semantic-release-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 on:
   workflow_dispatch:
@@ -31,6 +31,19 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: lts/*
+      - name: Validate canonical MetaConfig payload and stage build asset
+        run: |
+          python3 scripts/validate_config.py
+          install -D config/mc_overrides.json extensions/extension/src/main/assets/mc_overrides.json
+          cmp config/mc_overrides.json extensions/extension/src/main/assets/mc_overrides.json
+      - name: Build Morphe patch bundle before release
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew :patches:buildAndroid --no-daemon
+      - name: Verify release bundle exists
+        run: |
+          test -n "$(find patches/build/libs -maxdepth 1 -type f -name '*.mpp' ! -name '*sources*' ! -name '*javadoc*' -print -quit)"
       - name: Install release dependencies
         run: npm install
       - name: Semantic release

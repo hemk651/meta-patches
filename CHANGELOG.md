@@ -1,3 +1,120 @@
+## [1.1.0-dev.14](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.13...v1.1.0-dev.14) (2026-11-18)
+
+### ✨ New Features
+
+* **patches:** add Instants upload from gallery patch for main Instagram ([f0d289a](https://github.com/hemk651/meta-patches/commit/f0d289ac71d21fc5f0d5290dfcdc3471e28a6ead))
+
+## [1.1.0-dev.13](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.12...v1.1.0-dev.13) (2026-11-17)
+
+### ✨ New Features
+
+* **instants:** port the Instants Mod from Wagg13 for Instagram Instants ([31f3ef9](https://github.com/hemk651/meta-patches/commit/31f3ef945cd6c5c81e07b44ad1b73cd95ee76455))
+
+## [1.1.0-dev.12](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.11...v1.1.0-dev.12) (2026-11-17)
+
+### ✨ New Features
+
+* **instagram:** port the InstaFL overrides backup import ([52514fd](https://github.com/hemk651/meta-patches/commit/52514fd05d94955030a10bb58043d9f90515dca0))
+
+### 🐛 Bug Fixes
+
+* **instagram:** fix the Mods menu items that failed on device ([583fdbf](https://github.com/hemk651/meta-patches/commit/583fdbfce735cb0791e54d5a38262a9de05df24b))
+
+## [1.1.0-dev.11](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.10...v1.1.0-dev.11) (2026-11-17)
+
+### 🐛 Bug Fixes
+
+* **instagram:** give the menu activities a self-contained theme ([9541ab4](https://github.com/hemk651/meta-patches/commit/9541ab4a61a556e472906424265aa9422384a981))
+
+## [1.1.0-dev.10](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.9...v1.1.0-dev.10) (2026-11-17)
+
+### 🐛 Bug Fixes
+
+* **instagram:** close Mods popups on outside taps and harden menu actions ([64f0976](https://github.com/hemk651/meta-patches/commit/64f09769406e3f9b7a5c9119d192ef6dc94fc99c))
+
+## [1.1.0-dev.9](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.8...v1.1.0-dev.9) (2026-11-17)
+
+### 🐛 Bug Fixes
+
+* **instagram:** fix Mods menu crash on home long press ([f314482](https://github.com/hemk651/meta-patches/commit/f314482d3da639b43b56f739dd337c729bfb87eb))
+
+## [1.1.0-dev.8](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.7...v1.1.0-dev.8) (2026-11-17)
+
+### 🐛 Bug Fixes
+
+* **release:** republish the bundle with the on-device patcher dex ([8a85555](https://github.com/hemk651/meta-patches/commit/8a85555a75b306de9bf9199d7cfa1525896f5644))
+
+## [1.1.0-dev.7](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.6...v1.1.0-dev.7) (2026-11-17)
+
+### 🐛 Bug Fixes
+
+* **instagram:** embed the full ad-blocking override payload ([9996154](https://github.com/hemk651/meta-patches/commit/99961542ff950700980271b69a508376cc0587c6)), closes [150/#160](https://github.com/150/meta-patches/issues/160)
+* **release:** republish the bundle with the on-device patcher dex ([8a85555](https://github.com/hemk651/meta-patches/commit/8a85555a75b306de9bf9199d7cfa1525896f5644))
+
+## [1.1.0-dev.7](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.6...v1.1.0-dev.7) (2026-11-17)
+
+### 🐛 Bug Fixes
+
+* **instagram:** embed the full ad-blocking override payload ([9996154](https://github.com/hemk651/meta-patches/commit/99961542ff950700980271b69a508376cc0587c6)), closes [150/#160](https://github.com/150/meta-patches/issues/160)
+
+## [1.1.0-dev.6](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.5...v1.1.0-dev.6) (2026-11-17)
+
+### 🐛 Bug Fixes
+
+* **instagram:** remove the unused SAF packaging patches and dead installer machinery ([2fe8abf](https://github.com/hemk651/meta-patches/commit/2fe8abf7e97cb353076d398405e8415a2e423011))
+
+## [1.1.0-dev.5](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.4...v1.1.0-dev.5) (2026-11-17)
+
+### 🐛 Bug Fixes
+
+* **instagram:** install the mc_overrides payload and force the dev options gate ([89c6344](https://github.com/hemk651/meta-patches/commit/89c634441ca893dc0771e8e0866175b865ae2cbb))
+
+## [1.1.0-dev.4](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.3...v1.1.0-dev.4) (2026-11-16)
+
+### ✨ New Features
+
+* **instagram:** port InstaFL patch set to Morphe format ([df83535](https://github.com/hemk651/meta-patches/commit/df835353ad4b95dc665b3b6d631765b0b198a6b0))
+
+### 🐛 Bug Fixes
+
+* **ci:** run the verification harnesses outside the test task ([f4576ea](https://github.com/hemk651/meta-patches/commit/f4576ea0189c672f767349ca60bd44b93b7cc6a7))
+* **instagram:** verify full patch run against the real APK ([387b40f](https://github.com/hemk651/meta-patches/commit/387b40fe50d34275ddf0716021caaf8bbf817635))
+
+## [1.1.0-dev.3](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.2...v1.1.0-dev.3) (2026-11-11)
+
+### 🐛 Bug Fixes
+
+* **ci:** build and verify patch bundle before semantic release ([b8d40a4](https://github.com/hemk651/meta-patches/commit/b8d40a4d035b635600eafdb698df08b83cfa02b5))
+* **installer:** verify saved destination and persist install state ([fdb6ebb](https://github.com/hemk651/meta-patches/commit/fdb6ebb347b191c8abafb283c1b12f03f643dce2))
+
+## [1.1.0-dev.2](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.1...v1.1.0-dev.2) (2026-11-11)
+
+### 🐛 Bug Fixes
+
+* **ci:** stage canonical config asset without editing source payload ([dd103e6](https://github.com/hemk651/meta-patches/commit/dd103e67bdc1b1c4933565882d7ccdc5eae57a34))
+
+## [1.1.0-dev.1](https://github.com/hemk651/meta-patches/compare/v1.0.0...v1.1.0-dev.1) (2026-11-11)
+
+### ✨ New Features
+
+* bundle Developer options unlocker for Edits ([3496e6d](https://github.com/hemk651/meta-patches/commit/3496e6d2652d8df71aa14963c7d4869d89bd75de))
+* bundle Developer options unlocker for Instagram ([fb62cdf](https://github.com/hemk651/meta-patches/commit/fb62cdfcef523fff34fde1dc8ebefaab893ddacf))
+* bundle Developer options unlocker for Instants ([7d25417](https://github.com/hemk651/meta-patches/commit/7d25417fa3f47138c964156c1384b8cc7316564e))
+* bundle Developer options unlocker for Threads ([74d697c](https://github.com/hemk651/meta-patches/commit/74d697cea4ab9d4b6d11cc9aa5c1b5d892d4a543))
+* bundle MetaConfig installer extension in app patches ([487178c](https://github.com/hemk651/meta-patches/commit/487178c789e5c8fdbb47f12af449674ad2c36a5b))
+* bundle MetaConfig installer extension in app patches ([bf8e40d](https://github.com/hemk651/meta-patches/commit/bf8e40d3420854fa7c6be7fed495c4c023a472ce))
+* bundle MetaConfig installer extension in app patches ([c2652d1](https://github.com/hemk651/meta-patches/commit/c2652d11ac31a2f89ba155c655f22c26d2964c61))
+* bundle MetaConfig installer extension in app patches ([235ce47](https://github.com/hemk651/meta-patches/commit/235ce4797ce796ad55aadb3bcfca2b44b57f332d))
+* **extension:** add bounded startup installer entry point ([d3d5941](https://github.com/hemk651/meta-patches/commit/d3d5941f03b94d02f609e9027c28b2c7692a7adb))
+* **extension:** add user-consented SAF setup activity ([53e28c5](https://github.com/hemk651/meta-patches/commit/53e28c5bd3ac24eb0691066a70459ca04424a205))
+* **extension:** register SAF setup activity ([3e8ee2e](https://github.com/hemk651/meta-patches/commit/3e8ee2ec0dc880db21f64da477e10db9b308a8dd))
+
+### 🐛 Bug Fixes
+
+* preserve startup retries until folder permission is granted ([1406f2f](https://github.com/hemk651/meta-patches/commit/1406f2f489a97fe10d88b0ce3982984ba9ab7b27))
+* **release:** add expanded patches README markers ([f60877e](https://github.com/hemk651/meta-patches/commit/f60877eecad235eae6372c5dc3c18022e692cf1d))
+* **release:** use valid generated README markers ([7e1d8fc](https://github.com/hemk651/meta-patches/commit/7e1d8fc37d7b133bbfd3e81af9a51f6a88186799))
+
 ## 1.0.0 (2026-11-11)
 
 ### ✨ New Features

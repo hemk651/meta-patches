@@ -3,138 +3,164 @@
 [![Build](https://github.com/hemk651/meta-patches/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/hemk651/meta-patches/actions/workflows/build.yml)
 [![Release](https://github.com/hemk651/meta-patches/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/hemk651/meta-patches/actions/workflows/release.yml)
 
-An independent [Morphe](https://github.com/MorpheApp) patch source exploring shared MetaConfig overrides for Meta Android applications.
+An independent [Morphe](https://github.com/MorpheApp) patch source for Instagram and Instagram Instants.
 
-> **Branch:** `main` · **Release baseline:** `v1.0.0` · **Status:** compatibility declarations and repository foundation
+> **Branch:** `main` · **Release channel:** stable · **Status:** official stable release line
 >
-> This project is an independent fork of [InstaFL](https://github.com/mamiiblt/instafel) by [mamiiblt](https://github.com/mamiiblt) (Muhammed Ali Bulut). The project is not affiliated with Meta, Instagram, or Morphe.
+> Meta Patches is an independent fork of [InstaFL](https://github.com/mamiiblt/instafel) by [mamiiblt](https://github.com/mamiiblt). The Instants and gallery-upload functionality includes ports from [Wagg13Patch_Morphe](https://github.com/WaggBR/Wagg13Patch_Morphe) by Wagg13. See [NOTICE](NOTICE) for attribution. This project is not affiliated with InstaFL, Wagg13, Meta, Instagram, or Morphe.
 
 ## Quick links
 
 - [Add this source to Morphe](https://morphe.software/add-source?github=hemk651/meta-patches)
-- [Latest main release](https://github.com/hemk651/meta-patches/releases)
+- [Stable releases](https://github.com/hemk651/meta-patches/releases)
 - [Development branch](https://github.com/hemk651/meta-patches/tree/dev)
-- [Feature and implementation status](docs/feature-status.md)
-- [Supported app identifiers](docs/supported-apps.md)
-- [Implementation plan](docs/implementation-plan.md)
+- [Feature status and verification matrix](docs/feature-status.md)
+- [Supported apps](docs/supported-apps.md)
+- [Implementation history and remaining work](docs/implementation-plan.md)
 - [Version compatibility policy](docs/version-policy.md)
-- [Dynamic storage-path notes](docs/storage-path.md)
 
 ## Morphe patches
 
-The list below is generated from `patches-list.json` during the release workflow. Do not edit the generated section by hand.
+This section is generated from `patches-list.json` during the release workflow. Do not edit the generated section by hand.
 
-<!-- PATCHES_START -->
-> **[v1.0.0](https://github.com/hemk651/meta-patches/releases/tag/v1.0.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;4 patches total
+<!-- PATCHES_START EXPANDED -->
+> **[v1.1.0-dev.14](https://github.com/hemk651/meta-patches/releases/tag/v1.1.0-dev.14)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;8 patches total
 <details open>
-<summary>📦 Edits&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
-<br>
-
-**Package name:** `com.instagram.basel`
-
-| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
-|----------|----------------|-----------|
-| [Edits — compatibility entry](#edits-compatibility-entry) | Registers Edits package compatibility. Runtime config injection is not included yet. |  |
-
-</details>
-
-<details open>
-<summary>📦 Instagram&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<summary>📦 Instagram&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
 
 **Package name:** `com.instagram.android`
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Instagram — compatibility entry](#instagram-compatibility-entry) | Registers Instagram package compatibility. Runtime config injection is not included yet. |  |
+| [AMOLED theme](#amoled-theme) | Forces Instagram dark theme surfaces to pure black (AMOLED). |  |
+| [Add Mods menu](#add-mods-menu) | Adds the Mods menu (fork of the InstaFL menu): long press the home feed to open the quick menu, incl. developer options. |  |
+| [Change channel name](#change-channel-name) | Replaces the release channel name (NONE, ALPHA, BETA, PROD) shown in the developer options UI. | • Channel name |
+| [Remove ads](#remove-ads) | Removes ads in Instagram by stopping the ad pod flow. |  |
+| [Remove snooze warning](#remove-snooze-warning) | Removes the "build expired" snooze warning dialog that alpha builds show. |  |
+| [Unlock developer options](#unlock-developer-options) | Unlocks the developer options: writes the MobileConfig overrides file that reveals Developer options in the settings together with a dedicated Employee options entry, and forces the employee options gate to true (shake-gesture entry). The overrides file becomes active after an app restart. |  |
+| [Upload instants from gallary](#upload-instants-from-gallary) | Adds a gallery button to the Instants camera to post photos and videos from your device's gallery. |  |
 
 </details>
 
 <details open>
-<summary>📦 Instants&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<summary>📦 Instagram Instants&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
 <br>
 
 **Package name:** `com.instagram.moonshot`
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Instants — compatibility entry](#instants-compatibility-entry) | Registers Instants package compatibility. Runtime config injection is not included yet. |  |
-
-</details>
-
-<details open>
-<summary>📦 Threads&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
-<br>
-
-**Package name:** `com.instagram.barcelona`
-
-| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
-|----------|----------------|-----------|
-| [Threads — compatibility entry](#threads-compatibility-entry) | Registers Threads package compatibility. Runtime config injection is not included yet. |  |
+| [Instants Mod](#instants-mod) | Adds a gallery button to post photos and videos, and allows saving friends' Instants to your device. |  |
 
 </details>
 
 <!-- PATCHES_END -->
 
-## What this branch currently provides
+## Supported apps
 
-The `main` branch is the conservative v1.0.0 baseline. It contains four Morphe compatibility declarations, a shared MetaConfig JSON payload, Gradle project configuration, patch-list generation, validation, and GitHub Actions build/release workflows.
-
-**Important:** the four entries register package compatibility only. They do not currently inject the configuration at runtime, unlock developer options, or modify the target apps' behavior. A patch appearing in Morphe is not evidence that its feature is implemented or device-tested.
-
-| App | Android package | Main-branch state |
+| App | Package | Current evidence |
 |---|---|---|
-| Instagram | `com.instagram.android` | Compatibility declaration only |
-| Threads | `com.instagram.barcelona` | Compatibility declaration only |
-| Edits | `com.instagram.basel` | Compatibility declaration only |
-| Instants | `com.instagram.moonshot` | Compatibility declaration only; package identity should be confirmed on-device |
+| Instagram | `com.instagram.android` | Runtime writer and developer-options unlock confirmed on-device on the documented test build; see [verification notes](docs/feature-status.md) |
+| Instagram Instants | `com.instagram.moonshot` | Patch port and APK harness work documented; device verification remains pending |
 
-For the functional Instagram and Instants implementation, see the [dev branch](https://github.com/hemk651/meta-patches/tree/dev). The two branches intentionally represent different project states.
+Threads and Edits are not currently supported targets. The stable source focuses on Instagram (`com.instagram.android`) and Instagram Instants (`com.instagram.moonshot`).
 
-## Configuration
+## Feature overview
 
-The canonical payload is [`config/mc_overrides.json`](config/mc_overrides.json). The validator checks that the JSON is valid and matches the reviewed values:
+### Instagram
+
+- **Unlock developer options:** injects the canonical MobileConfig overrides into the app's private files directory and enables the employee-options gate. Changes take effect after an app restart.
+- **Add Mods menu:** adds a home-feed long-press quick menu and companion activities for Meta tools, build information, crash reports, backup import, and other utilities.
+- **AMOLED theme:** forces supported dark surfaces to pure black.
+- **Remove ads:** ports the ad-pod suppression behavior and bundled override set. This is not a promise that every ad placement is removed.
+- **Remove snooze warning:** removes the alpha-build expiry/snooze warning dialog.
+- **Change channel name:** changes the channel label shown in the developer-options UI; the `channelName` option defaults to `Mods`.
+- **Upload instants from gallary:** a separate selectable patch targeting the main Instagram package (`com.instagram.android`); adds gallery-based photo/video selection to Instagram's Instants camera flow. It is not an Instagram Instants (`com.instagram.moonshot`) patch.
+
+### Instagram Instants
+
+- **Instants Mod:** adds a gallery picker to the camera flow and a save-to-gallery action for friends' Instants. Saving uses MediaStore and requires Android 10 or later.
+
+## Runtime configuration flow
+
+The canonical file is [`config/mc_overrides.json`](config/mc_overrides.json).
+
+1. The extension build embeds the compact, single-line JSON payload as a `BuildConfig` value.
+2. The **Unlock developer options** patch injects the runtime installer call at the app-shell `Application.onCreate` startup point.
+3. The writer installs the file atomically and idempotently at `<filesDir>/mobileconfig/mc_overrides.json`, the Instagram MobileConfig location identified during APK inspection.
+4. The patch also changes the employee-options gate so the shake-gesture entry can be reached.
+5. Restart Instagram for the newly installed MobileConfig values to be read.
+
+The payload is written inside Instagram's app-private storage. The older proposal to write to an arbitrary removable-storage path was removed; it was not a viable approach for this dex-only extension architecture.
+
+Validate the repository payload before building:
 
 ```bash
 python3 scripts/validate_config.py
 ```
 
-Validation checks repository data only. It does not prove that an Android app loads the payload or that a feature is enabled.
+## Mods menu
 
-## Build from source
+When **Add Mods menu** is applied, long-press the Instagram home feed to open the quick sheet. The extension includes:
 
-Requirements:
+- Meta menu entry and developer-options navigation
+- About and build information
+- Applied patch information
+- Miscellaneous tools and backup import
+- Crash-report viewing
+- App restart action
 
-- JDK 21
-- Git
-- Network access to resolve Gradle and Morphe dependencies
+The menu has guarded actions and in-app error reporting. Failures are intended to produce a diagnostic toast and crash-report entry rather than take down the app. Menu pages also apply system-bar insets for modern Android edge-to-edge behavior.
 
-Build the Morphe patch bundle:
+### Backup import
+
+Open **Mods menu → Misc → Backup → Import backup**. The importer accepts an InstaFL-style backup wrapper or a plain overrides JSON file:
+
+- **Full replace** replaces the current overrides.
+- **Merge** adds keys missing from the current file; existing current values win.
+- **Restore bundled overrides** reinstalls the payload shipped with the patch.
+
+Imported values are protected from automatic bundled-payload replacement across restarts. Backup export is not currently implemented.
+
+## Build and validate
+
+Requirements: JDK 21, Git, and network access to resolve Gradle/Morphe dependencies.
 
 ```bash
+python3 scripts/validate_config.py
 ./gradlew :patches:buildAndroid --no-daemon
 ```
 
-The GitHub Actions build workflow runs this task on pushes and pull requests targeting `main` or `dev`. The release workflow uses semantic-release to publish branch releases.
+The repository also contains APK-oriented harness tests and helper checks. A successful repository build or harness run is not equivalent to verification on a physical device.
+
+GitHub Actions builds pushes and pull requests. Semantic-release publishes stable releases from `main`; `dev` remains the separate prerelease development line.
+
+## Verification status and limitations
+
+The detailed matrix is maintained in [`docs/feature-status.md`](docs/feature-status.md). In summary:
+
+- The runtime payload installation and developer-options unlock were documented as working on-device on Instagram 457.0.0.0.26 (development build v1.1.0-dev.5).
+- The Mods menu opening and theme issue were documented as confirmed on-device by v1.1.0-dev.11.
+- Several later menu fixes and backup-import changes are documented as build-harness verified but still awaiting device confirmation.
+- The Instagram gallery-upload patch is a selectable patch for the main Instagram app. It adds gallery selection to the Instants camera flow; the documented APK harness work is not a substitute for device verification.
+- Ad suppression does not currently claim complete coverage of Stories, Reels, or promotional placements.
+
+Version-agnostic target declarations do not mean every app version is guaranteed to work. App internals and fingerprints can change. Review the [version policy](docs/version-policy.md) and test the exact APK before relying on a patch.
 
 ## Repository layout
 
 | Path | Purpose |
 |---|---|
-| `patches/` | Morphe patch declarations and patch-list generation |
-| `extensions/extension/` | Android extension module |
-| `config/mc_overrides.json` | Canonical MetaConfig payload |
+| `patches/` | Morphe patch declarations and APK-oriented patch logic |
+| `extensions/extension/` | Runtime Java extension, menu, helpers, and MobileConfig writer |
+| `config/mc_overrides.json` | Canonical MobileConfig payload |
 | `scripts/validate_config.py` | Payload validation |
-| `.github/scripts/` | Generated README patch-list helper |
-| `.github/workflows/` | Build and release automation |
-| `docs/` | Compatibility, implementation, and storage documentation |
+| `docs/` | Supported targets, implementation history, and feature verification |
+| `.github/workflows/` | Build and semantic-release automation |
 
-## Compatibility and safety
+## Credits, license, and disclaimer
 
-Morphe's version-agnostic target declarations are package selectors, not universal compatibility guarantees. App updates can change internal classes, methods, startup behavior, and configuration loading. See the [version policy](docs/version-policy.md) before treating any target as supported.
+The patch module declares GPLv3 in its Morphe metadata. See [NOTICE](NOTICE) for Morphe naming restrictions, retain upstream attribution when redistributing, and consult [CHANGELOG.md](CHANGELOG.md) for release history.
 
-MetaConfig experiments can be unstable, account-specific, or carry service/account risk. Use at your own discretion and keep a recoverable copy of important app data. This project is independent and is not endorsed by Meta or Morphe.
-
-## Credits and licensing
-
-The patch module declares GPLv3 in its Morphe metadata. See [NOTICE](NOTICE) for Morphe naming restrictions and [CHANGELOG.md](CHANGELOG.md) for release history.
+Meta Patches is an independent community project. It is not endorsed by Meta, Instagram, InstaFL, Wagg13, or Morphe. Modifying third-party apps may cause instability or account/service consequences. Use at your own discretion.
