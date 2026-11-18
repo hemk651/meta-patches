@@ -2,12 +2,13 @@
 
 This page records the functional target scope and the verification evidence documented for the promoted stable branch.
 
-| App | Android package ID | Evidence recorded in project notes |
+| App | Android package ID | Release status |
 |---|---|---|
-| Instagram | `com.instagram.android` | Runtime payload installation and developer-options unlock confirmed on-device on Instagram 457.0.0.0.26 (v1.1.0-dev.5); Mods menu opening confirmed on-device by v1.1.0-dev.11 |
-| Instagram Instants | `com.instagram.moonshot` | Instants Mod port and harness work documented against 455.0.0.55.95; device confirmation pending |
+| Instagram | `com.instagram.android` | 🟢 Included — all 7 listed patches reported working well |
+| Instagram Instants | `com.instagram.moonshot` | 🟡 Included — patch available, functionality not yet working reliably |
+| Threads | — | 🚧 Under development — not included in v1.1.0 |
 
-Threads and Edits are not currently supported targets in this stable release line.
+Edits is not currently included in this stable release line.
 
 ## Instagram
 
