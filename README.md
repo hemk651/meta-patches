@@ -1,14 +1,27 @@
 # Meta Patches
 
-An independent Morphe patch source for Instagram.
+[![Build](https://github.com/hemk651/meta-patches/actions/workflows/build.yml/badge.svg?branch=dev)](https://github.com/hemk651/meta-patches/actions/workflows/build.yml)
+[![Release](https://github.com/hemk651/meta-patches/actions/workflows/release.yml/badge.svg?branch=dev)](https://github.com/hemk651/meta-patches/actions/workflows/release.yml)
 
-> This project is a fork of [InstaFL](https://github.com/mamiiblt/instafel) by
-> [mamiiblt](https://github.com/mamiiblt) (Muhammed Ali Bulut). The menu, the
-> tools and the patch ideas come from InstaFL — thank you for building and
-> sharing the project. The Instagram Instants patch is a port of the
-> functional parts of [Wagg13Patch_Morphe](https://github.com/WaggBR/Wagg13Patch_Morphe)
-> by Wagg13 — thank you as well. Meta Patches is an independent fork; it is
-> not affiliated with InstaFL, Wagg13, Meta, or Instagram.
+An independent [Morphe](https://github.com/MorpheApp) patch source for Instagram and Instagram Instants.
+
+> **Branch:** `dev` · **Development release:** `v1.1.0-dev.14` · **Status:** active development
+>
+> Meta Patches is an independent fork of [InstaFL](https://github.com/mamiiblt/instafel) by [mamiiblt](https://github.com/mamiiblt). The Instants and gallery-upload functionality includes ports from [Wagg13Patch_Morphe](https://github.com/WaggBR/Wagg13Patch_Morphe) by Wagg13. See [NOTICE](NOTICE) for attribution. This project is not affiliated with InstaFL, Wagg13, Meta, Instagram, or Morphe.
+
+## Quick links
+
+- [Add this source to Morphe](https://morphe.software/add-source?github=hemk651/meta-patches)
+- [Development releases](https://github.com/hemk651/meta-patches/releases)
+- [Main/stable baseline](https://github.com/hemk651/meta-patches/tree/main)
+- [Feature status and verification matrix](docs/feature-status.md)
+- [Supported apps](docs/supported-apps.md)
+- [Implementation history and remaining work](docs/implementation-plan.md)
+- [Version compatibility policy](docs/version-policy.md)
+
+## Morphe patches
+
+This section is generated from `patches-list.json` during the release workflow. Do not edit the generated section by hand.
 
 <!-- PATCHES_START EXPANDED -->
 > **[v1.1.0-dev.14](https://github.com/hemk651/meta-patches/releases/tag/v1.1.0-dev.14)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;8 patches total
@@ -44,47 +57,110 @@ An independent Morphe patch source for Instagram.
 
 <!-- PATCHES_END -->
 
-## Runtime install (Instagram)
+## Supported apps
 
-For Instagram the payload is installed without any user consent flow:
+| App | Package | Current evidence |
+|---|---|---|
+| Instagram | `com.instagram.android` | Runtime writer and developer-options unlock confirmed on-device on the documented test build; see [verification notes](docs/feature-status.md) |
+| Instagram Instants | `com.instagram.moonshot` | Patch port and APK harness work documented; device verification remains pending |
 
-- `config/mc_overrides.json` stays the canonical, validated source of truth and must remain a **single line** (Instagram's loader only reliably parses compact single-line JSON).
-- The payload is embedded into the extension at build time as a `BuildConfig` string (`extensions/extension/build.gradle.kts`); no asset is required because the patcher merges only the extension's dex into the target APK.
-- The "Unlock developer options" patch injects a call to `MCOverrides.install(Context)` right after the app shell's `Application.onCreate` super call, so it works without the optional "Add Mods menu" patch.
-- The writer installs the payload atomically and idempotently to `<filesDir>/mobileconfig/mc_overrides.json` — the exact path Instagram's MobileConfig loader reads natively (verified in the app's smali). The settings become active on the next app start.
-- The same patch also forces the employee options gate (`A00(UserSession)Z`) to true, which unlocks the shake-gesture developer options entry.
-- Verified by `:patches:instagramApkBuild`: all patches apply, all DEX files pass dexdump, and the cross-DEX hierarchy issue set is identical to the stock APK.
+Threads and Edits are not targets of this development branch. The main branch retains the earlier four-app compatibility declarations, which should not be confused with the functional scope of this branch.
 
-## Mods menu (`Add Mods menu`)
+## Feature overview
 
-The optional "Add Mods menu" patch ports the InstaFL quick menu: **long press the home feed** to open the sheet with the ported InstaFL tools (Open Meta menu, Developer options, About, Restart app, …).
+### Instagram
 
-- The home long-press listener and the sheet's `openDeveloperOptions` placeholder are replaced wholesale with fixed-size bodies, mirroring InstaFL's smali (`.registers 6` for the listener, `.registers 7` for the developer-options body, which dismisses the sheet through `p0`). Earlier bundles (v1.1.0-dev.5–dev.8) injected the developer-options body with hardcoded registers and called `dismissSheetDialog()` on an uninitialized register; ART failed to verify the class, so loading the sheet crashed the app exactly when the long press fired. Since v1.1.0-dev.9 the method is normalized to the fixed register layout before the body is injected, and the patched registers are verified by dex inspection in the build harness.
-- Opening the menu can no longer take the app down: if the sheet fails to open, the handler reports the error into the in-app crash reports and shows a toast naming the cause (`Menu error: <Exception>`).
-- Since v1.1.0-dev.10 the popups behave like back gestures: tapping the dimmed background (or any empty spot of the sheet) closes the quick sheet, and tapping an empty area of the Mods menu activity closes it. Every item action and both activity `onCreate` bodies are wrapped — a failure lands in the crash reports and a `Menu error: <Exception>` toast instead of crashing the app.
-- The menu activities declare the framework theme `Theme.Material.NoActionBar` in the manifest. Without it they inherited Instagram's application theme — the splash theme chain (`Theme.Instagram.Splash`) — whose unresolved `textAppearance` attributes made the first `TextView` of the menu throw `Failed to resolve attribute at index 7`, crashing every menu activity at start. Reported on device with v1.1.0-dev.9; fixed in v1.1.0-dev.11 (verified by `aapt2 dump xmltree` of the output APK).
-- Developer options from the Mods menu (v1.1.0-dev.12): the menu activity sits in front of the feed, which is stopped with its fragment state saved, so committing the navigation there threw `IllegalStateException: Can not perform this action after onSaveInstanceState` (reported on device). The menu now finishes itself first and navigates the feed once it has window focus again (short retry loop, guarded like every menu action).
-- The menu shows the real patch bundle version everywhere (Build info, Misc, crash reports): it is generated into the extension's `BuildConfig` from the Gradle project version, which the release flow sets to the release version before the bundle is built. Previously a stale constant ("1.0.0") was displayed and written into crash reports.
-- The "Applied package patches" screen parses the patch list injected at patch time; the list JSON is now escaped, so descriptions containing literal quotes (e.g. the "build expired" snooze warning) no longer break the parse and show "Failed to read the applied patches."
-- Every menu page pads its root by the system bar insets: Android 15+ enforces edge-to-edge, which used to push the page titles under the status bar.
-- **Import backup** (v1.1.0-dev.12, ported from InstaFL's developer options import): Misc → Backup → Import backup picks a JSON backup through the system file picker — *Full replace* overwrites the overrides file, *Merge* adds only the entries the current file does not define (current values win), and *Restore bundled overrides* reinstalls the payload bundled with the build. InstaFL backups (with the `"backup"` wrapper) and plain overrides files are both accepted; imports are written as compact single-line JSON and survive app restarts (a marker file keeps the bundled installer from overwriting them).
-- Crash reports live in the Mods menu (Open Meta menu → Crash reports); the log file is written to `<external files dir>/mp_update_files/mp_crashlogs.json` (e.g. `/storage/emulated/0/Android/data/com.instagram.android/files/mp_update_files/mp_crashlogs.json`).
-- The extension initialization (`ModsInit.init`) is injected after the app shell's `Application.onCreate` super call whenever it is not present yet — independently of the "Unlock developer options" patch, which injects its own `MCOverrides.install` call at the same site. (Previously the two patches could each skip the other's injection, leaving the menu without a context.)
+- **Unlock developer options:** injects the canonical MobileConfig overrides into the app's private files directory and enables the employee-options gate. Changes take effect after an app restart.
+- **Add Mods menu:** adds a home-feed long-press quick menu and companion activities for Meta tools, build information, crash reports, backup import, and other utilities.
+- **AMOLED theme:** forces supported dark surfaces to pure black.
+- **Remove ads:** ports the ad-pod suppression behavior and bundled override set. This is not a promise that every ad placement is removed.
+- **Remove snooze warning:** removes the alpha-build expiry/snooze warning dialog.
+- **Change channel name:** changes the channel label shown in the developer-options UI; the `channelName` option defaults to `Mods`.
+- **Upload instants from gallary:** adds gallery-based photo/video selection to the Instagram Instants camera flow.
 
-## Targets
+### Instagram Instants
 
-| App | Package |
+- **Instants Mod:** adds a gallery picker to the camera flow and a save-to-gallery action for friends' Instants. Saving uses MediaStore and requires Android 10 or later.
+
+## Runtime configuration flow
+
+The canonical file is [`config/mc_overrides.json`](config/mc_overrides.json).
+
+1. The extension build embeds the compact, single-line JSON payload as a `BuildConfig` value.
+2. The **Unlock developer options** patch injects the runtime installer call at the app-shell `Application.onCreate` startup point.
+3. The writer installs the file atomically and idempotently at `<filesDir>/mobileconfig/mc_overrides.json`, the Instagram MobileConfig location identified during APK inspection.
+4. The patch also changes the employee-options gate so the shake-gesture entry can be reached.
+5. Restart Instagram for the newly installed MobileConfig values to be read.
+
+The payload is written inside Instagram's app-private storage. The older proposal to write to an arbitrary removable-storage path was removed; it was not a viable approach for this dex-only extension architecture.
+
+Validate the repository payload before building:
+
+```bash
+python3 scripts/validate_config.py
+```
+
+## Mods menu
+
+When **Add Mods menu** is applied, long-press the Instagram home feed to open the quick sheet. The extension includes:
+
+- Meta menu entry and developer-options navigation
+- About and build information
+- Applied patch information
+- Miscellaneous tools and backup import
+- Crash-report viewing
+- App restart action
+
+The menu has guarded actions and in-app error reporting. Failures are intended to produce a diagnostic toast and crash-report entry rather than take down the app. Menu pages also apply system-bar insets for modern Android edge-to-edge behavior.
+
+### Backup import
+
+Open **Mods menu → Misc → Backup → Import backup**. The importer accepts an InstaFL-style backup wrapper or a plain overrides JSON file:
+
+- **Full replace** replaces the current overrides.
+- **Merge** adds keys missing from the current file; existing current values win.
+- **Restore bundled overrides** reinstalls the payload shipped with the patch.
+
+Imported values are protected from automatic bundled-payload replacement across restarts. Backup export is not currently implemented.
+
+## Build and validate
+
+Requirements: JDK 21, Git, and network access to resolve Gradle/Morphe dependencies.
+
+```bash
+python3 scripts/validate_config.py
+./gradlew :patches:buildAndroid --no-daemon
+```
+
+The repository also contains APK-oriented harness tests and helper checks. A successful repository build or harness run is not equivalent to verification on a physical device.
+
+The GitHub Actions workflows build pull requests and pushes to `main` and `dev`; semantic-release publishes branch-specific releases.
+
+## Verification status and limitations
+
+The detailed matrix is maintained in [`docs/feature-status.md`](docs/feature-status.md). In summary:
+
+- The runtime payload installation and developer-options unlock were documented as working on-device on Instagram 457.0.0.0.26 (development build v1.1.0-dev.5).
+- The Mods menu opening and theme issue were documented as confirmed on-device by v1.1.0-dev.11.
+- Several later menu fixes and backup-import changes are documented as build-harness verified but still awaiting device confirmation.
+- The Instants Mod and Instagram gallery-upload patches have harness work documented; device verification is still pending in the project notes.
+- Ad suppression does not currently claim complete coverage of Stories, Reels, or promotional placements.
+
+Version-agnostic target declarations do not mean every app version is guaranteed to work. App internals and fingerprints can change. Review the [version policy](docs/version-policy.md) and test the exact APK before relying on a patch.
+
+## Repository layout
+
+| Path | Purpose |
 |---|---|
-| Instagram | `com.instagram.android` |
+| `patches/` | Morphe patch declarations and APK-oriented patch logic |
+| `extensions/extension/` | Runtime Java extension, menu, helpers, and MobileConfig writer |
+| `config/mc_overrides.json` | Canonical MobileConfig payload |
+| `scripts/validate_config.py` | Payload validation |
+| `docs/` | Supported targets, implementation history, and feature verification |
+| `.github/workflows/` | Build and semantic-release automation |
 
-## Validation
+## Credits, license, and disclaimer
 
-Run `python3 scripts/validate_config.py` to validate the source payload. This validates repository data only; it does not prove device deployment.
+This project incorporates work and ideas from InstaFL and Wagg13Patch_Morphe. Please retain the upstream attribution and license notices when redistributing. See [NOTICE](NOTICE), [CHANGELOG.md](CHANGELOG.md), and the repository license.
 
-## Current limitation
-
-For Instagram the startup hook is wired and the payload install plus dev-options unlock are confirmed working on device (v1.1.0-dev.5). The Mods menu itself opens on device (v1.1.0-dev.11, theme fix confirmed). The "Remove ads" patch now installs the full community-tested ad-removal override set (1370 parameters, merged with the developer-options parameters; see InstaFL issues #143, #150 and #160 for on-device ad coverage reports), embedded into the extension DEX at build time (v1.1.0-dev.7).
-
-The v1.1.0-dev.12 menu changes (developer options from the menu, applied-patches list, patch version display, system bar insets, import backup) are verified by the build harness and await on-device confirmation.
-
-> Note for consumers: the Morphe manager runs the patcher on-device and loads the patch classes from the bundle's `classes.dex`, which only the `:patches:buildAndroid` task adds to the bundle.
+Meta Patches is an independent community project. It is not endorsed by Meta, Instagram, InstaFL, Wagg13, or Morphe. Modifying third-party apps may cause instability or account/service consequences. Use at your own discretion.
