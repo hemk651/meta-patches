@@ -4,56 +4,20 @@
 
 This page separates implemented code from the verification evidence recorded in the repository. Status statements reflect the checked-in project notes; they are not a fresh physical-device test.
 
-## Patch notes and app status
-
-Status key: **Feature available** means the patch is included in this release. **Working well** reflects the current reported runtime status.
-
-### Instagram
-
-**Package:** `com.instagram.android`
-
-| Feature | Feature available | Working well |
-|---|:---:|:---:|
-| AMOLED theme | 🟢 ✓ | 🟢 ✓ |
-| Add Mods menu | 🟢 ✓ | 🟢 ✓ |
-| Change channel name | 🟢 ✓ | 🟢 ✓ |
-| Remove ads | 🟢 ✓ | 🟢 ✓ |
-| Remove snooze warning | 🟢 ✓ | 🟢 ✓ |
-| Unlock developer options | 🟢 ✓ | 🟢 ✓ |
-| Upload instants from gallary | 🟢 ✓ | 🟢 ✓ |
-
-All listed Instagram patches are reported available and working well.
-
-### Instagram Instants
-
-**Package:** `com.instagram.moonshot`
-
-| Feature | Feature available | Working well |
-|---|:---:|:---:|
-| Instants Mod — gallery upload and save-to-gallery | 🟢 ✓ | 🔴 ✗ |
-
-The patch is included, but its functionality is not yet working reliably.
-
-### Threads
-
-**🚧 Under development**
-
-Threads support is being worked on and is not included in stable release v1.1.0.
-
 ## Patch inventory
 
-| Patch | Target | Default | Purpose |
+| Patch | Target | Default | Available | Working well | Purpose |
 |---|---|---:|---|
-| AMOLED theme | Instagram | On | Forces supported dark surfaces to pure black |
-| Add Mods menu | Instagram | Off | Adds the home-feed long-press menu and companion activities |
-| Change channel name | Instagram | Off | Replaces the release-channel label; option `channelName` defaults to `Mods` |
-| Remove ads | Instagram | On | Suppresses the ad-pod flow and includes the bundled override set |
-| Remove snooze warning | Instagram | On | Removes the alpha-build expiry/snooze warning dialog |
-| Unlock developer options | Instagram | On | Installs MobileConfig overrides and enables the employee-options gate |
-| Upload instants from gallary | Instagram | Off | Adds gallery-based photo/video selection to the Instants camera |
-| Instants Mod | Instagram Instants | Off | Adds camera gallery selection and save-to-gallery action |
+| AMOLED theme | Instagram | On | 🟢 ✓ | 🟢 ✓ | Forces supported dark surfaces to pure black |
+| Add Mods menu | Instagram | Off | 🟢 ✓ | 🟢 ✓ | Adds the home-feed long-press menu and companion activities |
+| Change channel name | Instagram | Off | 🟢 ✓ | 🟢 ✓ | Replaces the release-channel label; option `channelName` defaults to `Mods` |
+| Remove ads | Instagram | On | 🟢 ✓ | 🟢 ✓ | Suppresses the ad-pod flow and includes the bundled override set |
+| Remove snooze warning | Instagram | On | 🟢 ✓ | 🟢 ✓ | Removes the alpha-build expiry/snooze warning dialog |
+| Unlock developer options | Instagram | On | 🟢 ✓ | 🟢 ✓ | Installs MobileConfig overrides and enables the employee-options gate |
+| Upload instants from gallery | Instagram | Off | 🟢 ✓ | 🟢 ✓ | Adds gallery-based photo/video selection to the Instants camera |
+| Instants Mod | Instagram Instants | Off | 🟢 ✓ | 🔴 ✗ | Adds camera gallery selection and save-to-gallery action |
 
-Defaults and names above are taken from the promoted generated `patches-list.json`. The misspelling in the gallery-upload patch name is retained because it is the published patch identifier.
+Defaults and names above are taken from the promoted generated `patches-list.json`. The gallery-upload patch name is shown with corrected spelling in documentation. The published patch identifier remains unchanged in v1.1.0 for compatibility.
 
 ## Runtime MobileConfig installation
 
