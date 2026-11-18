@@ -40,10 +40,15 @@ jobs:
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew :patches:buildAndroid --no-daemon
+        run: ./gradlew clean :patches:buildAndroid --no-daemon
       - name: Verify release bundle exists
         run: |
-          test -n "$(find patches/build/libs -maxdepth 1 -type f -name '*.mpp' ! -name '*sources*' ! -name '*javadoc*' -print -quit)"
+          expected_version="$(sed -n 's/^version[[:space:]]*=[[:space:]]*//p' gradle.properties | tr -d '[:space:]')"
+          test -n "$expected_version"
+          test -f "patches/build/libs/patches-${expected_version}.mpp"
+          bundle_count="$(find patches/build/libs -maxdepth 1 -type f -name '*.mpp' ! -name '*sources*' ! -name '*javadoc*' | wc -l)"
+          test "$bundle_count" -eq 1
+          echo "Verified exactly one release bundle: patches-${expected_version}.mpp"
       - name: Install release dependencies
         run: npm install
       - name: Semantic release
