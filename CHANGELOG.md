@@ -1,3 +1,9 @@
+## [1.1.0](https://github.com/hemk651/meta-patches/compare/v1.0.0...v1.1.0) (2026-11-18)
+
+### ✨ New Features
+
+* promote development patch implementation to stable main ([df6bbef](https://github.com/hemk651/meta-patches/commit/df6bbef32c4cd21135d1baba52ab9cafa592961a))
+
 ## [1.1.0-dev.14](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.13...v1.1.0-dev.14) (2026-11-18)
 
 ### ✨ New Features

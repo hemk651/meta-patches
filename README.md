@@ -24,7 +24,7 @@ An independent [Morphe](https://github.com/MorpheApp) patch source for Instagram
 This section is generated from `patches-list.json` during the release workflow. Do not edit the generated section by hand.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.1.0-dev.14](https://github.com/hemk651/meta-patches/releases/tag/v1.1.0-dev.14)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;8 patches total
+> **[v1.1.0](https://github.com/hemk651/meta-patches/releases/tag/v1.1.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;8 patches total
 <details open>
 <summary>📦 Instagram&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
