@@ -39,7 +39,7 @@ This section is generated from `patches-list.json` during the release workflow. 
 | [Remove ads](#remove-ads) | Removes ads in Instagram by stopping the ad pod flow. |  |
 | [Remove snooze warning](#remove-snooze-warning) | Removes the "build expired" snooze warning dialog that alpha builds show. |  |
 | [Unlock developer options](#unlock-developer-options) | Unlocks the developer options: writes the MobileConfig overrides file that reveals Developer options in the settings together with a dedicated Employee options entry, and forces the employee options gate to true (shake-gesture entry). The overrides file becomes active after an app restart. |  |
-| [Upload instants from gallary](#upload-instants-from-gallary) | Adds a gallery button to the Instants camera to post photos and videos from your device's gallery. |  |
+| [Upload instants from gallery](#upload-instants-from-gallery) | Adds a gallery button to the Instants camera to post photos and videos from your device's gallery. |  |
 
 </details>
 
@@ -57,42 +57,6 @@ This section is generated from `patches-list.json` during the release workflow. 
 
 <!-- PATCHES_END -->
 
-
-## Patch notes and app status
-
-Status key: **Feature available** = the patch is included in this release. **Working well** = current reported runtime status.
-
-### Instagram
-
-**Package:** `com.instagram.android`
-
-| Feature | Feature available | Working well |
-|---|:---:|:---:|
-| AMOLED theme | 🟢 ✓ | 🟢 ✓ |
-| Add Mods menu | 🟢 ✓ | 🟢 ✓ |
-| Change channel name | 🟢 ✓ | 🟢 ✓ |
-| Remove ads | 🟢 ✓ | 🟢 ✓ |
-| Remove snooze warning | 🟢 ✓ | 🟢 ✓ |
-| Unlock developer options | 🟢 ✓ | 🟢 ✓ |
-| Upload instants from gallary | 🟢 ✓ | 🟢 ✓ |
-
-All listed Instagram patches are available and reported working well.
-
-### Instagram Instants
-
-**Package:** `com.instagram.moonshot`
-
-| Feature | Feature available | Working well |
-|---|:---:|:---:|
-| Instants Mod — gallery upload and save-to-gallery | 🟢 ✓ | 🔴 ✗ |
-
-The patch is included and available, but its functionality is not yet working reliably.
-
-### Threads
-
-**🚧 Under development**
-
-Threads support is being worked on and is not included in the current stable release. No Threads patch is available in v1.1.0.
 
 ## Supported apps
 
@@ -113,7 +77,7 @@ Threads and Edits are not currently supported targets. The stable source focuses
 - **Remove ads:** ports the ad-pod suppression behavior and bundled override set. This is not a promise that every ad placement is removed.
 - **Remove snooze warning:** removes the alpha-build expiry/snooze warning dialog.
 - **Change channel name:** changes the channel label shown in the developer-options UI; the `channelName` option defaults to `Mods`.
-- **Upload instants from gallary:** a separate selectable patch targeting the main Instagram package (`com.instagram.android`); adds gallery-based photo/video selection to Instagram's Instants camera flow. It is not an Instagram Instants (`com.instagram.moonshot`) patch.
+- **Upload instants from gallery:** a separate selectable patch targeting the main Instagram package (`com.instagram.android`); adds gallery-based photo/video selection to Instagram's Instants camera flow. It is not an Instagram Instants (`com.instagram.moonshot`) patch.
 
 ### Instagram Instants
 
