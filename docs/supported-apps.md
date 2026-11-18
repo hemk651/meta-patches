@@ -1,24 +1,26 @@
-# Supported apps
+# Supported apps — main branch
 
-The project targets exactly these four Android apps:
+This page describes the **main** branch only. It must not be read as a feature-verification list for the development branch.
 
-| App | Android package ID | Status |
-|---|---|---|
-| Instagram | `com.instagram.android` | Package known; patch not yet verified |
-| Threads | `com.instagram.barcelona` | Package known; patch not yet verified |
-| Edits | `com.instagram.basel` | Package confirmed from Google Play listing; patch not yet verified |
-| Instants | `com.instagram.moonshot` | Candidate package ID; verify against installed app before release |
+## Registered package targets
 
-Instants is Meta's standalone companion app for sharing disappearing photos. The package ID above is a candidate from third-party app metadata and must be checked against the official installed APK before it is treated as confirmed.
+| App | Android package ID | Main-branch declaration | Runtime feature status |
+|---|---|---|---|
+| Instagram | `com.instagram.android` | Registered | No runtime injection in this branch |
+| Threads | `com.instagram.barcelona` | Registered | No runtime injection in this branch |
+| Edits | `com.instagram.basel` | Registered | No runtime injection in this branch |
+| Instants | `com.instagram.moonshot` | Registered | No runtime injection in this branch; confirm package identity on-device |
 
-A package name is not sufficient evidence of compatibility. Each app needs its own Morphe compatibility declaration and verified startup integration point.
+These entries are compatibility declarations. They make the package targets available to Morphe but do not modify app bytecode or install `mc_overrides.json`.
 
-## Acceptance checklist
+## Verification requirements
 
-- [ ] Confirm exact package ID on a device using `adb shell pm list packages`.
-- [ ] Record app version name and version code.
-- [ ] Identify the correct process and startup hook for that APK build.
-- [ ] Confirm a supported way to request and persist removable-storage access.
-- [ ] Write the shared `mc_overrides.json` to the requested mobileconfig folder.
-- [ ] Verify the file contents on-device.
-- [ ] Test update/restart behavior and failure handling.
+A package declaration alone does not establish that a patch works. Before advertising an app as supported, record:
+
+- The exact package ID and installed app version/version code.
+- The APK fingerprint or structural anchors used by the patch.
+- The build-harness result for the exact APK.
+- On-device installation and runtime behavior.
+- Restart, update, and failure-path behavior.
+
+The development branch currently contains the functional Instagram and Instagram Instants implementation. See [the dev branch's supported-app page](https://github.com/hemk651/meta-patches/blob/dev/docs/supported-apps.md) for its separate scope and evidence.
