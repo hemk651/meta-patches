@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.1.0-dev.13",
+  "version": "1.1.0-dev.14",
   "patches": [
     {
       "name": "AMOLED theme",
@@ -178,6 +178,33 @@
       "name": "Unlock developer options",
       "description": "Unlocks the developer options: writes the MobileConfig overrides file that reveals Developer options in the settings together with a dedicated Employee options entry, and forces the employee options gate to true (shake-gesture entry). The overrides file becomes active after an app restart.",
       "default": true,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.instagram.android",
+          "name": "Instagram",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#E1306C",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": null,
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Upload instants from gallary",
+      "description": "Adds a gallery button to the Instants camera to post photos and videos from your device's gallery.",
+      "default": false,
       "category": null,
       "compatiblePackages": [
         {

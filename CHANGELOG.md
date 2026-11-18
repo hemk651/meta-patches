@@ -1,3 +1,9 @@
+## [1.1.0-dev.14](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.13...v1.1.0-dev.14) (2026-11-18)
+
+### ✨ New Features
+
+* **patches:** add Instants upload from gallery patch for main Instagram ([f0d289a](https://github.com/hemk651/meta-patches/commit/f0d289ac71d21fc5f0d5290dfcdc3471e28a6ead))
+
 ## [1.1.0-dev.13](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.12...v1.1.0-dev.13) (2026-11-17)
 
 ### ✨ New Features

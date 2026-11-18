@@ -11,9 +11,9 @@ An independent Morphe patch source for Instagram.
 > not affiliated with InstaFL, Wagg13, Meta, or Instagram.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.1.0-dev.13](https://github.com/hemk651/meta-patches/releases/tag/v1.1.0-dev.13)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;7 patches total
+> **[v1.1.0-dev.14](https://github.com/hemk651/meta-patches/releases/tag/v1.1.0-dev.14)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;8 patches total
 <details open>
-<summary>📦 Instagram&nbsp;&nbsp;•&nbsp;&nbsp;6 patches</summary>
+<summary>📦 Instagram&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
 
 **Package name:** `com.instagram.android`
@@ -26,6 +26,7 @@ An independent Morphe patch source for Instagram.
 | [Remove ads](#remove-ads) | Removes ads in Instagram by stopping the ad pod flow. |  |
 | [Remove snooze warning](#remove-snooze-warning) | Removes the "build expired" snooze warning dialog that alpha builds show. |  |
 | [Unlock developer options](#unlock-developer-options) | Unlocks the developer options: writes the MobileConfig overrides file that reveals Developer options in the settings together with a dedicated Employee options entry, and forces the employee options gate to true (shake-gesture entry). The overrides file becomes active after an app restart. |  |
+| [Upload instants from gallary](#upload-instants-from-gallary) | Adds a gallery button to the Instants camera to post photos and videos from your device's gallery. |  |
 
 </details>
 
