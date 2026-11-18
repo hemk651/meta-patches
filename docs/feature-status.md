@@ -4,6 +4,42 @@
 
 This page separates implemented code from the verification evidence recorded in the repository. Status statements reflect the checked-in project notes; they are not a fresh physical-device test.
 
+## Patch notes and app status
+
+Status key: **Feature available** means the patch is included in this release. **Working well** reflects the current reported runtime status.
+
+### Instagram
+
+**Package:** `com.instagram.android`
+
+| Feature | Feature available | Working well |
+|---|:---:|:---:|
+| AMOLED theme | 🟢 ✓ | 🟢 ✓ |
+| Add Mods menu | 🟢 ✓ | 🟢 ✓ |
+| Change channel name | 🟢 ✓ | 🟢 ✓ |
+| Remove ads | 🟢 ✓ | 🟢 ✓ |
+| Remove snooze warning | 🟢 ✓ | 🟢 ✓ |
+| Unlock developer options | 🟢 ✓ | 🟢 ✓ |
+| Upload instants from gallary | 🟢 ✓ | 🟢 ✓ |
+
+All listed Instagram patches are reported available and working well.
+
+### Instagram Instants
+
+**Package:** `com.instagram.moonshot`
+
+| Feature | Feature available | Working well |
+|---|:---:|:---:|
+| Instants Mod — gallery upload and save-to-gallery | 🟢 ✓ | 🔴 ✗ |
+
+The patch is included, but its functionality is not yet working reliably.
+
+### Threads
+
+**🚧 Under development**
+
+Threads support is being worked on and is not included in stable release v1.1.0.
+
 ## Patch inventory
 
 | Patch | Target | Default | Purpose |
