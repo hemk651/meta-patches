@@ -1,20 +1,34 @@
-# Supported apps
+# Supported apps — dev branch
 
-| App | Android package ID | Status |
+This page records the functional target scope and the verification evidence documented for the current development branch.
+
+| App | Android package ID | Evidence recorded in project notes |
 |---|---|---|
-| Instagram | `com.instagram.android` | Verified on device (v1.1.0-dev.5, Instagram 457.0.0.0.26) |
-| Instagram Instants | `com.instagram.moonshot` | Ported from Wagg13Patch_Morphe; verified in the build harness, awaiting device confirmation (target 455.0.0.55.95) |
+| Instagram | `com.instagram.android` | Runtime payload installation and developer-options unlock confirmed on-device on Instagram 457.0.0.0.26 (v1.1.0-dev.5); Mods menu opening confirmed on-device by v1.1.0-dev.11 |
+| Instagram Instants | `com.instagram.moonshot` | Instants Mod port and harness work documented against 455.0.0.55.95; device confirmation pending |
 
-Instagram verification covers: payload install via the runtime writer, developer options unlocked, all patches apply cleanly in the build harness, and the patched DEX hierarchy matches the stock APK.
+Threads and Edits are not targets of this branch. Their compatibility declarations remain on `main`; they are not included in the dev patch list.
 
-The Instants Mod patch is a port of the functional parts of
-[Wagg13Patch_Morphe](https://github.com/WaggBR/Wagg13Patch_Morphe) by Wagg13
-(GPL-3): a gallery button on the camera screen (posts a picked photo or video
-through the app's own pipeline) and a "Save to gallery" row in the friends'
-Instant overflow menu. Upstream anchors it to 451.0.0.53.106; this bundle
-declares it for every version and verifies against 455.0.0.55.95 in the
-harness (device confirmation pending).
+## Instagram
 
-The previous multi-app list (Threads, Edits) was removed along with the
-per-app packaging patches; those declarations were never verified on device.
+The Instagram target includes the developer-options/MobileConfig runtime path, Mods menu extension, theme and channel-label modifications, ad-pod suppression, snooze-warning removal, and gallery upload to Instants.
 
+The runtime writer installs the bundled configuration to:
+
+```text
+<filesDir>/mobileconfig/mc_overrides.json
+```
+
+The app-private path is intentional: the previous removable-storage/SAF design was removed because the extension's dex-only merge does not deliver the host app's assets to the target app.
+
+## Instagram Instants
+
+The Instants Mod is a port of the functional parts of [Wagg13Patch_Morphe](https://github.com/WaggBR/Wagg13Patch_Morphe) (GPL-3). It adds a gallery picker to the camera flow and a save-to-gallery action for friends' Instants. The patch declares a version-agnostic target, but the documented harness check against 455.0.0.55.95 is not a guarantee for future releases. Device verification remains pending in the project notes.
+
+## Verification terminology
+
+- **Declared:** Morphe metadata registers the package/target.
+- **Harness verified:** the project's APK-oriented build/test harness completed for the recorded input.
+- **Device confirmed:** the behavior was observed on a physical device and exact app build.
+
+Do not promote a feature from one evidence level to another without new test results. See [feature-status.md](feature-status.md) and [implementation-plan.md](implementation-plan.md).
