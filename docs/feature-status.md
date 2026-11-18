@@ -14,8 +14,9 @@ This page separates implemented code from the verification evidence recorded in 
 | Remove ads | Instagram | On | 🟢 ✓ | 🟢 ✓ | Suppresses the ad-pod flow and includes the bundled override set |
 | Remove snooze warning | Instagram | On | 🟢 ✓ | 🟢 ✓ | Removes the alpha-build expiry/snooze warning dialog |
 | Unlock developer options | Instagram | On | 🟢 ✓ | 🟢 ✓ | Installs MobileConfig overrides and enables the employee-options gate |
-| Upload instants from gallery | Instagram | Off | 🟢 ✓ | 🟢 ✓ | Adds gallery-based photo/video selection to the Instants camera |
+| Upload Instants from Gallery | Instagram | Off | 🟢 ✓ | 🟢 ✓ | Adds gallery-based photo/video selection to the Instants camera |
 | Instants Mod | Instagram Instants | Off | 🟢 ✓ | 🔴 ✗ | Adds camera gallery selection and save-to-gallery action |
+| — | Threads | — | 🚧 Under development | — | Not included in the stable release |
 
 Defaults and names above are taken from the promoted generated `patches-list.json`. The gallery-upload patch name is shown with corrected spelling in documentation. The published patch identifier remains unchanged in v1.1.0 for compatibility.
 
