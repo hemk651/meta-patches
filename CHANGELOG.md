@@ -1,3 +1,9 @@
+## [1.2.0-beta.2](https://github.com/hemk651/meta-patches/compare/v1.2.0-beta.1...v1.2.0-beta.2) (2026-11-24)
+
+### ✨ New Features
+
+* **meta:** unify naming and finish backup export ([afbc448](https://github.com/hemk651/meta-patches/commit/afbc44886623917a20a4f930917a6490ebd5bdc8))
+
 ## [1.2.0-beta.1](https://github.com/hemk651/meta-patches/compare/v1.1.1...v1.2.0-beta.1) (2026-11-24)
 
 ### ✨ New Features
