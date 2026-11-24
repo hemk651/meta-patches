@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
@@ -55,7 +54,6 @@ public final class InstantsSaveImage {
 
     // The viewer state; it knows which media is current, so the photo is read from it on click.
     private static volatile Object viewerState;
-    private static Object onClick;
 
     // The class that holds the video player's static helper (Media -> video source). Passed by the
     // patch; the helper is called on demand with the current media.
@@ -69,6 +67,7 @@ public final class InstantsSaveImage {
     /** Called with the viewer state every time the context menu items are built. */
     public static void onViewerState(Object state) {
         viewerState = state;
+        Log.i(TAG, "viewer state updated: " + (state != null));
     }
 
     /** Resource id of the app's download icon (the one of "Save to photos"), or [fallback]. */
@@ -119,48 +118,79 @@ public final class InstantsSaveImage {
         return item;
     }
 
+    // Touch hook: Activity.dispatchTouchEvent -> Window.Callback.dispatchTouchEvent. Wrapping the
+    // callback sees every touch, including those consumed by Compose, so the long press works
+    // regardless of the app's obfuscated gesture classes.
+    private static boolean touchHookInstalled;
+    private static android.view.GestureDetector detector;
+
+    /** Called by the patch from Activity.onCreate. Installs an all-touch long-press detector. */
+    public static synchronized void installTouchHook(Activity activity) {
+        if (touchHookInstalled || activity == null) return;
+        try {
+            final android.view.Window window = activity.getWindow();
+            final android.view.Window.Callback original = window.getCallback();
+            if (original == null) return;
+            detector = new android.view.GestureDetector(activity, new android.view.GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public void onLongPress(android.view.MotionEvent e) {
+                    offerOriginalDownload();
+                }
+            });
+            android.view.Window.Callback proxy = (android.view.Window.Callback) Proxy.newProxyInstance(
+                    android.view.Window.Callback.class.getClassLoader(),
+                    new Class<?>[]{android.view.Window.Callback.class},
+                    (obj, method, args) -> {
+                        if ("dispatchTouchEvent".equals(method.getName()) && args != null && args.length > 0
+                                && args[0] instanceof android.view.MotionEvent) {
+                            try {
+                                detector.onTouchEvent((android.view.MotionEvent) args[0]);
+                            } catch (Throwable ignored) {
+                            }
+                        }
+                        try {
+                            return method.invoke(original, args);
+                        } catch (java.lang.reflect.InvocationTargetException e) {
+                            throw e.getCause();
+                        }
+                    });
+            window.setCallback(proxy);
+            touchHookInstalled = true;
+            Log.i(TAG, "long-press touch hook installed");
+        } catch (Throwable t) {
+            Log.e(TAG, "Unable to install long-press touch hook", t);
+        }
+    }
+
+    /** Shows the download option after a long press, but only while an Instants viewer is open. */
+    private static void offerOriginalDownload() {
+        final Activity activity = InstantsGalleryHelper.getActivity();
+        Log.i(TAG, "long press detected, activity=" + (activity != null)
+                + ", viewerState=" + (viewerState != null));
+        if (activity == null || viewerState == null) return;
+        MAIN.post(() -> {
+            try {
+                new android.app.AlertDialog.Builder(activity)
+                        .setTitle(InstantsStrings.saveToGallery())
+                        .setItems(new CharSequence[]{"Download original (4K)", "Cancel"}, (dialog, which) -> {
+                            if (which == 0) save();
+                        })
+                        .show();
+            } catch (Throwable t) {
+                Log.e(TAG, "Unable to show the download option", t);
+            }
+        });
+    }
+
     /** Called with the id of every selected item of the viewer's context menu. */
     public static void onMenuSelected(int id) {
         Log.i(TAG, "menu selected id=" + id + (id == MENU_ITEM_ID ? " (save)" : ""));
         if (id == MENU_ITEM_ID) save();
     }
 
-    /** Shared Function0 for the menu row. */
-    public static synchronized Object onClick() {
-        if (onClick == null) {
-            try {
-                Class<?> function0 = Class.forName("kotlin.jvm.functions.Function0");
-                onClick = Proxy.newProxyInstance(
-                        InstantsSaveImage.class.getClassLoader(),
-                        new Class<?>[]{function0},
-                        new ClickHandler());
-            } catch (Throwable t) {
-                Log.e(TAG, "Unable to create click action", t);
-            }
-        }
-        return onClick;
-    }
-
-    private static final class ClickHandler implements InvocationHandler {
-        @Override
-        public Object invoke(Object proxy, Method method, Object[] args) {
-            switch (method.getName()) {
-                case "invoke":
-                    save();
-                    return null;
-                case "hashCode":
-                    return System.identityHashCode(proxy);
-                case "equals":
-                    return proxy == args[0];
-                default:
-                    return "InstantsSaveImage.onClick";
-            }
-        }
-    }
-
     // ImageUrl's accessor names are obfuscated, so take the first public no-arg String getter
     // that returns something that looks like a location.
-    private static String urlOf(Object imageUrl) {
+    static String urlOf(Object imageUrl) {
         if (imageUrl == null) return null;
         for (Method m : imageUrl.getClass().getMethods()) {
             if (m.getParameterTypes().length != 0 || m.getReturnType() != String.class
@@ -181,7 +211,7 @@ public final class InstantsSaveImage {
     }
 
     // What the viewer shows right now: the address to save and whether it is a video.
-    private static final class Target {
+    static final class Target {
         final String url;
         final boolean video;
 
@@ -192,11 +222,23 @@ public final class InstantsSaveImage {
     }
 
     // The state's accessor for the current media is obfuscated: try its no-arg methods that return
-    // an object, and take the first whose result is a media model (one that holds a Media or exposes
-    // an ImageUrl).
-    private static Target currentTarget() {
-        Object state = viewerState;
+    // an object and take the first whose result is a media model (one that holds a Media). The
+    // accessor found is kept, so that a state without a current item (no unseen posts) is told
+    // apart from an accessor that was never found.
+    private static Method modelAccessor;
+
+    /** The media model the viewer shows in [state], or null when it shows none. */
+    static synchronized Object currentModelOf(Object state) {
         if (state == null) return null;
+        Method cached = modelAccessor;
+        if (cached != null && cached.getDeclaringClass().isInstance(state)) {
+            try {
+                return cached.invoke(state);
+            } catch (Throwable t) {
+                Log.e(TAG, "Unable to read the current media", t);
+                return null;
+            }
+        }
         for (Method m : state.getClass().getMethods()) {
             Class<?> returnType = m.getReturnType();
             if (m.getParameterTypes().length != 0 || returnType.isPrimitive() || returnType == String.class
@@ -205,27 +247,47 @@ public final class InstantsSaveImage {
             }
             try {
                 Object model = m.invoke(state);
-                if (model == null) continue;
-
-                Object media = fieldOfType(model, MEDIA_TYPE);
-                Object source = videoSourceOf(media);
-                String videoUrl = source != null ? videoUrlOf(source) : null;
-                if (videoUrl != null) {
-                    Log.i(TAG, "current media is a video: " + videoUrl);
-                    return new Target(videoUrl, true);
+                if (model != null && fieldOfType(model, MEDIA_TYPE) != null) {
+                    modelAccessor = m;
+                    return model;
                 }
-
-                String url = largestCandidateUrl(model);
-                if (url == null) url = urlOf(imageUrlOf(model));
-                if (url != null && isVideoThumbnail(url)) {
-                    // A video whose address could not be read: do not save its still image as a photo.
-                    Log.w(TAG, "video without a readable address, source=" + (source != null));
-                    return new Target(null, true);
-                }
-                if (url != null) return new Target(url, false);
             } catch (Throwable ignored) {
                 // Try the next accessor.
             }
+        }
+        return null;
+    }
+
+    private static Target currentTarget() {
+        Object model = currentModelOf(viewerState);
+        return model != null ? targetOf(model) : null;
+    }
+
+    /** The address to save for a media model, and whether it is a video. Null when none is found. */
+    static Target targetOf(Object model) {
+        try {
+            Object media = fieldOfType(model, MEDIA_TYPE);
+            Object source = videoSourceOf(media);
+            String videoUrl = source != null ? videoUrlOf(source) : null;
+            if (videoUrl != null) {
+                Log.i(TAG, "current media is a video: " + videoUrl);
+                return new Target(videoUrl, true);
+            }
+
+            // Prefer the app's own original-quality accessor: MediaExtKt.A0V(Media, null) is what
+            // Instagram uses when saving a QuickSnap, and returns the largest (original upload)
+            // ExtendedImageUrl, which can be 4K - not the ~360px display image.
+            String url = originalUrl(media);
+            if (url == null) url = largestCandidateUrl(model);
+            if (url == null) url = urlOf(imageUrlOf(model));
+            if (url != null && isVideoThumbnail(url)) {
+                // A video whose address could not be read: do not use its still image as a photo.
+                Log.w(TAG, "video without a readable address, source=" + (source != null));
+                return new Target(null, true);
+            }
+            if (url != null) return new Target(url, false);
+        } catch (Throwable ignored) {
+            // No readable address.
         }
         return null;
     }
@@ -237,13 +299,28 @@ public final class InstantsSaveImage {
         Class<?> type = videoSourceClass;
         if (media == null || type == null) return null;
         try {
+            Method stringHelper = null;
+            Method fallback = null;
             for (Method m : type.getDeclaredMethods()) {
                 Class<?>[] params = m.getParameterTypes();
-                if (Modifier.isStatic(m.getModifiers()) && params.length == 1 && params[0].isInstance(media)
-                        && !m.getReturnType().isPrimitive() && m.getReturnType() != Void.TYPE) {
-                    m.setAccessible(true);
-                    return m.invoke(null, media);
+                if (!Modifier.isStatic(m.getModifiers()) || params.length != 1 || !params[0].isInstance(media)) {
+                    continue;
                 }
+                Class<?> result = m.getReturnType();
+                if (result == Void.TYPE || result.isPrimitive()) continue;
+                // A (Media) -> String helper is the reliable video-source accessor: the source is
+                // then the returned address itself. Other (Media) -> wrapper helpers are kept only
+                // as a fallback (v458's LX/0252 has both shapes).
+                if (result == String.class) {
+                    stringHelper = m;
+                    break;
+                }
+                if (fallback == null) fallback = m;
+            }
+            Method helper = stringHelper != null ? stringHelper : fallback;
+            if (helper != null) {
+                helper.setAccessible(true);
+                return helper.invoke(null, media);
             }
         } catch (Throwable t) {
             Log.e(TAG, "Unable to read the video source", t);
@@ -253,6 +330,11 @@ public final class InstantsSaveImage {
 
     // The source exposes several texts; the video address is the one that points to a media file.
     private static String videoUrlOf(Object source) {
+        // Some builds expose the address directly as a String from the (Media) helper.
+        if (source instanceof String) {
+            String direct = (String) source;
+            return direct.startsWith("http") ? direct : null;
+        }
         String fallback = null;
         for (Method m : source.getClass().getMethods()) {
             if (m.getParameterTypes().length != 0 || m.getReturnType() != String.class
@@ -325,7 +407,44 @@ public final class InstantsSaveImage {
         }
     }
 
-    private static Object fieldOfType(Object target, String typeName) throws Exception {
+    /**
+     * v458's original-image path: MediaExtKt.A0V(Media, Long) -> ExtendedImageUrl.getUrl().
+     * Passing null for the size selects the largest candidate, i.e. the originally uploaded file.
+     */
+    private static String originalUrl(Object media) {
+        if (media == null) return null;
+        try {
+            Class<?> ext = Class.forName("com.instagram.feed.media.MediaExtKt", false,
+                    media.getClass().getClassLoader());
+            for (Method m : ext.getDeclaredMethods()) {
+                Class<?>[] params = m.getParameterTypes();
+                if (!Modifier.isStatic(m.getModifiers()) || params.length != 2
+                        || !params[0].isInstance(media) || params[1] != Long.class
+                        || !m.getReturnType().getName().equals("com.instagram.model.mediasize.ExtendedImageUrl")) {
+                    continue;
+                }
+                m.setAccessible(true);
+                Object imageUrl = m.invoke(null, media, null);
+                if (imageUrl == null) continue;
+                for (Method getter : imageUrl.getClass().getMethods()) {
+                    if (getter.getName().equals("getUrl") && getter.getParameterTypes().length == 0
+                            && getter.getReturnType() == String.class) {
+                        getter.setAccessible(true);
+                        String url = (String) getter.invoke(imageUrl);
+                        if (url != null && url.startsWith("http")) {
+                            Log.i(TAG, "original image url found");
+                            return url;
+                        }
+                    }
+                }
+            }
+        } catch (Throwable t) {
+            Log.e(TAG, "Unable to read the original image url", t);
+        }
+        return null;
+    }
+
+    static Object fieldOfType(Object target, String typeName) throws Exception {
         for (Class<?> type = target.getClass(); type != null && type != Object.class; type = type.getSuperclass()) {
             for (java.lang.reflect.Field field : type.getDeclaredFields()) {
                 if (!Modifier.isStatic(field.getModifiers()) && field.getType().getName().equals(typeName)) {

@@ -59,6 +59,7 @@ public final class InstantsGalleryHelper {
 
     public static void setActivity(Activity activity) {
         activityRef = new WeakReference<>(activity);
+        InstantsSaveImage.installTouchHook(activity);
     }
 
     static Activity getActivity() {
