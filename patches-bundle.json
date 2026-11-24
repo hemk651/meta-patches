@@ -1,7 +1,7 @@
 {
   "created_at": "2026-11-24T06:39:39",
-  "description": "## [1.1.0-dev.15](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.14...v1.1.0-dev.15) (2026-11-24)\n\n### ✨ New Features\n\n* **instagram:** add Save Instants to gallery for v458 ([c7b45de](https://github.com/hemk651/meta-patches/commit/c7b45de91ca2430cbbcc844e140d7c41bfddb1aa))",
-  "download_url": "https://github.com/hemk651/meta-patches/releases/download/v1.1.0-dev.15/patches-1.1.0-dev.15.mpp",
+  "description": "## [1.2.0-beta.1](https://github.com/hemk651/meta-patches/compare/v1.1.1...v1.2.0-beta.1)\n\n### ✨ New Features\n\n* **instagram:** add Save Instants to gallery for v458 ([c7b45de](https://github.com/hemk651/meta-patches/commit/c7b45de91ca2430cbbcc844e140d7c41bfddb1aa))",
+  "download_url": "https://github.com/hemk651/meta-patches/releases/download/v1.2.0-beta.1/patches-1.2.0-beta.1.mpp",
   "signature_download_url": "",
-  "version": "1.1.0-dev.15"
+  "version": "1.2.0-beta.1"
 }
