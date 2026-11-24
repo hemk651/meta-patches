@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.1.0-dev.14",
+  "version": "1.1.0-dev.15",
   "patches": [
     {
       "name": "AMOLED theme",
@@ -150,6 +150,33 @@
     {
       "name": "Remove snooze warning",
       "description": "Removes the \"build expired\" snooze warning dialog that alpha builds show.",
+      "default": true,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.instagram.android",
+          "name": "Instagram",
+          "description": null,
+          "apkFileType": "APK",
+          "appIconColor": "#E1306C",
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": null,
+              "versionCodes": null,
+              "isExperimental": false,
+              "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Save Instants to gallery (v458)",
+      "description": "Adds a \"Save to gallery\" option to the Instants menu, so you can keep the photo or video you are viewing. Ported to Instagram 458.0.0.0.3.",
       "default": true,
       "category": null,
       "compatiblePackages": [

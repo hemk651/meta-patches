@@ -1,3 +1,9 @@
+## [1.1.0-dev.15](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.14...v1.1.0-dev.15) (2026-11-24)
+
+### ✨ New Features
+
+* **instagram:** add Save Instants to gallery for v458 ([c7b45de](https://github.com/hemk651/meta-patches/commit/c7b45de91ca2430cbbcc844e140d7c41bfddb1aa))
+
 ## [1.1.0-dev.14](https://github.com/hemk651/meta-patches/compare/v1.1.0-dev.13...v1.1.0-dev.14) (2026-11-18)
 
 ### ✨ New Features
