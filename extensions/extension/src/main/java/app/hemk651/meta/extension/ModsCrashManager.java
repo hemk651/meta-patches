@@ -1,7 +1,7 @@
 /*
  * Meta Patches — crash logging.
  *
- * Forked from InstaFL managers/CrashManager.java and
+ * Forked from Instafel managers/CrashManager.java and
  * utils/InstafelCrashHandler.java (https://github.com/mamiiblt/instafel) by
  * mamiiblt (Muhammed Ali Bulut), rebranded to Meta Patches.
  *

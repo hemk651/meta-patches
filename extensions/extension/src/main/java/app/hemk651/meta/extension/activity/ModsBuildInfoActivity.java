@@ -1,7 +1,7 @@
 /*
  * Meta Patches — build information activity.
  *
- * Forked from InstaFL activity/about/ifl_a_build_info.java
+ * Forked from Instafel activity/about/ifl_a_build_info.java
  * (https://github.com/mamiiblt/instafel) by mamiiblt (Muhammed Ali Bulut),
  * rebranded to Meta Patches. Only the patch version and the installation
  * type are kept; the generation ID and the code commit were removed.

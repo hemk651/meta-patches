@@ -1,7 +1,7 @@
 /*
  * Meta Patches — crash reports activity.
  *
- * Forked from InstaFL activity/crash_manager/ifl_a_crash_reports.java
+ * Forked from Instafel activity/crash_manager/ifl_a_crash_reports.java
  * (https://github.com/mamiiblt/instafel) by mamiiblt (Muhammed Ali Bulut),
  * rebranded to Meta Patches.
  *

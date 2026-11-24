@@ -1,30 +1,30 @@
 /*
- * Meta Patches — main Instagram: save friends' Instants to the gallery (v458).
+ * Meta Patches — main Instagram: save friends' Instants to the gallery .
  *
  * Ported from Wagg13Patch_Morphe (https://github.com/WaggBR/Wagg13Patch_Morphe)
  * by Wagg13, licensed under the GNU General Public License version 3.
  * Rebranded for Meta Patches: helpers live in app.hemk651.meta.extension.instants.
- * Compatibility follows the bundle-wide "every version" convention; a runtime
- * guard in execute() rejects builds other than 458.0.0.0.3.
+ * Compatibility follows the bundle-wide version-agnostic convention; the
+ * obfuscated fingerprints resolve only on builds that contain those symbols.
  *
  * This file is part of Meta Patches, licensed under the GNU General Public
  * License version 3. https://www.gnu.org/licenses/gpl-3.0.html
  */
 
 /*
- * Save Instants to gallery - Instagram v458.0.0.0.3 (arm64-v8a, APKM).
+ * Save Instants to gallery - Instagram vthe target build (arm64-v8a, APKM).
  *
  * Port of app.morphe.patches.instagram.instants.saveInstantsToGalleryPatch to Instagram 458.
  *
  * WHY A NEW PATCH:
  *   The v452 patch resolves its hooks through Compose trace strings such as
  *   "com.instagram.quicksnap.viewer.compose.createQuickSnapContextMenuItems (".
- *   Those strings no longer exist in 458.0.0.0.3 (verified against all 33 dex files of base.apk),
+ *   Those strings no longer exist in the target build (verified against all 33 dex files of base.apk),
  *   so the old fingerprints cannot match. The hook points below were recovered by
- *   reverse engineering the v458 dex and are pinned to this exact build, which is the
+ *   reverse engineering the dex and are pinned to this exact build, which is the
  *   normal compatibility model for these patches.
  *
- * RECOVERED v458 HOOKS (evidence in RE_NOTES.md):
+ * RECOVERED HOOKS (evidence in RE_NOTES.md):
  *   - menu composable .... LX/0cm5;->A01(...)   (5 calls to the item factory)
  *   - item factory ....... LX/0Zw5;->A00(LX/1Eqm;LX/0YN1;Ljava/lang/String;)LX/0XM6;
  *   - action enum ........ LX/0YN1;  { A00:I icon, A01:I id, A02:Z destructive, A03:entries }
@@ -82,7 +82,7 @@ private object InstagramActivityFingerprint : Fingerprint(
     parameters = listOf("Landroid/os/Bundle;"),
 )
 
-/** The composable that builds the viewer context menu (v458: LX/0cm5.A01). */
+/** The composable that builds the viewer context menu (LX/0cm5.A01). */
 private object QuickSnapMenuItemsFingerprint : Fingerprint(
     definingClass = MENU_CLASS,
     name = MENU_METHOD,
@@ -90,7 +90,7 @@ private object QuickSnapMenuItemsFingerprint : Fingerprint(
     custom = { method, _ -> hasFactoryCalls(method) },
 )
 
-/** The app's single context-menu item factory (v458: LX/0Zw5.A00). */
+/** The app's single context-menu item factory (LX/0Zw5.A00). */
 private object QuickSnapMenuItemFactoryFingerprint : Fingerprint(
     definingClass = FACTORY_CLASS,
     name = FACTORY_METHOD,
@@ -101,7 +101,7 @@ private object QuickSnapMenuItemFactoryFingerprint : Fingerprint(
 /**
  * Index of the instruction that reads the selected item's id inside the menu click handler:
  *   check-cast vX, <event>; ...; iget vN, vX, <event>->id:I; sget-object vY, <enum>->A03:EnumEntries
- * The entries field must belong to [enumType] (v458 enum entries field is A03).
+ * The entries field must belong to [enumType] (enum entries field is A03).
  */
 private fun List<Instruction>.selectedItemIdReadIndex(enumType: String): Int {
     for (index in indices) {
@@ -137,17 +137,17 @@ private object QuickSnapMenuSelectionFingerprint : Fingerprint(
 )
 
 @Suppress("unused")
-val saveInstantsToGalleryV458Patch = patch(
-    name = "Save Instants to gallery (v458)",
+val saveInstantsToGalleryPatch = patch(
+    name = "Save Instants to gallery",
     description = "Adds a \"Save to gallery\" option to the Instants menu, so you can keep the photo " +
-        "or video you are viewing. Ported to Instagram 458.0.0.0.3.",
+        "or video you are viewing. Ported to Instagram the target build.",
 ) {
     compatibleWith(MetaCompatibilities.INSTAGRAM)
 
     extendWith("extensions/extension.mpe")
 
     execute {
-        // Hooks are pinned to 458's obfuscated symbols; the fingerprints below fail with a clear
+        // Hooks use obfuscated symbols discovered by reverse engineering; the fingerprints below fail with a clear
         // message on any other build instead of modifying it. Bundle-wide compatibility is declared
         // through MetaCompatibilities.INSTAGRAM.
 

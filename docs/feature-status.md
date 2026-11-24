@@ -1,6 +1,6 @@
 # Feature and verification status — dev branch
 
-**Branch:** `dev` · **Documented release:** `v1.1.0-dev.14`
+**Branch:** `dev` · **Documented release:** `v1.2.0-beta.1`
 
 This page separates implemented code from the verification evidence recorded in the repository. Status statements reflect the checked-in project notes; they are not a fresh physical-device test.
 
@@ -53,7 +53,7 @@ Menu actions report handled failures through a toast and in-app crash log rather
 
 ### Backup import behavior
 
-The file picker accepts plain overrides JSON and an InstaFL-style backup wrapper. The import modes are:
+The file picker accepts plain overrides JSON and an Instafel-style backup wrapper. The import modes are:
 
 - **Full replace:** replace the current overrides file.
 - **Merge:** add keys that are absent from the current file; current values take precedence.
@@ -65,16 +65,16 @@ A marker prevents the bundled installer from overwriting imported values on subs
 
 | Feature / area | Evidence recorded in project notes | Remaining qualification |
 |---|---|---|
-| MobileConfig writer + developer-options unlock | Confirmed on-device on Instagram 457.0.0.0.26, v1.1.0-dev.5 | Evidence is tied to that recorded app build |
-| Mods menu opening | Confirmed on-device by v1.1.0-dev.11 | Later menu additions need separate device confirmation |
+| MobileConfig writer + developer-options unlock | Confirmed on-device | Evidence is tied to that recorded app build |
+| Mods menu opening | Confirmed on-device | Later menu additions need separate device confirmation |
 | Menu register-layout fix | APK harness / DEX inspection | Does not replace device testing |
 | Menu activity theme fix | Output APK manifest inspected; menu opening confirmed on-device | Device coverage is limited to recorded test |
-| Developer-options navigation from menu | Harness-verified fix documented in v1.1.0-dev.12 | Awaiting device confirmation in project notes |
+| Developer-options navigation from menu | Harness-verified fix | Awaiting device confirmation in project notes |
 | Applied-patches JSON, version display, insets | Harness-verified in project notes | Awaiting device confirmation in project notes |
 | Backup import | Harness-verified implementation documented | Awaiting device confirmation in project notes |
 | Remove ads | Ad-pod patch and 1,370-parameter override set documented | Stories, Reels, and promotional placements are not claimed as fully covered |
-| Instants Mod | Port and harness work documented against 455.0.0.55.95 | Device confirmation pending |
-| Instagram gallery upload | Harness build documented; tested compatibility work references Instagram 457.0.0.0.26 | Device confirmation pending |
+| Instants Mod | Port and harness work documented | Device confirmation pending |
+| Instagram gallery upload | Harness build documented | Device confirmation pending |
 
 ## Validation and build commands
 
@@ -89,6 +89,6 @@ The repository also includes APK-oriented test/harness sources under `patches/sr
 
 ## Compatibility policy
 
-Morphe target declarations may omit a fixed app version, but that only removes a version allowlist. It does not make obfuscated bytecode fingerprints universal. App updates can change classes, methods, Compose traces, lifecycle behavior, or configuration loaders.
+Morphe targets are version-agnostic. That removes version allowlists but does not make obfuscated bytecode fingerprints universal; app changes can affect classes, methods, Compose traces, lifecycle behavior, or configuration loaders.
 
-Record the exact app version and APK used for every test. Treat **declared**, **harness verified**, and **device confirmed** as separate evidence levels. Do not claim future-version compatibility without testing.
+Record what was tested for every change. Treat **declared**, **harness verified**, and **device confirmed** as separate evidence levels.

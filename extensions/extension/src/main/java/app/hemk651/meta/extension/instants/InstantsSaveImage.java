@@ -310,7 +310,7 @@ public final class InstantsSaveImage {
                 if (result == Void.TYPE || result.isPrimitive()) continue;
                 // A (Media) -> String helper is the reliable video-source accessor: the source is
                 // then the returned address itself. Other (Media) -> wrapper helpers are kept only
-                // as a fallback (v458's LX/0252 has both shapes).
+                // as a fallback (some builds expose both shapes).
                 if (result == String.class) {
                     stringHelper = m;
                     break;
@@ -408,7 +408,7 @@ public final class InstantsSaveImage {
     }
 
     /**
-     * v458's original-image path: MediaExtKt.A0V(Media, Long) -> ExtendedImageUrl.getUrl().
+     * The app's original-image path: MediaExtKt.A0V(Media, Long) -> ExtendedImageUrl.getUrl().
      * Passing null for the size selects the largest candidate, i.e. the originally uploaded file.
      */
     private static String originalUrl(Object media) {

@@ -1,7 +1,7 @@
 /*
  * Meta Patches — Remove ads.
  *
- * Ported from InstaFL patcher-core "Remove Ads"
+ * Ported from Instafel patcher-core "Remove Ads"
  * (https://github.com/mamiiblt/instafel) by mamiiblt (Muhammed Ali Bulut),
  * reworked for the Morphe patcher.
  *
@@ -28,7 +28,7 @@ val removeAdsPatch = patch(
         // "Is ad pod" string. Its static helper is called to decide whether the
         // ad pod is registered, so returning true skips the ad pod flow.
         //
-        // Original InstaFL patch injects "const/4 v0, 0x1" and "return v0" at the
+        // Original Instafel patch injects "const/4 v0, 0x1" and "return v0" at the
         // start of the method, which returnEarly(true) does the same way.
         AdPodFingerprint.method.returnEarly(true)
     }

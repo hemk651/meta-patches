@@ -1,13 +1,13 @@
 /*
  * Meta Patches — about activity.
  *
- * Forked from InstaFL activity/about/ifl_a_about.java
+ * Forked from Instafel activity/about/ifl_a_about.java
  * (https://github.com/mamiiblt/instafel) by mamiiblt (Muhammed Ali Bulut),
  * rebranded to Meta Patches with the following changes:
  *   - only "About Developer" remains of the project section; it links to the
  *     repository owner's GitHub page
- *   - the InstaFL Community section was removed
- *   - a "Inspired By and Credits" section was added, crediting InstaFL
+ *   - the Instafel Community section was removed
+ *   - a "Inspired By and Credits" section was added, crediting Instafel
  *
  * This file is part of Meta Patches, licensed under the GNU General Public
  * License version 3. https://www.gnu.org/licenses/gpl-3.0.html
@@ -54,7 +54,7 @@ public class ModsAboutActivity extends Activity {
 
         // ── Build information ───────────────────────────────────────────────
         content.addView(ui.sectionTitle("Build Information"));
-        // InstaFL also lists the generation ID and the code commit here;
+        // Instafel also lists the generation ID and the code commit here;
         // both were removed.
         content.addView(ui.tile(
                 "⎇", "Patch Version", ModsEnv.PATCH_VERSION, null, null));
@@ -68,7 +68,7 @@ public class ModsAboutActivity extends Activity {
         content.addView(ui.sectionTitle(ModsEnv.CREDITS_TITLE));
         content.addView(ui.paragraph(ModsEnv.CREDITS_TEXT));
         content.addView(ui.tile(
-                "↗", "InstaFL by mamiiblt", ModsEnv.CREDITS_URL, "›",
+                "↗", "Instafel by mamiiblt", ModsEnv.CREDITS_URL, "›",
                 v -> ModsMenuActivity.openUrl(this, ModsEnv.CREDITS_URL)));
 
         // ── Repository information ──────────────────────────────────────────

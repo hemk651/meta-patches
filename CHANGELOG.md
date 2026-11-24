@@ -14,8 +14,8 @@
 * **extension:** add user-consented SAF setup activity ([53e28c5](https://github.com/hemk651/meta-patches/commit/53e28c5bd3ac24eb0691066a70459ca04424a205))
 * **extension:** register SAF setup activity ([3e8ee2e](https://github.com/hemk651/meta-patches/commit/3e8ee2ec0dc880db21f64da477e10db9b308a8dd))
 * **instagram:** add Save Instants to gallery for v458 ([c7b45de](https://github.com/hemk651/meta-patches/commit/c7b45de91ca2430cbbcc844e140d7c41bfddb1aa))
-* **instagram:** port InstaFL patch set to Morphe format ([df83535](https://github.com/hemk651/meta-patches/commit/df835353ad4b95dc665b3b6d631765b0b198a6b0))
-* **instagram:** port the InstaFL overrides backup import ([52514fd](https://github.com/hemk651/meta-patches/commit/52514fd05d94955030a10bb58043d9f90515dca0))
+* **instagram:** port Instafel patch set to Morphe format ([df83535](https://github.com/hemk651/meta-patches/commit/df835353ad4b95dc665b3b6d631765b0b198a6b0))
+* **instagram:** port the Instafel overrides backup import ([52514fd](https://github.com/hemk651/meta-patches/commit/52514fd05d94955030a10bb58043d9f90515dca0))
 * **instants:** port the Instants Mod from Wagg13 for Instagram Instants ([31f3ef9](https://github.com/hemk651/meta-patches/commit/31f3ef945cd6c5c81e07b44ad1b73cd95ee76455))
 * **patches:** add Instants upload from gallery patch for main Instagram ([f0d289a](https://github.com/hemk651/meta-patches/commit/f0d289ac71d21fc5f0d5290dfcdc3471e28a6ead))
 
@@ -60,7 +60,7 @@
 
 ### ✨ New Features
 
-* **instagram:** port the InstaFL overrides backup import ([52514fd](https://github.com/hemk651/meta-patches/commit/52514fd05d94955030a10bb58043d9f90515dca0))
+* **instagram:** port the Instafel overrides backup import ([52514fd](https://github.com/hemk651/meta-patches/commit/52514fd05d94955030a10bb58043d9f90515dca0))
 
 ### 🐛 Bug Fixes
 
@@ -119,7 +119,7 @@
 
 ### ✨ New Features
 
-* **instagram:** port InstaFL patch set to Morphe format ([df83535](https://github.com/hemk651/meta-patches/commit/df835353ad4b95dc665b3b6d631765b0b198a6b0))
+* **instagram:** port Instafel patch set to Morphe format ([df83535](https://github.com/hemk651/meta-patches/commit/df835353ad4b95dc665b3b6d631765b0b198a6b0))
 
 ### 🐛 Bug Fixes
 

@@ -1,12 +1,12 @@
 /*
  * Meta Patches — Add Mods menu.
  *
- * Ported from InstaFL patcher-core "Add Initialize Instafel",
+ * Ported from Instafel patcher-core "Add Initialize Instafel",
  * "Change Home Long Click" and "Add App Trigger"
  * (https://github.com/mamiiblt/instafel) by mamiiblt (Muhammed Ali Bulut),
  * rebranded and reworked for the Morphe patcher.
  *
- * InstaFL copies its embedded UI classes into the app and wires them up with
+ * Instafel copies its embedded UI classes into the app and wires them up with
  * separate smali patches. The Morphe port ships the same UI as a merged
  * extension (`extensions/extension.mpe`) and does the wiring at patch time:
  *
@@ -92,16 +92,19 @@ private val MODS_ACTIVITIES = listOf(
 /**
  * The static patch list shown in the menu's "Applied package patches" screen.
  *
- * Like InstaFL, the bundle declares this list itself; the patcher does not
+ * Like Instafel, the bundle declares this list itself; the patcher does not
  * expose the applied patch set to a patch.
  */
 private val APPLIED_PATCHES = listOf(
+    "AMOLED theme" to "Forces Instagram dark theme surfaces to pure black (AMOLED).",
+    "Add Mods menu" to "Adds the Mods menu (home long press) with the ported Instafel tools.",
+    "Change channel name" to "Replaces the release channel name (NONE, ALPHA, BETA, PROD) shown in the developer options UI.",
+    "Instants Mod" to "Adds a gallery button to post photos and videos, and allows saving friends' Instants to your device.",
     "Remove ads" to "Removes ads in Instagram by stopping the ad pod flow.",
     "Remove snooze warning" to "Removes the \"build expired\" snooze warning dialog that alpha builds show.",
+    "Save Instants to gallery" to "Adds a \"Save to gallery\" option to the Instants menu, so you can keep the photo or video you are viewing.",
     "Unlock developer options" to "Unlocks the employee options (developer options) menu.",
-    "AMOLED theme" to "Forces Instagram dark theme surfaces to pure black (AMOLED).",
-    "Change channel name" to "Replaces the release channel name (NONE, ALPHA, BETA, PROD) shown in the developer options UI.",
-    "Add Mods menu" to "Adds the Mods menu (home long press) with the ported InstaFL tools."
+    "Upload instants from gallary" to "Adds a gallery button to the Instants camera to post photos and videos from your device's gallery."
 )
 
 /**
@@ -148,7 +151,7 @@ private fun isExtensionReferenced(method: com.android.tools.smali.dexlib2.iface.
 @Suppress("unused")
 val addModsMenuPatch = patch(
     name = "Add Mods menu",
-    description = "Adds the Mods menu (fork of the InstaFL menu): long press the home feed to open the quick menu, incl. developer options.",
+    description = "Adds the Mods menu (fork of the Instafel menu): long press the home feed to open the quick menu, incl. developer options.",
     default = false
 ) {
     compatibleWith(MetaCompatibilities.INSTAGRAM)
@@ -185,7 +188,7 @@ val addModsMenuPatch = patch(
         // Init: inject the extension initialization right after the
         // Application.onCreate super call of the app shell.
         //
-        // InstaFL additionally builds its crash handler inline in smali; the
+        // Instafel additionally builds its crash handler inline in smali; the
         // Morphe port installs the crash handler inside `ModsInit.init`, so a
         // single static call using the super call's own register is enough.
         // ---------------------------------------------------------------
@@ -227,7 +230,7 @@ val addModsMenuPatch = patch(
         // Home long press: replace the listener body.
         //
         // The original body performs MobileConfig driven feed interactions;
-        // InstaFL swaps it for a handler that stores the activity / session
+        // Instafel swaps it for a handler that stores the activity / session
         // and opens the quick menu sheet. The synthetic field names of the
         // class are recovered at patch time, since they are obfuscated and
         // differ between builds.
@@ -255,7 +258,7 @@ val addModsMenuPatch = patch(
             val classType = classDef.type
 
             val method = longClickMatch.method
-            // Like InstaFL's "Change Home Long Click" (`.registers 6`), the
+            // Like Instafel's "Change Home Long Click" (`.registers 6`), the
             // replacement body always uses the locals v0-v2 plus the
             // parameters p0/p1. The original body is removed wholesale, so
             // when the original method declared fewer registers, the method
@@ -299,7 +302,7 @@ val addModsMenuPatch = patch(
         // Developer options: fill the quick menu's `openDeveloperOptions`
         // with the app's own fragment navigation code.
         //
-        // The navigation internals are recovered the same way InstaFL
+        // The navigation internals are recovered the same way Instafel
         // recovers them: from the UserDetailFragment call site that
         // navigates to a bare `Landroidx/fragment/app/Fragment;`:
         //   - the method call defines the navigator class and its add method,
@@ -360,7 +363,7 @@ val addModsMenuPatch = patch(
         val sheetMatch = ModsHomeSheetOpenDeveloperOptionsFingerprint.matchOrNull()
             ?: throw PatchException("openDeveloperOptions placeholder did not match")
 
-        // Like InstaFL's "Update openDeveloperOptions" (`.registers 7`), the
+        // Like Instafel's "Update openDeveloperOptions" (`.registers 7`), the
         // replacement body always uses the locals v0-v3 and dismisses the
         // sheet through p0. The placeholder is an instance method with only
         // p0, so it is grown to seven registers when it was compiled with

@@ -6,8 +6,7 @@
  *
  * The fingerprints are anchored on unobfuscated Compose trace strings and on
  * behavior (what a method does with its arguments), so they survive the
- * obfuscation of the app and its version drift. Verified against
- * 451.0.0.53.106 upstream and against 455.0.0.55.95 in this bundle.
+ * obfuscation of the app and version drift.
  *
  * This file is part of Meta Patches, licensed under the GNU General Public
  * License version 3. https://www.gnu.org/licenses/gpl-3.0.html

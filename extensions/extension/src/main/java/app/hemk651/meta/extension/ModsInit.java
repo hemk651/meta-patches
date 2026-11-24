@@ -1,7 +1,7 @@
 /*
  * Meta Patches — extension initialization.
  *
- * Forked from InstaFL (https://github.com/mamiiblt/instafel) by
+ * Forked from Instafel (https://github.com/mamiiblt/instafel) by
  * mamiiblt (Muhammed Ali Bulut), rebranded to Meta Patches.
  *
  * This file is part of Meta Patches, licensed under the GNU General Public
@@ -30,7 +30,7 @@ public class ModsInit {
      * Called by the "Add Mods menu" patch from the Application.onCreate of the
      * app shell.
      *
-     * InstaFL builds its crash handler inline in smali; here the installation
+     * Instafel builds its crash handler inline in smali; here the installation
      * is done in Java so the patch only has to inject a single static call.
      */
     public static void init(Context context) {
@@ -64,7 +64,7 @@ public class ModsInit {
         base.startActivity(intent);
     }
 
-    /** Restarts the whole app process, like InstaFL's restart menu item. */
+    /** Restarts the whole app process, like Instafel's restart menu item. */
     public static void restartApp(Activity activity) {
         Intent intent = activity.getPackageManager()
                 .getLaunchIntentForPackage(activity.getPackageName());

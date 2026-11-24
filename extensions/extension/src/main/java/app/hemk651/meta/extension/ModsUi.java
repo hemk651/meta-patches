@@ -1,7 +1,7 @@
 /*
  * Meta Patches — shared UI helpers.
  *
- * Forked from the InstaFL UI kit (https://github.com/mamiiblt/instafel) by
+ * Forked from the Instafel UI kit (https://github.com/mamiiblt/instafel) by
  * mamiiblt (Muhammed Ali Bulut), reduced to what Meta Patches needs.
  * The menu UI is built programmatically so the extension does not have to
  * ship compiled resources.
@@ -79,7 +79,7 @@ public final class ModsUi {
                 ctx.getResources().getDisplayMetrics());
     }
 
-    /** Rounded tile background, matching the InstaFL tile look. */
+    /** Rounded tile background, matching the Instafel tile look. */
     public GradientDrawable tileBackground() {
         GradientDrawable bg = new GradientDrawable();
         bg.setColor(tileColor());

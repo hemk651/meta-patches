@@ -1,7 +1,7 @@
 /*
  * Meta Patches — MobileConfig overrides installer.
  *
- * Forked from InstaFL (https://github.com/mamiiblt/instafel) by
+ * Forked from Instafel (https://github.com/mamiiblt/instafel) by
  * mamiiblt (Muhammed Ali Bulut), rebranded to Meta Patches.
  *
  * This file is part of Meta Patches, licensed under the GNU General Public
@@ -118,7 +118,7 @@ public final class MCOverrides {
     /**
      * Installs a backup picked by the user into the overrides file.
      *
-     * Mirrors the InstaFL backup import: the backup may wrap its payload
+     * Mirrors the Instafel backup import: the backup may wrap its payload
      * under a {@code "backup"} key; in merge mode only the entries the
      * current overrides file does not define are added, so the current
      * values win. The payload is written as compact single-line JSON, the
@@ -139,7 +139,7 @@ public final class MCOverrides {
 
         try {
             JSONObject picked = new JSONObject(rawJson);
-            // InstaFL backups wrap the payload under "backup"; a bare payload
+            // Instafel backups wrap the payload under "backup"; a bare payload
             // (an overrides file exported as-is) is imported directly.
             JSONObject payload = picked.has("backup") && picked.optJSONObject("backup") != null
                     ? picked.getJSONObject("backup")
@@ -174,6 +174,36 @@ public final class MCOverrides {
             Log.w(TAG, "Failed to import the overrides backup", e);
             return e.getMessage() == null || e.getMessage().isEmpty()
                     ? e.getClass().getSimpleName() : e.getMessage();
+        }
+    }
+
+    /**
+     * Exports the current overrides file as JSON.
+     *
+     * @param wrapBackup true wraps the payload under a {@code "backup"} key,
+     *                   the format Instafel backups use; false writes the
+     *                   plain overrides file that Instagram loads directly.
+     * @return the JSON text, or null when no overrides file can be read
+     */
+    public static String exportOverrides(Context context, boolean wrapBackup) {
+        if (context == null) {
+            return null;
+        }
+        try {
+            File directory = overridesDirectory(context);
+            JSONObject content = readJsonObject(directory == null ? null : new File(directory, FILE_NAME));
+            if (content == null) {
+                return null;
+            }
+            if (!wrapBackup) {
+                return content.toString();
+            }
+            JSONObject envelope = new JSONObject();
+            envelope.put("backup", content);
+            return envelope.toString();
+        } catch (Throwable t) {
+            Log.w(TAG, "Failed to export the overrides backup", t);
+            return null;
         }
     }
 

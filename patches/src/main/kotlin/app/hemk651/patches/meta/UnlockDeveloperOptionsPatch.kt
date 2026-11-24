@@ -1,7 +1,7 @@
 /*
  * Meta Patches — Unlock developer options.
  *
- * Ported from InstaFL patcher-core "Unlock Developer Options"
+ * Ported from Instafel patcher-core "Unlock Developer Options"
  * (https://github.com/mamiiblt/instafel) by mamiiblt (Muhammed Ali Bulut),
  * reworked for the Morphe patcher.
  *
@@ -31,7 +31,7 @@ import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 private const val USER_SESSION_TYPE = "Lcom/instagram/common/session/UserSession;"
 
 /**
- * The obfuscated gate method InstaFL looks for: `A00(UserSession)Z`.
+ * The obfuscated gate method Instafel looks for: `A00(UserSession)Z`.
  *
  * The gate reads a MobileConfig boolean (`LX/02wa;->A00` on inspected
  * builds, id `0x81007600000105L`) and returns it; it controls the
@@ -113,7 +113,7 @@ private fun installMcOverridesInstaller() {
 /**
  * Forces the employee options gate (`A00(UserSession)Z`) to return true.
  *
- * Port of the InstaFL algorithm:
+ * Port of the Instafel algorithm:
  *
  *  1. Walk the fallback chain of stable, non-obfuscated reference classes.
  *  2. In each class, look for `invoke-static` call sites that call the
@@ -121,7 +121,7 @@ private fun installMcOverridesInstaller() {
  *     `A00(UserSession)Z` (the strict `->A00(` + `UserSession` + `)Z` shape).
  *  3. Validate each candidate by checking that the referenced gate class
  *     really defines an `A00(UserSession)Z` method.
- *  4. Patch the first validated gate: InstaFL inserts `const v0, 0x1` after
+ *  4. Patch the first validated gate: Instafel inserts `const v0, 0x1` after
  *     the single `move-result v0` of the A00 body; `returnLate(true)` forces
  *     every return of the method to true, which covers the same (single)
  *     return path and stays robust if the method gains extra returns.
@@ -171,7 +171,7 @@ private fun findValidatedGateReference(
             }
 
             // Validate the candidate: the gate class must actually define the
-            // A00(UserSession)Z method (InstaFL parity; invoke-static alone
+            // A00(UserSession)Z method (Instafel parity; invoke-static alone
             // already guarantees the method is static).
             val gateClassDef = classDefByOrNull(callee.definingClass) ?: continue
             val gateDefined = gateClassDef.methods.any { candidate ->

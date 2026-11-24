@@ -1,7 +1,7 @@
 /*
  * Meta Patches — Remove snooze warning.
  *
- * Ported from InstaFL patcher-core "Remove Snooze Warning"
+ * Ported from Instafel patcher-core "Remove Snooze Warning"
  * (https://github.com/mamiiblt/instafel) by mamiiblt (Muhammed Ali Bulut),
  * reworked for the Morphe patcher.
  *
@@ -31,7 +31,7 @@ val removeSnoozeWarningPatch = patch(
         // constructed. Overriding the converted value with 0 makes the app treat
         // the build as freshly released, so the snooze dialog never appears.
         //
-        // Original InstaFL patch replaces the "long-to-int vX, vY" instruction
+        // Original Instafel patch replaces the "long-to-int vX, vY" instruction
         // with "const/4 vX, 0x0".
         DogfoodingLockoutFingerprint.let {
             val longToIntMatch = it.instructionMatches.last()

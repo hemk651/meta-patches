@@ -1,7 +1,7 @@
 /*
  * Meta Patches — developer options holder.
  *
- * Forked from InstaFL patch_exts/DevHolder.smali
+ * Forked from Instafel patch_exts/DevHolder.smali
  * (https://github.com/mamiiblt/instafel) by mamiiblt (Muhammed Ali Bulut).
  *
  * The patch binds the Instagram main activity and the current user session

@@ -3,7 +3,7 @@
  *
  * This class is part of the Meta Patches extension, which is merged into the
  * target app by the Meta Patches patch bundle. The menu is forked from the
- * InstaFL embedded app (https://github.com/mamiiblt/instafel) by
+ * Instafel embedded app (https://github.com/mamiiblt/instafel) by
  * mamiiblt (Muhammed Ali Bulut) and rebranded to Meta Patches.
  *
  * This file is part of Meta Patches, licensed under the GNU General Public
@@ -37,7 +37,7 @@ public class ModsEnv {
      */
     public static final String PATCH_VERSION = BuildConfig.PATCH_VERSION;
     /**
-     * Installation type of the patched app. The clone generation of InstaFL is
+     * Installation type of the patched app. The clone generation of Instafel is
      * not ported, so a Meta Patches build is always a normal package.
      */
     public static final String INSTALL_TYPE = "Normal package";
@@ -49,19 +49,19 @@ public class ModsEnv {
     public static final String DEVELOPER_URL = "https://github.com/hemk651";
     // ── Inspired By and Credits ─────────────────────────────────────────────
     /**
-     * The menu UI and the patch logic are forked from InstaFL.
+     * The menu UI and the patch logic are forked from Instafel.
      * Credit must always stay visible to the original developer.
      */
     public static final String CREDITS_TITLE = "Inspired By and Credits";
     public static final String CREDITS_URL = "https://github.com/mamiiblt/instafel";
     public static final String CREDITS_TEXT =
-            "This project is a fork of InstaFL, originally developed by "
+            "This project is a fork of Instafel, originally developed by "
                     + "mamiiblt (Muhammed Ali Bulut). The menu, tools and patch "
-                    + "ideas come from InstaFL — thanks to them for building "
+                    + "ideas come from Instafel — thanks to them for building "
                     + "and sharing the project.\n"
                     + "Project: https://github.com/mamiiblt/instafel\n\n"
                     + "Meta Patches is an independent fork; it is not affiliated "
-                    + "with InstaFL, Meta, or Instagram.";
+                    + "with Instafel, Meta, or Instagram.";
 
     // ── Runtime state ───────────────────────────────────────────────────────
     private static String igVersion = null;

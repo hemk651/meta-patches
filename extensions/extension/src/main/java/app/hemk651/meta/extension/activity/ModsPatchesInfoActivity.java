@@ -1,7 +1,7 @@
 /*
  * Meta Patches — applied patches activity.
  *
- * Forked from InstaFL activity/about/ifl_a_patches_info.java
+ * Forked from Instafel activity/about/ifl_a_patches_info.java
  * (https://github.com/mamiiblt/instafel) by mamiiblt (Muhammed Ali Bulut),
  * rebranded to Meta Patches.
  *

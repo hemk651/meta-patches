@@ -1,7 +1,7 @@
 /*
  * Meta Patches — crash viewer activity.
  *
- * Forked from InstaFL activity/crash_manager/ifl_a_crash_viewer.java
+ * Forked from Instafel activity/crash_manager/ifl_a_crash_viewer.java
  * (https://github.com/mamiiblt/instafel) by mamiiblt (Muhammed Ali Bulut),
  * rebranded to Meta Patches.
  *

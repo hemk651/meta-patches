@@ -8,7 +8,7 @@
  * Instants camera classes unobfuscated but strips their Compose trace
  * strings, so unlike the Instants app the fingerprints here are structural:
  * they anchor on kept class names and on what a method does with its
- * arguments. Verified against Instagram 457.0.0.0.26.
+ * arguments.
  *
  * This file is part of Meta Patches, licensed under the GNU General Public
  * License version 3. https://www.gnu.org/licenses/gpl-3.0.html

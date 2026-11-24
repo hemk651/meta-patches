@@ -4,8 +4,8 @@ This page records the functional target scope and the verification evidence docu
 
 | App | Android package ID | Evidence recorded in project notes |
 |---|---|---|
-| Instagram | `com.instagram.android` | Runtime payload installation and developer-options unlock confirmed on-device on Instagram 457.0.0.0.26 (v1.1.0-dev.5); Mods menu opening confirmed on-device by v1.1.0-dev.11 |
-| Instagram Instants | `com.instagram.moonshot` | Instants Mod port and harness work documented against 455.0.0.55.95; device confirmation pending |
+| Instagram | `com.instagram.android` | Runtime payload installation and developer-options unlock confirmed on-device on the target build (v1.1.0-dev.5); Mods menu opening confirmed on-device by v1.1.0-dev.11 |
+| Instagram Instants | `com.instagram.moonshot` | Instants Mod port and harness work documented on the target build; device confirmation pending |
 
 Threads and Edits are not targets of this branch. Their compatibility declarations remain on `main`; they are not included in the dev patch list.
 
@@ -23,7 +23,7 @@ The app-private path is intentional: the previous removable-storage/SAF design w
 
 ## Instagram Instants
 
-The Instants Mod is a port of the functional parts of [Wagg13Patch_Morphe](https://github.com/WaggBR/Wagg13Patch_Morphe) (GPL-3). It adds a gallery picker to the camera flow and a save-to-gallery action for friends' Instants. The patch declares a version-agnostic target, but the documented harness check against 455.0.0.55.95 is not a guarantee for future releases. Device verification remains pending in the project notes.
+The Instants Mod is a port of the functional parts of [Wagg13Patch_Morphe](https://github.com/WaggBR/Wagg13Patch_Morphe) (GPL-3). It adds a gallery picker to the camera flow and a save-to-gallery action for friends' Instants. The patch declares a version-agnostic target, but the documented harness check on the target build is not a guarantee for future releases. Device verification remains pending in the project notes.
 
 ## Verification terminology
 

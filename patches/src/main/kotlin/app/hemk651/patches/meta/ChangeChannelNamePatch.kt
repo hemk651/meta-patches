@@ -1,7 +1,7 @@
 /*
  * Meta Patches — Change channel name.
  *
- * Ported from InstaFL patcher-core "Change Visible Channel Name"
+ * Ported from Instafel patcher-core "Change Visible Channel Name"
  * (https://github.com/mamiiblt/instafel) by mamiiblt (Muhammed Ali Bulut),
  * rebranded and reworked for the Morphe patcher.
  *
@@ -41,7 +41,7 @@ val changeChannelNamePatch = patch(
         // enum. Every occurrence is replaced, so each channel is displayed with
         // the patched name.
         //
-        // Original InstaFL patch replaces the constants with "Instafel v<n>".
+        // Original Instafel patch replaces the constants with "Instafel v<n>".
         val name = channelName?.takeIf { it.isNotBlank() } ?: DEFAULT_CHANNEL_NAME
 
         ChannelNameFingerprint.let {

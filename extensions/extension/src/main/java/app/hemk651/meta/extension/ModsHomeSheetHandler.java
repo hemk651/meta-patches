@@ -1,7 +1,7 @@
 /*
  * Meta Patches — home sheet handler.
  *
- * Forked from InstaFL utils/HomeSheetHandler.java
+ * Forked from Instafel utils/HomeSheetHandler.java
  * (https://github.com/mamiiblt/instafel) by mamiiblt (Muhammed Ali Bulut),
  * rebranded to Meta Patches.
  *

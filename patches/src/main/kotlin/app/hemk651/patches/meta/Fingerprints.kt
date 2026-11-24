@@ -1,7 +1,7 @@
 /*
  * Meta Patches — fingerprints shared by the Instagram patches.
  *
- * Ported from InstaFL patcher-core (https://github.com/mamiiblt/instafel)
+ * Ported from Instafel patcher-core (https://github.com/mamiiblt/instafel)
  * by mamiiblt (Muhammed Ali Bulut), reworked for the Morphe patcher.
  *
  * This file is part of Meta Patches, licensed under the GNU General Public
@@ -22,7 +22,7 @@ import com.android.tools.smali.dexlib2.Opcode
 /**
  * The method of the ad-pod tracking class that contains the `"Is ad pod"` string.
  *
- * InstaFL ("Remove Ads" patch) makes this method return `true` immediately,
+ * Instafel ("Remove Ads" patch) makes this method return `true` immediately,
  * which stops the ad pod flow from being registered.
  */
 internal object AdPodFingerprint : Fingerprint(
@@ -36,7 +36,7 @@ internal object AdPodFingerprint : Fingerprint(
  *
  * The method constructs `Lcom/instagram/release/lockout/DogfoodingEligibilityApi;`
  * and converts "days since the build was released" from a long to an int by dividing
- * with `0x5265c00` (86400000 ms = one day). InstaFL ("Remove Snooze Warning" patch)
+ * with `0x5265c00` (86400000 ms = one day). Instafel ("Remove Snooze Warning" patch)
  * replaces the `long-to-int` result with `0x0`, so the app believes the build was
  * released today and never shows the expiration warning dialog.
  *
@@ -59,7 +59,7 @@ internal object DogfoodingLockoutFingerprint : Fingerprint(
  * The static call site that resolves the employee options (developer options) gate.
  *
  * The gate itself lives in an obfuscated class and is only reachable by following the
- * call from a stable, non-obfuscated caller. InstaFL uses a fallback chain of three
+ * call from a stable, non-obfuscated caller. Instafel uses a fallback chain of three
  * reference classes; every inspected build resolves through the first one.
  *
  * [app.hemk651.patches.meta.UnlockDeveloperOptionsPatch] loops over these class names
@@ -115,7 +115,7 @@ internal object ChannelNameFingerprint : Fingerprint(
  *
  * [app.hemk651.patches.meta.AddModsMenuPatch] injects the extension
  * initialization (`ModsInit.init`) right after the `Application.onCreate` super
- * call, mirroring InstaFL's "Add Initialize Instafel" patch.
+ * call, mirroring Instafel's "Add Initialize Instafel" patch.
  */
 internal object InstagramAppShellOnCreateFingerprint : Fingerprint(
     definingClass = "Lcom/instagram/app/InstagramAppShell;",
@@ -135,7 +135,7 @@ internal object InstagramAppShellOnCreateFingerprint : Fingerprint(
  * `"click"` and `"activity"`.
  *
  * The class holds the main activity and the user session as synthetic fields,
- * which InstaFL ("Change Home Long Click" patch) verifies as well.
+ * which Instafel ("Change Home Long Click" patch) verifies as well.
  */
 internal object HomeLongClickFingerprint : Fingerprint(
     name = "onLongClick",
@@ -155,7 +155,7 @@ internal object HomeLongClickFingerprint : Fingerprint(
  * class that navigates to a bare `Landroidx/fragment/app/Fragment;`.
  *
  * The call goes through the app's FragmentNavigator
- * (`A0I(Landroidx/fragment/app/Fragment;)V`), which InstaFL's
+ * (`A0I(Landroidx/fragment/app/Fragment;)V`), which Instafel's
  * "Change Home Long Click" patch re-uses to open the developer options from the
  * home sheet. The navigator class, its add method, its transition method and
  * its constructor signature are all recovered from this call site at patch time.

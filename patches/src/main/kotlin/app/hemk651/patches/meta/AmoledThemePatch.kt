@@ -1,7 +1,7 @@
 /*
  * Meta Patches — AMOLED theme.
  *
- * Ported from InstaFL patcher-core "AMOLED Theme"
+ * Ported from Instafel patcher-core "AMOLED Theme"
  * (https://github.com/mamiiblt/instafel) by mamiiblt (Muhammed Ali Bulut),
  * reworked for the Morphe patcher.
  *
@@ -23,7 +23,7 @@ import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 
 /**
  * Night mode surface colors that are forced to pure black.
- * InstaFL points them at `@color/bds_black`, which is Instagram's own black.
+ * Instafel points them at `@color/bds_black`, which is Instagram's own black.
  */
 private val AMOLED_NIGHT_COLORS = listOf(
     "igds_secondary_background",
@@ -45,7 +45,7 @@ val amoledThemePatch = patch(
     compatibleWith(MetaCompatibilities.INSTAGRAM)
 
     execute {
-        // The bds_black reference InstaFL writes only resolves if the resource
+        // The bds_black reference Instafel writes only resolves if the resource
         // exists in the resource table, otherwise fall back to a literal black.
         val black = if (hasResourceId(ResourceType.COLOR, "bds_black")) {
             "@color/bds_black"
@@ -81,7 +81,7 @@ val amoledThemePatch = patch(
         // black. The ARGB literal is shifted left by 32 bits before being stored
         // as a Compose ColorULong, so the shift of the original code is kept.
         //
-        // Original InstaFL patch replaces the const-wide literal with
+        // Original Instafel patch replaces the const-wide literal with
         // "const-wide vX, 0xff000000L".
         PrismGray1600Fingerprint.let {
             val constWideMatch = it.instructionMatches.last()

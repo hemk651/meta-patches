@@ -1,7 +1,7 @@
 /*
  * Meta Patches — quick menu sheet shown on home long press.
  *
- * Forked from InstaFL utils/InstafelHomeSheet.java
+ * Forked from Instafel utils/InstafelHomeSheet.java
  * (https://github.com/mamiiblt/instafel) by mamiiblt (Muhammed Ali Bulut),
  * rebranded to Meta Patches with the following changes:
  *   - the version subtitle line was removed
@@ -101,7 +101,7 @@ public class ModsHomeSheet {
         // also closes it, like a back gesture.
         root.setOnClickListener(v -> dismissSheetDialog());
 
-        // Header. InstaFL shows the IFL version and the IG version in a
+        // Header. Instafel shows the IFL version and the IG version in a
         // subtitle here; the subtitle is intentionally not ported.
         LinearLayout header = new LinearLayout(act);
         header.setOrientation(LinearLayout.HORIZONTAL);
@@ -159,7 +159,7 @@ public class ModsHomeSheet {
      * This method is replaced by the "Add Mods menu" patch at patch time with
      * the code that navigates to
      * com.instagram.debug.quickexperiment.QuickExperimentCategoriesFragment
-     * through the FragmentNavigator of the app, exactly like the InstaFL
+     * through the FragmentNavigator of the app, exactly like the Instafel
      * ChangeHomeLongClick patch fills InstafelHomeSheet.openDeveloperOptions.
      */
     public void openDeveloperOptions() {

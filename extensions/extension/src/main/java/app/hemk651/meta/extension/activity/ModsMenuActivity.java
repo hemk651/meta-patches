@@ -1,7 +1,7 @@
 /*
  * Meta Patches — main menu activity.
  *
- * Forked from InstaFL activity/ifl_a_menu.java
+ * Forked from Instafel activity/ifl_a_menu.java
  * (https://github.com/mamiiblt/instafel) by mamiiblt (Muhammed Ali Bulut),
  * rebranded to Meta Patches with the following changes:
  *   - the Updates (OTA) menu was removed
@@ -67,7 +67,7 @@ public class ModsMenuActivity extends Activity {
                     v -> openActivity(ModsMiscActivity.class)));
 
             // ── Bottom icons ────────────────────────────────────────────────
-            // InstaFL shows language, chat, guide and GitHub icons here; only
+            // Instafel shows language, chat, guide and GitHub icons here; only
             // the language and information icons are kept.
             content.addView(ui.sectionTitle("General"));
 

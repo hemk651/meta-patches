@@ -1,7 +1,7 @@
 /*
  * Meta Patches — language activity.
  *
- * Forked from InstaFL activity/ifl_a_language.java
+ * Forked from Instafel activity/ifl_a_language.java
  * (https://github.com/mamiiblt/instafel) by mamiiblt (Muhammed Ali Bulut),
  * rebranded to Meta Patches. English is bundled; further translations can be
  * added by the patch bundle without changing the extension.
