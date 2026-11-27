@@ -41,6 +41,7 @@ private const val STRINGS_HELPER = "Lapp/hemk651/meta/extension/instants/Instant
 private const val GALLERY_HELPER = "Lapp/hemk651/meta/extension/instants/InstantsGalleryHelper;"
 
 private const val MEDIA_TYPE = "Lcom/instagram/feed/media/Media;"
+private const val EXTENDED_IMAGE_URL = "Lcom/instagram/model/mediasize/ExtendedImageUrl;"
 private const val ENUM_ENTRIES_TYPE = "Lkotlin/enums/EnumEntries;"
 private const val STRING_TYPE = "Ljava/lang/String;"
 private const val ACC_STATIC = 0x0008
@@ -197,6 +198,32 @@ private fun findViewerStateParameter(menu: HostMethod): Int {
     error("Instagram: unable to locate the Instants viewer state parameter")
 }
 
+/**
+ * The app's original-image helper: a static (Media[, Long]) -> ExtendedImageUrl method. Its
+ * defining class changes between builds (MediaExtKt in older builds, LX/06vu; in newer ones).
+ */
+private fun findOriginalImageHelper(): Pair<String, String>? {
+    var result: Pair<String, String>? = null
+    var bestScore = 0
+    classDefForEach { definition ->
+        definition.methods.forEach { method ->
+            if (!isStatic(method)) return@forEach
+            val parameters = method.parameterTypes.map { it.toString() }
+            if (parameters.isEmpty() || parameters[0] != MEDIA_TYPE ||
+                method.returnType != EXTENDED_IMAGE_URL ||
+                parameters.size !in 1..2
+            ) return@forEach
+
+            val score = if (parameters.size == 2 && parameters[1] == "Ljava/lang/Long;") 2 else 1
+            if (score > bestScore) {
+                bestScore = score
+                result = definition.type to method.name
+            }
+        }
+    }
+    return result
+}
+
 /** A class with a static (Media) -> String helper, used by the extension for video sources. */
 private fun findVideoSourceClass(): String {
     var result: String? = null
@@ -232,12 +259,13 @@ val saveInstantsToGalleryPatch = patch(
         val selection = findSelectionHandler(enumType)
         val viewerStateParameter = findViewerStateParameter(menu)
         val videoSourceClass = findVideoSourceClass()
+        val originalImageHelper = findOriginalImageHelper()
 
         println(
             "Instants save hooks: enum=$enumType factory=${factory.definingClass}->${factory.name} " +
                 "menu=${menu.definingClass}->${menu.name} " +
                 "selection=${selection.definingClass}->${selection.name} " +
-                "state=p$viewerStateParameter video=$videoSourceClass"
+                "state=p$viewerStateParameter video=$videoSourceClass original=$originalImageHelper"
         )
 
         // 2) Add one item to the viewer menu, built with the app's own item factory.
@@ -321,13 +349,21 @@ val saveInstantsToGalleryPatch = patch(
             """.trimIndent(),
         )
 
-        // 3) Report the viewer state and the video-source class.
+        // 3) Report the viewer state, the video-source class and the original-image helper.
+        val originalHelperInstructions = originalImageHelper?.let { (type, name) ->
+            """
+            const-class v1, $type
+            const-string v2, "$name"
+            invoke-static {v1, v2}, $SAVE_HELPER->setOriginalUrlHelper(Ljava/lang/Class;Ljava/lang/String;)V
+            """.trimIndent()
+        } ?: ""
         menuMethod.addInstructions(
             0,
             """
             invoke-static/range {p$viewerStateParameter .. p$viewerStateParameter}, $SAVE_HELPER->onViewerState(Ljava/lang/Object;)V
             const-class v0, $videoSourceClass
             invoke-static {v0}, $SAVE_HELPER->setVideoSourceClass(Ljava/lang/Class;)V
+            $originalHelperInstructions
             """.trimIndent(),
         )
 

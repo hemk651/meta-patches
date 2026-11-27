@@ -59,6 +59,17 @@ public final class InstantsSaveImage {
     // patch; the helper is called on demand with the current media.
     private static volatile Class<?> videoSourceClass;
 
+    // The app's original-image helper (Media[, Long] -> ExtendedImageUrl). Its name changes
+    // between builds, so the patch discovers and passes it at patch time.
+    private static volatile Class<?> originalUrlClass;
+    private static volatile String originalUrlMethod;
+
+    /** Called by the patch with the discovered original-image helper. */
+    public static void setOriginalUrlHelper(Class<?> type, String method) {
+        originalUrlClass = type;
+        originalUrlMethod = method;
+    }
+
     /** Called by the patched menu builder with the video player's class. */
     public static void setVideoSourceClass(Class<?> type) {
         videoSourceClass = type;
@@ -413,6 +424,8 @@ public final class InstantsSaveImage {
      */
     private static String originalUrl(Object media) {
         if (media == null) return null;
+        String discovered = urlFromHelper(media, originalUrlClass, originalUrlMethod);
+        if (discovered != null) return discovered;
         try {
             Class<?> ext = Class.forName("com.instagram.feed.media.MediaExtKt", false,
                     media.getClass().getClassLoader());
@@ -433,6 +446,36 @@ public final class InstantsSaveImage {
                         String url = (String) getter.invoke(imageUrl);
                         if (url != null && url.startsWith("http")) {
                             Log.i(TAG, "original image url found");
+                            return url;
+                        }
+                    }
+                }
+            }
+        } catch (Throwable t) {
+            Log.e(TAG, "Unable to read the original image url", t);
+        }
+        return null;
+    }
+
+    /** Invokes the patch-discovered original-image helper, if one was supplied. */
+    private static String urlFromHelper(Object media, Class<?> helperClass, String methodName) {
+        if (media == null || helperClass == null || methodName == null) return null;
+        try {
+            for (Method m : helperClass.getDeclaredMethods()) {
+                if (!m.getName().equals(methodName) || !Modifier.isStatic(m.getModifiers())) continue;
+                Class<?>[] params = m.getParameterTypes();
+                if (params.length < 1 || params.length > 2 || !params[0].isInstance(media)) continue;
+                if (!m.getReturnType().getName().equals("com.instagram.model.mediasize.ExtendedImageUrl")) continue;
+                m.setAccessible(true);
+                Object imageUrl = params.length == 1 ? m.invoke(null, media) : m.invoke(null, media, null);
+                if (imageUrl == null) continue;
+                for (Method getter : imageUrl.getClass().getMethods()) {
+                    if (getter.getName().equals("getUrl") && getter.getParameterTypes().length == 0
+                            && getter.getReturnType() == String.class) {
+                        getter.setAccessible(true);
+                        String url = (String) getter.invoke(imageUrl);
+                        if (url != null && url.startsWith("http")) {
+                            Log.i(TAG, "original image url found (discovered helper)");
                             return url;
                         }
                     }
