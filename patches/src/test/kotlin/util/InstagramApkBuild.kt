@@ -23,6 +23,8 @@ package util
 
 import app.hemk651.patches.instants.instantsModPatch
 import app.hemk651.patches.instantsupload.uploadInstantsFromGalleryPatch
+import app.hemk651.patches.instagram.clonePackagePatch
+import app.hemk651.patches.instagram.saveInstantsToGalleryPatch
 import app.hemk651.patches.meta.addModsMenuPatch
 import app.hemk651.patches.meta.amoledThemePatch
 import app.hemk651.patches.meta.changeChannelNamePatch
@@ -162,8 +164,24 @@ fun main(arguments: Array<String>) {
             amoledThemePatch,
             changeChannelNamePatch,
             addModsMenuPatch,
-            uploadInstantsFromGalleryPatch
+            uploadInstantsFromGalleryPatch,
+            saveInstantsToGalleryPatch,
+            clonePackagePatch
         )
+    }
+
+    // Optional Clone package overrides for offline verification.
+    System.getenv("CLONE_INSTALL_BESIDE")?.let {
+        clonePackagePatch.options.set("installBesideOriginal", it.toBoolean())
+    }
+    System.getenv("CLONE_PACKAGE_NAME")?.let {
+        clonePackagePatch.options.set("packageName", it)
+    }
+    System.getenv("CLONE_APP_NAME")?.let {
+        clonePackagePatch.options.set("appName", it)
+    }
+    System.getenv("CLONE_ICON_PATH")?.let {
+        clonePackagePatch.options.set("customIcon", it)
     }
 
     val workspace = createTempDirectory("meta-patches-build").toFile()
