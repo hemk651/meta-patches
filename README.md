@@ -24,9 +24,9 @@ An independent [Morphe](https://github.com/MorpheApp) patch source for Instagram
 This section is generated from `patches-list.json` during the release workflow. Do not edit the generated section by hand.
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.2.0-beta.2](https://github.com/hemk651/meta-patches/releases/tag/v1.2.0-beta.2)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;9 patches total
+> **[v1.2.0-beta.3](https://github.com/hemk651/meta-patches/releases/tag/v1.2.0-beta.3)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;10 patches total
 <details open>
-<summary>📦 Instagram&nbsp;&nbsp;•&nbsp;&nbsp;8 patches</summary>
+<summary>📦 Instagram&nbsp;&nbsp;•&nbsp;&nbsp;9 patches</summary>
 <br>
 
 **Package name:** `com.instagram.android`
@@ -36,9 +36,10 @@ This section is generated from `patches-list.json` during the release workflow. 
 | [AMOLED theme](#amoled-theme) | Forces Instagram dark theme surfaces to pure black (AMOLED). |  |
 | [Add Mods menu](#add-mods-menu) | Adds the Mods menu (fork of the Instafel menu): long press the home feed to open the quick menu, incl. developer options. |  |
 | [Change channel name](#change-channel-name) | Replaces the release channel name (NONE, ALPHA, BETA, PROD) shown in the developer options UI. | • Channel name |
+| [Clone package](#clone-package) | Install Instagram beside the original app (clone) or replace it. Choose the package name, the app name and optionally a custom launcher icon. | • Install beside original (clone)<br>• Package name<br>• App name<br>• Custom launcher icon |
 | [Remove ads](#remove-ads) | Removes ads in Instagram by stopping the ad pod flow. |  |
 | [Remove snooze warning](#remove-snooze-warning) | Removes the "build expired" snooze warning dialog that alpha builds show. |  |
-| [Save Instants to gallery](#save-instants-to-gallery) | Adds a "Save to gallery" option to the Instants menu, so you can keep the photo or video you are viewing. Ported to Instagram the target build. |  |
+| [Save Instants to gallery](#save-instants-to-gallery) | Adds a "Save to gallery" option to the Instants menu, so you can keep the photo or video you are viewing. Hooks are discovered at patch time, so this works across builds. |  |
 | [Unlock developer options](#unlock-developer-options) | Unlocks the developer options: writes the MobileConfig overrides file that reveals Developer options in the settings together with a dedicated Employee options entry, and forces the employee options gate to true (shake-gesture entry). The overrides file becomes active after an app restart. |  |
 | [Upload instants from gallary](#upload-instants-from-gallary) | Adds a gallery button to the Instants camera to post photos and videos from your device's gallery. |  |
 

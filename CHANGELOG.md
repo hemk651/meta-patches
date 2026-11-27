@@ -1,3 +1,9 @@
+## [1.2.0-beta.3](https://github.com/hemk651/meta-patches/compare/v1.2.0-beta.2...v1.2.0-beta.3) (2026-11-27)
+
+### ✨ New Features
+
+* **instagram:** add Clone package patch and version-agnostic hooks ([80af5d4](https://github.com/hemk651/meta-patches/commit/80af5d49580498d6c369b46edc621472ff505c8e))
+
 ## [1.2.0-beta.2](https://github.com/hemk651/meta-patches/compare/v1.2.0-beta.1...v1.2.0-beta.2) (2026-11-24)
 
 ### ✨ New Features
