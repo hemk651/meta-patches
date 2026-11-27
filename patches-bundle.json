@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-11-27T16:31:26",
-  "description": "## [1.2.0-beta.3](https://github.com/hemk651/meta-patches/compare/v1.2.0-beta.2...v1.2.0-beta.3) (2026-11-27)\n\n### ✨ New Features\n\n* **instagram:** add Clone package patch and version-agnostic hooks ([80af5d4](https://github.com/hemk651/meta-patches/commit/80af5d49580498d6c369b46edc621472ff505c8e))",
-  "download_url": "https://github.com/hemk651/meta-patches/releases/download/v1.2.0-beta.3/patches-1.2.0-beta.3.mpp",
+  "created_at": "2026-11-27T16:38:26",
+  "description": "## [1.2.0-beta.4](https://github.com/hemk651/meta-patches/compare/v1.2.0-beta.3...v1.2.0-beta.4) (2026-11-27)\n\n### 🐛 Bug Fixes\n\n* **meta:** list Clone package in the applied patches screen ([263366f](https://github.com/hemk651/meta-patches/commit/263366fdf39800e1f74f7f570aa895bd4d77bb69))",
+  "download_url": "https://github.com/hemk651/meta-patches/releases/download/v1.2.0-beta.4/patches-1.2.0-beta.4.mpp",
   "signature_download_url": "",
-  "version": "1.2.0-beta.3"
+  "version": "1.2.0-beta.4"
 }

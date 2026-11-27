@@ -1,3 +1,9 @@
+## [1.2.0-beta.4](https://github.com/hemk651/meta-patches/compare/v1.2.0-beta.3...v1.2.0-beta.4) (2026-11-27)
+
+### 🐛 Bug Fixes
+
+* **meta:** list Clone package in the applied patches screen ([263366f](https://github.com/hemk651/meta-patches/commit/263366fdf39800e1f74f7f570aa895bd4d77bb69))
+
 ## [1.2.0-beta.3](https://github.com/hemk651/meta-patches/compare/v1.2.0-beta.2...v1.2.0-beta.3) (2026-11-27)
 
 ### ✨ New Features
