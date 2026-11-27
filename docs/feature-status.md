@@ -11,7 +11,9 @@ This page separates implemented code from the verification evidence recorded in 
 | AMOLED theme | Instagram | On | Forces supported dark surfaces to pure black |
 | Add Mods menu | Instagram | Off | Adds the home-feed long-press menu and companion activities |
 | Change channel name | Instagram | Off | Replaces the release-channel label; option `channelName` defaults to `Mods` |
+| Clone package | Instagram | Off | Installs beside the original app (`com.metapaches.insta`, `insta by meta`) or replaces it; optional custom launcher icon |
 | Remove ads | Instagram | On | Suppresses the ad-pod flow and includes the bundled override set |
+| Save Instants to gallery | Instagram | Off | Adds a save-to-gallery option to the Instants menu; hooks discovered at patch time |
 | Remove snooze warning | Instagram | On | Removes the alpha-build expiry/snooze warning dialog |
 | Unlock developer options | Instagram | On | Installs MobileConfig overrides and enables the employee-options gate |
 | Upload instants from gallary | Instagram | Off | Adds gallery-based photo/video selection to the Instants camera |

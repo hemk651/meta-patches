@@ -99,6 +99,7 @@ private val APPLIED_PATCHES = listOf(
     "AMOLED theme" to "Forces Instagram dark theme surfaces to pure black (AMOLED).",
     "Add Mods menu" to "Adds the Mods menu (home long press) with the ported Instafel tools.",
     "Change channel name" to "Replaces the release channel name (NONE, ALPHA, BETA, PROD) shown in the developer options UI.",
+    "Clone package" to "Installs Instagram beside the original app (com.metapaches.insta / insta by meta) or replaces it, with an optional custom launcher icon.",
     "Instants Mod" to "Adds a gallery button to post photos and videos, and allows saving friends' Instants to your device.",
     "Remove ads" to "Removes ads in Instagram by stopping the ad pod flow.",
     "Remove snooze warning" to "Removes the \"build expired\" snooze warning dialog that alpha builds show.",
