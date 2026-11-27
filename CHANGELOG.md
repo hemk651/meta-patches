@@ -1,3 +1,9 @@
+## [1.2.0-beta.5](https://github.com/hemk651/meta-patches/compare/v1.2.0-beta.4...v1.2.0-beta.5) (2026-11-27)
+
+### 🐛 Bug Fixes
+
+* **instagram:** discover the original-image helper for full-quality Instants saves ([5a717c1](https://github.com/hemk651/meta-patches/commit/5a717c17c18c44f31273cd23e184e0524c76070f))
+
 ## [1.2.0-beta.4](https://github.com/hemk651/meta-patches/compare/v1.2.0-beta.3...v1.2.0-beta.4) (2026-11-27)
 
 ### 🐛 Bug Fixes
